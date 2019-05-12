@@ -50,7 +50,7 @@ function ladeGame()
     {
         
         meldung("Erhöhe deine geistige Ausdauer","20px Arial","black",65, 35);  
-        meldung("Welche Rechenzeichen ( +  -  * ) werden gesucht?","18px Arial","black",xBasis, 100); 
+        meldung("Welche Rechenzeichen ( +  -  *  ) werden gesucht?","18px Arial","black",xBasis, 100); 
         //meldung( "3 ? 4 ? ....... = ..","18px Arial","black",xBasis,140);
         meldung("Anzahl Operanden = " + rechenSchritte,"20px Arial","black",xBasis ,320); 
         //meldung(( "Anzahl Treffer :  0"),"18px Arial","black",xBasis, 350);   
@@ -286,17 +286,9 @@ function boxMeldung(melde,x,y,w,h,k1,k2,o)
         {anz=anz + delta; }
         if ((anz + delta)> unten && delta<=0)
         {anz=anz + delta; }
-        
+             
         return anz;
 }         
-
-function Minus(sw)
-{
-rechenSchritte=rechenSchritte + sw 
- var lg = 20 + ctx.measureText("Anzahl Operanden = " + rechenSchritte ).width 
- ctx.clearRect(xBasis,320, lg, -20); 
- meldung("Anzahl Operanden = " + rechenSchritte , "20px Arial","black",xBasis ,320);
-}
 
 function meldung(text, schrift,farbe,xm,ym)
    {
