@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>Mah Jongg - eines der besten chinesischen Brettspiele als DHTML!</title>
+<meta name="author" content="sascha noormann, noormann@gmx.de">
+<script language="JavaScript">
+<!--// BrowserCheck (c) by Sascha Noormann
+  var starttitle="mahjongg";
+  var screenresX=800;
+  var screenresY=572;
+  function MkFrame(art,doc) {
+    doc.write("<html>");
+    doc.write("<head>");
+    doc.write("<meta name='author' content='sascha noormann, noormann@gmx.de'>");
+    doc.write("</head>");
+    doc.write("<frameset framespacing='0' border='false' frameborder='0' cols='100%'>");
+    if (art>=800) { doc.write("<frame name='"+starttitle+"game' src='mahjongggame.htm' scrolling='no' marginwidth='0' marginheight='0' noresize>"); }
+             else { doc.write("<frame name='"+starttitle+"game' src='mahjongggame.htm' scrolling='auto' marginwidth='0' marginheight='0' noresize>"); }
+    doc.write("</frameset>");
+    doc.write("</html>"); 
+    doc.close();
+    if (art<=800) {
+      if (!opener) {
+        if (browser == "Netscape")
+        {
+          self.window.close();
+        } else { 
+          self.document.write("<strong><big><a href='javascript:self.window.close()'>Bitte schließen Sie das Fenster!</a></big></strong>");
+        }
+      } else {
+        self.window.close();
+      }
+    }
+  }
+
+   var browser=navigator.appName;
+   var version=navigator.appVersion;
+   var ver1=version.substring(0,1);
+   if (((browser == "Netscape") || (browser == "Microsoft Internet Explorer")) && (ver1 >= 4)) {
+     // set Screensize
+     _sizex=screenresX; _sizey=screenresY;
+     if (document.layers) { _sizex-=12; _sizey-=32; }
+     if (screen.width<screenresX) {
+       // Open new location in new small window and info user!
+       alert('Wir empfehlen Ihnen eine Bildschirmauflösung\n'+
+             'von 1024x768 Pixel zu benutzen, um eine optimale\n'+
+             'Darstellung zu erhalten.\n'+
+             'Verwenden Sie mindestens 800x600 Pixel um\n'+
+             'unerwünschte Scrollbalken zu vermeiden.');
+       _sizex=640; _sizey=480;
+       if (document.layers) _sizey-=58; else _sizey-=28;
+       window.resizeTo(320,240);
+       window.moveTo(0,0);
+       var GbWin=window.open('',starttitle,"scrollbars=no,resizable=yes");
+       GbWin.resizeTo(_sizex,_sizey);
+       if (screen.availWidth-_sizex>0) posx=(screen.availWidth-_sizex)/2; else posx=0;
+       if (screen.availHeight-_sizey>0) posy=(screen.availHeight-_sizey)/2; else posy=0;
+       GbWin.moveTo(posx,posy);
+       MkFrame(640,GbWin.document);
+     } else
+     // Open new location in new window
+     if (screen.width==screenresX) {
+       // Open new location in new small window and info user!
+//       alert('Wir empfehlen Ihnen eine Bildschirmauflösung\n'+
+//             'von 1024x768 Pixel zu benutzen, um eine optimale\n'+
+//             'Darstellung zu erhalten.');
+       // altes Fernster schrumpfen, neues Fenster erstellen. (800x600)
+       window.resizeTo(320,240);
+       window.moveTo(0,0);
+       var GbWin=window.open('',starttitle,"scrollbars=no,resizable=yes");
+       GbWin.resizeTo(_sizex,_sizey);
+       if (screen.availWidth-_sizex>0) posx=(screen.availWidth-_sizex)/2; else posx=0;
+       if (screen.availHeight-_sizey>0) posy=(screen.availHeight-_sizey)/2; else posy=0;
+       GbWin.moveTo(posx,posy);
+       MkFrame(800,GbWin.document);
+     } else
+     // Open new location in self.window
+     if (screen.width>screenresX) {
+       // 1024, 1152, 1280
+       if (!document.layers) _sizey+=116;
+       resizeTo(_sizex,_sizey);
+       if (screen.availWidth-_sizex>0) posx=(screen.availWidth-_sizex)/2; else posx=0;
+       if (screen.availHeight-_sizey>0) posy=(screen.availHeight-_sizey)/2; else posy=0;
+       window.moveTo(posx,posy);
+       MkFrame(1024,self.document);
+     }
+  } else {
+     // Fehlermeldung dynamisch erstellen
+     // Kein Internet Explorer oder kein Netscape oder Version <= 3.xx
+     document.write("<div align='center'><center>");
+     document.write("<table border='0' width='400' bgcolor='#FFFF00'>");
+     document.write("<tr><td align='center'><b>");
+     document.write("<big>Ihr Browser ist zu alt oder wird zur Zeit nicht unterstützt!</big><br><br>");
+     document.write("Intallieren Sie den ");
+     document.write("<a href='http://www.netscape.com'>");
+     document.write("Netscape-Communicator</a> ");
+     document.write("ab Version 4<br>");
+     document.write("oder den ");
+     document.write("<a href='http://www.microsoft.de'>");
+     document.write("Microsorft Internet-Explorer</a> ");
+     document.write("ab Version 4<br>");
+     document.write("um dieses Internet-Angebot zu nutzen.<br>");
+     // FOR MS ONLY!
+//     document.write("<big>Achtung!</big>Das Angebot funktioniert zur Zeit<br>");
+//     document.write("nur mit dem Microsoft Internet Explorer!");
+//     document.write("</b></td></tr></table></center></div>");
+  }
+//-->
+</script>
+</head>
+<NOSCRIPT>
+<body>
+<div align="center"><center><br><br>
+<table border="0" width="400" bgcolor="#FFFF00">
+  <tr><td align="center"><b>
+    Dieses Internetangebot benutzt Funktionalitäten von JavaScript.
+    Sie benötigen deshalb einen JavaScript-fähigen Browser wie
+    <a href="http://www.netscape.com">Netscape Navigator</a> ab Version 4.0
+    oder <a href="http://www.microsoft.de">Microsoft Internet Explorer</a>
+    ab Version 4.0! Wenn Sie bereits einen JavaScript-fähigen Browser
+    haben, so versichern Sie sich, daß die JavaScript Funktionalität
+    eingeschaltet ist und laden Sie diese Seite erneut.<br>
+    Achtung! Das Angebot funktioniert zur Zeit nur mit dem
+    Microsoft Internet Explorer!
+  </b></td></tr>
+</table>
+</center></div>
+<body>
+</NOSCRIPT>
+</html>

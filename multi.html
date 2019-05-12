@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+td{font-size:40px; padding:4px 10px;}
+</style>
+<script>
+var bIsRunning=false;
+var blinkFarben = new Array('white','blue','yellow','maroon','green','orange');
+var blinkende=new Array();
+var anzahlZeilen = 3;
+var anzahlSpalten = 3;
+var blinkFarbe = new Array(0,1,2,3,4,5);
+var zs=new Array();
+var ausgewaehlte=new Array();
+var anzahlFelder = 2; /* 4 ist magische Zahl, die aus dem Textbeitrag #1 stammt */
+
+function initBlink()
+{
+ if(bIsRunning == true)
+ {
+  return false;
+ }
+ bIsRunning=true;
+
+ var zaehler, zeile, spalte, k;
+ zs=new Array();
+ ausgewaehlte=new Array();
+ for(zaehler=0; zaehler<anzahlFelder; zaehler++)
+ {
+  zeile = Math.floor(Math.random() * anzahlZeilen);
+  spalte = Math.floor(Math.random() * anzahlSpalten);
+  k=zeile*anzahlSpalten+spalte;
+  alert(k);
+  if(ausgewaehlte[k]!=1)
+  {
+   zs[zaehler]=new Array( zeile,spalte);
+   ausgewaehlte[k]=1;
+  }
+  else
+  {
+   zaehler--;
+  }
+ }
+ myBlink=setInterval(function(){doBlink();},300);
+}
+
+function doBlink()
+{
+ for(var zaehler=0; zaehler < anzahlFelder; zaehler++)
+ {
+  var bfz=blinkFarbe[zaehler];
+  var bf=blinkFarben[bfz];
+
+  blinkende[zaehler]=document.getElementById('z'+zs[zaehler][0]+'s'+zs[zaehler][1]);
+  alert(  'z'+zs[zaehler][0]+'s'+zs[zaehler][1]);
+  blinkende[zaehler].style.backgroundColor=bf;
+  blinkFarbe[zaehler]++;
+  if(blinkFarbe[zaehler] > blinkFarben.length)
+  {
+   blinkFarbe[zaehler]=0;
+  }
+ }
+}
+
+function stopBlink()
+{
+ if(bIsRunning == true)
+ {
+  clearInterval(myBlink);
+  bIsRunning=false;
+  for(var zaehler=0; zaehler < anzahlFelder; zaehler++)
+  {
+   document.getElementById('z'+zs[zaehler][0]+'s'+zs[zaehler][1]).style.backgroundColor='white';
+  }
+ }
+}
+</script>
+</head>
+<body>
+
+<table border="1">
+ <tr>
+  <td id="z0s0"> A </td><td id="z0s1"> B </td><td id="z0s2"> C </td>
+ </tr>
+ <tr>
+  <td id="z1s0"> D </td><td id="z1s1"> E </td><td id="z1s2"> F </td>
+ </tr>
+ <tr>
+  <td id="z2s0"> G </td><td id="z2s1"> H </td><td id="z2s2"> I </td>
+ </tr>
+</table>
+<br>
+<button onclick="initBlink();">Start</button>
+<button onclick="stopBlink();">Stop</button>
+</body>
+</html>

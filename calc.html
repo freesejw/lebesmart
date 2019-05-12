@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>calc</title>
+<meta name="author" content="chef">
+<meta name="editor" content="html-editor phase 5">
+<style>
+
+ * {
+  box-sizing: border-box;
+}
+[class^='column'] {
+  float: left;
+  min-height: 200px;
+  background: red;
+  border: 1px solid black;
+}
+
+.column-1-7 {
+   width: calc(100% / 7);
+}
+.column-2-7 {
+   width: calc(100% / 7 * 2);
+}
+.column-3-7 {
+   width: calc(100% / 7 * 3);
+}
+
+body {
+  padding: 20px;
+}
+</style>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#FF0000" alink="#FF0000" vlink="#FF0000">
+
+
+<div class="column-1-7"></div>
+<div class="column-2-7"></div>
+<div class="column-3-7"></div>
+<div class="column-1-7"></div>
+
+
+</body>
+</html>

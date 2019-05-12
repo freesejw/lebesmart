@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">   
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    
+    border: 1px red solid;
+     background-color: #FFEFDB;
+   cursor: url(Images/fadenkreuz.png),  auto; 
+
+
+}
+</style>
+</head>
+<body onload="ladeGame()"></body>
+<body >
+    <canvas id = "StrukturFinden"></canvas>
+<script>
+
+
+var canv = document.getElementById("StrukturFinden");
+var ctx = canv.getContext("2d");
+canv.width=500;
+canv.height=500;
+
+var xAbstand=60,yAbstand = 110;     // Verschiebt die Matrix nach rechts und unten
+var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
+var xCoord = []; yCoord = [];   // x y Koordinate links oben im Feld
+var audio;
+var indexReihe = [];// hier werden die indizes der Felder gespeichert die angezeigt werden sollen
+var plusPunkte,minusPunkte,treffer;
+var zeilenZahl = 5, spaltenZahl = 5; // Felder pro Spalte und Zeile
+var breite = 50, hoehe=50;
+
+var xPos, yPos,xclick, yclick;
+var zaehlerClick, zaehlerTreffer;
+var rundeAus;
+var blocken;
+var bgColor="lightblue";
+var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum finden der Zahl in Sekunden
+var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
+
+var xBasis=20, yBasis=440, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Start"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
+
+var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na: "Mehr Bilder", x: (xBasis + xtestdis -10+  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na: "Weniger Bilder", x: ((xBasis + xtestdis-10) + 2 * (wBasis+ dBasis)) - 10,y: yBasis + ytextdis }];
+
+function ladeGame()
+{
+    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","20","Arial","black",xBasis, 30); 
+    meldung("Merke Dir die Bildpositionen","18", "Arial","black",xBasis, 60);   
+    meldung("Anzahl Bilder = " +  anzahlBilder,"16","Arial","blue",335,420);
+    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
+    buttonErstellen();
+    buttonText();
+    plusPunkte=0;
+    minusPunkte=0;
+   
+}
+
+function start() 
+{ 
+    blocken=true; // Klicken weährend dedr Merkphase verhindern
+    ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl);//Löscht die Matrix 
+    ctx.clearRect(xBasis,420-30,300,30);//löscht text " falsches Feld..."
+    zaehlerClick=0;
+    zaehlerTreffer=0;     
+    indexReihe=[]; 
+    zeitAusgang=0; // 
+    rundeAus=false;  
+    
+    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);    
+    auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt sie an 
+    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit)" ,"18","Arial","blue",xBasis,395); 
+ 
+   id=setInterval(zeitAbfrage,1000);
+}
+
+function zeitAbfrage()
+   {
+    // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
+    
+    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit)" ,"18","Arial","blue",xBasis,395); 
+
+    zeitAusgang=zeitAusgang + 1;
+   
+    if(zeitAusgang >= zeitSchranke)  
+        { 
+            blocken=false;
+            ctx.clearRect(xBasis,395 - 25,400,25);   // Merke dir die Position....
+            meldung("Jetzt suche die Bilder" ,"18","Arial","red",xBasis,425); 
+            for (var i =0; i<anzahlBilder;i++)
+            {
+                ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+                    zeigBild("augeLeer.gif" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+                  //  Hier werden die zu suchenden Zellen anonymisiert
+            }            
+            clearInterval(id);          
+        }
+
+    if (rundeAus)
+        {
+            clearInterval(id);
+            blocken=true;
+        }
+    }
+
+canv.addEventListener('click', function(event) 
+{   
+if (blocken==false)
+ { 
+    ctx.clearRect(xBasis,425-20,300,25);// löscht "falsches Feld....
+
+        xclick = event.clientX;
+        yclick = event.clientY; 
+        xclick = xclick - xAbstand ;
+        yclick = yclick - yAbstand ;
+        zaehlerClick++;
+        if (xclick>=xPos){}   
+        var treffer=false;    
+        var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des getippten feldes 
+
+        if (zwert>=0) { treffer= true}
+            if ( treffer == true) 
+            {            
+                var zw =indexReihe.indexOf(zwert);            
+                if (zw>=0)
+                        {
+                            zaehlerTreffer++;
+                            xxclick=(Math.floor(xclick/breite))*breite;
+                            yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+                        
+                            ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);
+                            zeigBild("augeGruen.gif",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                                
+                            //console.log("grün  " + "  zw  " +  zw + xCoord[indexReihe[zw]] + "  " +yCoord[indexReihe[zw]] +indexReihe);
+                            treffer=false;
+                         }
+                        else {                          
+                            ctx.clearRect(xBasis,420-30,300,30);
+                            meldung("Falsches Feld " ,"18","Arial","red",xBasis,420);                            
+                            akustischeMeldung("audio/up.mp3"); 
+                            rundeAus=true ;
+                            blocken=true;
+                            minusPunkte++;                
+                            }
+            }
+            if (zaehlerTreffer == indexReihe.length)
+            {
+                plusPunkte++;                 
+               //meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","blue",335,300);  
+                //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18","Arial","blue",335,340);  
+                rundeAus=true;
+                blocken=true;
+            }
+        }    
+}, false); 
+
+canv.addEventListener('click', function(e)
+     {
+       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);        
+        if (rect) 
+        {
+            auswahlButton();           
+        } 
+        meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","blue",335,300);  
+                meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18","Arial","blue",335,340);  
+    }, false);
+
+function buttonErstellen()
+{
+       for (var i = 0, len = rects.length; i < len; i++) {
+        ctx.lineWidth="5";   
+        ctx.strokeStyle="blue";   
+        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+       // ctx.stroke();     
+        ctx.fillStyle=rects[i].col;  
+        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+      }
+}
+
+function buttonText()
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+
+    for (var i = 0, len = texts.length; i < len; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);     
+    }
+        
+}
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;
+            
+                }
+    }
+    return isCollision;
+}
+
+function auswahlButton()
+    {
+        switch (getipptRechteck) 
+                {
+                    case 0:                    
+                        start();                       
+                    break;
+                    case 1:
+                        anzahlBilder=plusMinus(anzahlBilder,1,1,25);
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420); 
+                    break; 
+                    case 2:
+                        anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420);                                        
+                    break;                    
+                    default:
+                    alert("Sorry");
+                }             
+    }
+
+
+function aufbauMatrix(zeilen,spalten,breite,hoehe)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+    for (let i = 0; i<zeilen; i++)
+    {
+        var y=hoehe*i;
+        for(let j=0;j < spalten;j++)
+        {            
+            var x=breite*j;  
+            zeigBild("augeLeer.gif",x+xAbstand,y+yAbstand,breite,hoehe);
+            ctx.lineWidth="3";
+            ctx.strokeStyle="red";       
+            ctx.strokeRect(x+xAbstand,y+yAbstand,breite,hoehe);
+            
+            //linke, obere Koordinaten der Rechtecke
+            xCoord.push(x);
+            yCoord.push(y);
+         }
+    }   
+}
+
+function zeigBild(a,x,y,w,h)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
+}
+
+function auswahlZellen(zeilen,spalten)
+{
+// Wählt und zeigt die Zellen an, die gesucht werden sollen
+for (var i =0; i<anzahlBilder;i++)
+ {
+    var zw =(random(zeilen*spalten));    
+     if (indexReihe.indexOf(zw) <0)
+        {               
+                    indexReihe.push(zw);}
+                    else
+                    {i=i-1;}
+            
+                    zeigBild("augeRot.gif",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+         }   
+}
+
+function feldNummerSchuss(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
+    // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
+    var zw;
+    for (var i=0;i<(spaltenZahl*zeilenZahl);i++){
+
+        if ((xCoord[i] < xc) && (xc < xCoord[i] + breite ) &&
+            (yCoord[i] < yc) && (yc < yCoord[i]+ hoehe))
+            {
+            zw=i;      
+         
+        }
+        else{
+           // console.log(" i =  " ,i,  "   " + "xC[i]  " + xCoord[i]  + "yc[i]  " + yCoord[i]) ;   
+            //console.log( "xc  " + xc + "  yc  " +  yc );
+        } 
+     }
+     
+  return zw;  
+}
+
+ function random(max)
+          {
+            return Math.floor((Math.random() *max)+1);
+          }
+
+
+
+function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 20 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+
+function plusMinus(ausgang,delta,unten,oben)
+{
+        // Mehr oder weniger Zeit zum Suchen
+        let anz=ausgang; 
+        if ((anz + delta)< oben && delta>0)
+        {anz=anz + delta; }
+        if ((anz + delta)> unten && delta<=0)
+        {anz=anz + delta; }
+        return anz;
+}     
+      
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    }
+
+</script>
+
+
+</body>
+</html>

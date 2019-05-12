@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">     
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+
+Canvas {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   border: 1px red solid;
+   background-color: #FFEFDB;
+}
+</style>
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="500" height="400"></canvas>
+     
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var startTime, elapsedTime ;
+var uebungStart=false;
+var myVar, ident, aktIndex;
+var anzahlBilder=12;
+var pic =new Array;
+var getipptRechteck;
+var startIndex;
+var geschwindigkeit=1000;
+var zeiten=new Array;
+var fehler=0;
+var bgColor="lightblue";
+var elapsedTime;
+var xBasis=20, yBasis=340, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Start"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
+
+var bild = {x:200, y: 60, w: 100,h: 100 };
+
+var texts =[{na: "Start/Weiter", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na: "Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na: "Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+    
+var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
+
+// Die bilder befinden sich im Ordner imageVerkehr
+
+function ladeGame() 
+    {   
+        meldung("Verbessere deine Reaktionszeit","20px Arial","black",80, 25);    
+        einlesenBilder();
+        zeigBild("ImageVerkehr/auge.gif");
+        buttonErstellen();  // Start ; Stop ; Abbruch  
+        buttonText();   
+    }
+
+    canv.addEventListener('click', function(e)
+     {
+       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        if (rect) 
+        {
+            auswahlButton();           
+        } 
+
+    }, false);
+
+function start()
+
+    {
+        ctx.clearRect(200, 190, 250, -60);
+        ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
+        setzeAmpel("rot");  
+        
+        startIndex=random(anzahlBilder);    
+        zeigBild(pic[startIndex]); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
+        myVar = setTimeout(folgeBilder, 3000);        
+    }
+
+function folgeBilder(){
+    setzeAmpel("gruen");
+    clearTimeout(myVar);
+    aktIndex=random(anzahlBilder); // 
+    zeigBild(pic[aktIndex])  ; // aktuelle Bilder. Sie werden mit Basisbild verglichen
+    startTime = Date.now();
+    console.log ("  aktIndex  " + aktIndex );  
+    ident=setTimeout(folgeBilder, 1000);  
+    
+}
+
+function stop()
+// Wenn Basisbild mit dem geklickten Bild indentisch ist Treffermeldung und Abbruch
+    {
+    
+     uebungStart=true;
+     setzeAmpel("rot");
+    if (aktIndex==startIndex)
+        {
+            elapsedTime = Date.now() - startTime;
+            elapsedTime = (elapsedTime / 1000).toFixed(2);       
+            zeiten.push(elapsedTime)
+            boxMeldung(box.x,box.y,box.w,box.h,elapsedTime);
+            
+       //alert(zeiten);
+        }
+        else
+            {            
+            meldung("Falsches Zeichen getippt","20px Arial","red",200, 180);
+            fehler++;
+            }
+
+        zeigBild("ImageVerkehr/auge.gif");
+       
+        clearTimeout(ident);   
+    }
+ 
+function einlesenBilder()
+    {
+        for (i=0;i<= anzahlBilder;i++)
+        {
+            pic[i]=  "ImageVerkehr/verk" + i + ".jpg" 
+        } 
+    };
+
+function zeigBild(a)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, bild.x ,bild.y,bild.w,bild.h);
+     }
+    img.src = a;
+}
+
+function setzeAmpel(a)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, 50 ,120,30,70);
+     }
+    img.src = ("ImageVerkehr/ampel" + a + ".jpg");
+}
+
+function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;
+            
+                }
+    }
+    return isCollision;
+}
+
+function buttonErstellen()
+{
+       for (var i = 0, len = rects.length; i < len; i++) {
+        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+        ctx.stroke();     
+        ctx.fillStyle=rects[i].col;  
+        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+      }
+}
+
+function buttonText()
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+
+    for (var i = 0, len = texts.length; i < len; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }
+        
+}
+
+function auswahlButton()
+    {
+        switch (getipptRechteck) 
+                {
+                    case 0:                    
+                        start();                       
+                        break;
+                    case 1:
+                        stop();                        
+                        break;
+                    case 2:
+                        abbruch();                        
+                        break;
+                    default:
+                        alert("Sorry");
+                }             
+    }
+
+function abbruch()
+    {
+        setzeAmpel("rot");    
+        clearTimeout(ident);
+        zeigBild("ImageVerkehr/auge.gif");
+    }
+
+function meldung(text, schrift,farbe,xm,ym)
+   {
+        ctx.fillStyle = farbe;
+        ctx.font = schrift;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+function boxMeldung(x,y,w,h,time)
+    {
+        ctx.rect(x, y, w,h);
+        ctx.stroke();
+        meldung(("gebrauchte Zeit in Sekunden  "  + time),"12px Arial","black",x+10,y+h*0.33 );
+        meldung(("Vergleich:  "  + zeiten),"12px Arial","black", x + 10, y+ h*0.66 );
+    }
+
+
+</script>
+  
+<p>Enjoy !</p>
+
+</body>
+</html>

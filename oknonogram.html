@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8"> 
+<style>
+canvas {
+    
+    border: 1px red solid;
+     background-color: #FFEFDB;
+     cursor: url(Images/fadenkreuz.png),  auto; 
+
+
+}
+</style>
+</head>
+<body onload="ladeGame()"></body>
+<body >
+    <canvas id = "nanogram"></canvas>
+
+<script>
+
+var canv = document.getElementById("nanogram");
+var ctx = canv.getContext("2d");
+canv.width=500;
+canv.height=600;
+var spalten = 5;
+
+
+var grid=[];
+var gridVektor=[];
+var inhaltZeilen, inhaltSpalten;
+var xAbstand=70,yAbstand = 150;     // Verschiebt die Matrix nach rechts und unten
+var xDist=10, yDist=22;  // Verschiebt die Zahlen im Feld;
+var xCoord =[],yCoord=[];
+var xBreite=28,yHoehe=28;
+var zeilen = spalten;
+var zaehlerTreffer;
+var anzahlEins;
+var falsch;
+var audio;
+
+//Rechtecke für die Buttons
+var bgColor="lightblue";
+var xBasis=20, yBasis1=220, wBasis1=60, hBasis=30, dBasis=40, xtestdis=20, ytextdis=25;
+var yBasis2= 500, wBasis2=120, yErhoehung=50; 
+
+var rects = [ {x: xBasis, y: yBasis2+ yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2+ yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
+ 
+var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + yErhoehung + ytextdis},
+            {na: "Abbruch", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + yErhoehung + ytextdis} ,
+            {na: "Grösser", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+            {na: "Kleiner", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+
+
+function ladeGame(){
+    meldung("Nonogramm  =  Arbeit an der Logik","25","Arial","black",65,30 ); 	
+    zeigBild("Images/nonogram.PNG",150,198,200,200);
+    erklaerung(16,xBasis,100,20);
+
+    buttonErstellen(1);
+    buttonText(1);	
+	
+}
+
+canv.addEventListener('click', function(event)
+ {   
+    
+            xclick = event.clientX; 
+            yclick = event.clientY;  
+        
+    if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
+                        &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe))
+       {
+            //zaehlerClick++;        
+        
+            var zwert = geglicktesFeld(xclick,yclick,xAbstand,yAbstand) // liefert den Index des getippten feldes 
+            var zw =gridVektor[zwert];
+
+               
+                    if (zw == 1)
+                        {
+                            zaehlerTreffer++;
+                            xxclick=(Math.floor(xclick/xBreite))*xBreite;
+                            yyclick=(Math.floor(yclick/yHoehe))*yHoehe;   
+                            ctx.fillStyle="blue";
+                            ctx.fillRect(xCoord[zwert] ,yCoord[zwert] ,xBreite,yHoehe);
+                            meldung("Treffer : "+ zaehlerTreffer, "18","Arial","green",328,420);
+                            meldung( "von insgesamt  :  " + anzahlEins,"18","Arial","green",328,450); 
+
+                            ctx.clearRect(330,480-25,200,25);
+                        }
+                        else {
+                            ctx.fillStyle="black";
+                            ctx.font= "38px Arial";
+                            ctx.fillText("x",xCoord[zwert]+xDist-7 ,yCoord[zwert]+yDist+2); 
+                        falsch.play();
+                        meldung("Falsch","18","Arial","red",330,480);  
+                            //rundeAus=true ;
+                           // blocken=true;
+                                            
+                            }
+            
+                    if (zaehlerTreffer == anzahlEins)
+                    {
+                     akustischeMeldung("audio/down.mp3"); 
+                     meldung("Geschafft!  Glückwunsch  " ,"bold 20","Arial","green",30,480);  
+                      //  rundeAus=true;
+                       
+                    }
+            }    
+} , false); 
+
+function geglicktesFeld(xc,yc,xx,yy){    // xc und yc sind die Koordinaten des Klicks 
+    // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
+    var zw;
+    for (var i=0;i<spalten*zeilen;i++){
+   
+       
+        if ((xCoord[i] < xc) && (xc< xCoord[i] + xBreite ) &&
+            (yCoord[i] < yc) && (yc < yCoord[i]+ yHoehe))
+            {
+            zw=i;      
+         
+        }
+        else{
+      
+        } 
+     }
+         
+    // console.log("  xc  " + xc  + "  yc  " +yc) ;    
+  return zw;  
+}
+
+function aufbauInhaltMatrix(z,s){
+gridVektor=[];
+anzahlEins=0;
+
+let count = 1;
+for (let i=0; i<z; i++) {
+    grid[ i ] = [];
+   for (let j=0; j<s; j++) {
+      grid[i][j] = random(2); 
+      gridVektor.push(grid[i][j]);  
+      if (grid[i][j]==1 ){anzahlEins++};  
+   }
+}
+console.log("grid  " + gridVektor);
+}
+
+function aufbauBasisMatrix(zeilen,spalten,br,ho)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+	
+    for (let i = 0; i<zeilen; i++)
+    {
+        var y=yAbstand+ ho*i;
+        for(let j=0;j < spalten;j++)
+        {                     
+            var x=xAbstand+ br*j;  
+            ctx.lineWidth="1";  
+
+            ctx.strokeStyle="red";       
+            ctx.strokeRect (x,y,br,ho);     
+            
+            ctx.fillStyle="black";
+           ctx.font= "22px Arial";
+
+           //ctx.fillText(grid[i][j],x + xDist,y+yDist);
+           ctx.fillText("",x + xDist,y+yDist);
+            
+            //linke, obere Koordinaten der Rechtecke
+            xCoord.push(x);
+            yCoord.push(y);
+           
+           
+        }
+    }   
+}
+
+function erweiterungZeile(zeilen,spalten,br,ho,co,jj)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+	 
+    for (let i = 0;i<co.length; i++)
+    {
+        var y=ho*jj;
+        var x=br*(spalten +i+1);  
+            ctx.lineWidth="2";
+            ctx.strokeStyle="black";  
+              
+            ctx.strokeRect (x+xAbstand,y + yAbstand,br,ho);     
+
+            ctx.fillStyle = "#FFC0CB";    
+            ctx.fillRect(x+xAbstand,y+yAbstand,br,ho);
+
+            ctx.fillStyle="black";
+            ctx.font= "22px Arial";
+            ctx.fillText(co[i],x+xAbstand + xDist,y+yAbstand+yDist);
+
+    }   
+}
+
+function erweiterungSpalten(zeilen,spalten,br,ho,co,jj)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+	 
+    for (let i = 0;i<co.length; i++)
+    {
+		
+        var y=(zeilen +i +1)*ho;
+        var x=br*jj;  
+            ctx.lineWidth="2";
+            ctx.strokeStyle="black";  
+            ctx.strokeRect(x+xAbstand,y+yAbstand,br,ho);
+            ctx.stroke();
+
+            ctx.fillStyle = "#FFC0CB";        
+            ctx.fillRect(x+xAbstand,y+yAbstand,br,ho);
+            
+            ctx.fillStyle="black";
+            ctx.font= "22px Arial";
+            ctx.fillText(co[i],x+xAbstand + xDist,y+yAbstand+yDist);
+
+    }   
+}
+
+function analyseZeilen(zeil,spalt)
+ {
+	var filledTiles = [];
+	
+	for(var i = 0; i < zeil; i++)
+	{
+		var counts = [];
+		var count = 0;
+		for(var j = 0; j < spalt; j++)
+		{
+			if(grid[i][j] == 1)
+			{
+					count++;
+					if(j == grid[i].length-1)
+					{
+						counts.push(count);						
+					}
+			}
+			
+			else if(count != 0)
+			{
+				counts.push(count);	
+				count = 0;
+			}
+		}
+		filledTiles.push(counts);
+		erweiterungZeile(zeilen,spalten,xBreite,yHoehe,counts,i);
+	}			
+	return filledTiles;
+}
+
+function analyseSpalten(zeil,spalt){
+	var filledTiles = [];
+	
+	for(var i = 0; i < spalt; i++){
+		var counts = [];
+		var count = 0;
+		for(var j = 0; j < zeil; j++){
+			if(grid[j][i] == 1){
+				count++;
+				if(j == grid[j].length-1){
+					counts.push(count);
+				}
+			}else if(count != 0){
+				counts.push(count);
+				count = 0;
+			}
+		}
+		filledTiles.push(counts);
+		erweiterungSpalten(zeilen,spalten,xBreite,yHoehe,counts,i)
+		
+			}			
+	return filledTiles;
+}
+
+function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 20 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+function buttonErstellen(maxI)
+{
+      // for (var i = 0, len = rects.length; i < len; i++) {
+        for (var i = 0; i < maxI; i++) {  
+        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+        ctx.stroke();     
+        ctx.fillStyle=rects[i].col;  
+        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+      }
+}
+
+function buttonText(maxI)
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+
+    //for (var i = 0, len = texts.length; i < len; i++) 
+    for (var i = 0;i < maxI; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }
+        
+}
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;
+            
+                }
+    }
+    return isCollision;
+}
+
+function plusMinus(sw)
+{
+  spalten=spalten + sw; 
+  
+  if ( spalten<= 2 || spalten >10) 
+  {    
+      //meldung("Anzahl Zeilen / Spalten außerhalb des zulässigem Bereichs " ,"20","Arial","red",xBasis ,280);
+      meldung("Nonogramm  = Arbeit an der Logik","20","Arial","black",65,90 );  
+      spalten=spalten - sw;
+      sw=0;
+  }
+  zeilen=spalten;
+  xAbstand=xAbstand-sw*5;
+  yAbstand=yAbstand-sw*15;
+  //let lg = 20 + ctx.measureText("Anzahl Zeilen / Spalten  = ").width 
+  //meldung("Anzahl Zeilen / Spalten  " +  spalten,"18","Arial","black",xBasis ,480);
+  
+}
+
+canv.addEventListener('click', function(e)
+     {
+       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);        
+        if (rect) 
+        {
+            auswahlButton();           
+        } 
+
+    }, false);
+
+function auswahlButton()
+    {
+               switch (getipptRechteck) 
+              {
+                   
+                    case 0:
+                        start();                       
+                        break;                            
+                    case 1:
+                        abbruch(); 
+                        start();                       
+                        break;
+                    case 2:
+                        plusMinus(1); 
+                        start();                       
+                        break;
+                     case 3:
+                        plusMinus(-1);  
+                        start();                      
+                        break;
+                       default:
+                        alert("Sorry");
+                }             
+    }
+
+function start(){
+    ctx.clearRect(0,0,canv.width,canv.height);
+    xCoord=[];
+    yCoord=[];
+    grid=[];
+    gridVektor=[];
+    meldung("Nonogramm  = Arbeit an der Logik","20","Arial","black",65,30 );  
+	aufbauInhaltMatrix(zeilen,spalten);
+	aufbauBasisMatrix(zeilen,spalten,xBreite,yHoehe);
+    buttonErstellen(rects.length);
+    buttonText(rects.length);	
+	inhaltZeilen=analyseZeilen(zeilen,spalten);
+	inhaltSpalten=analyseSpalten(spalten,zeilen);	
+	zaehlerTreffer=0;   
+}
+
+function abbruch(){
+    ctx.clearRect(0,0,canv.width,canv.height);
+    meldung("Nonogramm  = Arbeit an der Logik","20","Arial","black",65,30 );
+    xCoord=[];
+    yCoord=[];
+    grid=[];
+    gridVektor=[]; 
+    
+}
+
+function erklaerung(s,x,y,d){
+    meldung("Die Zahlen hinter jeder Zeile und unter jeder Spalte geben an",s,"Arial","black",x,y );
+    meldung("wie viele Kästchen in der jeweiligen Zeile bzw. Spalte sind.",s," Arial","black",x,y+d);    
+    meldung("Die Zahlenfolge < 1 1 > hinter einer Zeile bedeutet, dass sich in ",s," Arial","black",x,y + 3*d);  
+    meldung("dieser zwei EINZELNE Kästchen verbergen.",s," Arial","black",x,y+4*d);  
+    meldung("Beginne mit < GO on >",s," Arial","black",x,y+17*d);  
+    meldung("Mit < Grösser> und <Kleiner> auf der <Go on> Seite veränderst du",s," Arial","black",x,y+19*d); 
+    meldung("die Anzahl der Zeilen und Spalten. (Minimum 3; Maximum 10)",s," Arial","black",x,y+20*d);    
+}  
+
+function zeigBild(a,x,y,w,h)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
+}
+
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    }
+
+</script>
+
+
+
+       
+</body>
+</html>

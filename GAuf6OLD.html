@@ -1,0 +1,451 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Bilder Raten</title>
+<meta name="editor" content="html-editor phase 5">
+<style>
+
+#wrapper {
+  width:480px;
+  height:350px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid blue;
+  margin: 5px;
+  position:relative;
+  background-color: #FFEFDB;
+}
+#sect10{
+
+       margin-left: 20px;
+       border:1px solid red;
+       width:140px;
+       height:100px;
+       float:left;
+       background-color:#00FFFF;
+       }
+
+#sect11{
+       margin-left: 30px;
+       border:1px solid red;
+       width:140px;
+       height:100px;
+       float:left;
+       margin-left: 40px;
+       background-color:#00FFFF;
+       }
+
+#ersteReihe {
+  //position:absolute;
+  float: left;
+  margin-left: 20px;
+  margin-top: 30px;
+  width: 395px;
+  height:200px;
+  background-color: #ddd;
+  border:1px solid #0090E0;
+  }
+
+ #textBox{
+  margin-left: 20px;
+  margin-top: 80px;
+ float: left;
+ width: 380px;
+  height: 30px;
+ font-size: 15px;
+}
+
+
+#btnStart {
+   position: absolute;
+   top: 480px;
+   left: 30px;
+    background-color: #00AFFF; /* Green */
+    border: 1 solid #0020FF;
+    color: white;
+    padding: 2px 2px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+#btnWeiter {
+    position: absolute;
+    top: 480px;
+    left: 130px;
+    background-color: #00AFFF;
+    border: 6 solid #0020FF;
+    color: white;
+    padding: 2px 2px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
+}
+
+#myTimeProgress {
+  position:absolute;
+  left: 30px;
+  top: 540px;
+  width: 395px;
+  height: 30px;
+  background-color: #ddd;
+  border:1px solid #0090E0;
+  }
+
+        #myTimeBar {width: 0%;height: 100%; background-color: #FF0000;}
+        #myTimeLabel { text-align: left;line-height: 30px;color: white;}
+
+#TimeLabel {
+    text-align: left;
+    line-height: 30px;
+    color: blue;
+    padding-left:220px;
+}
+
+
+</style>
+<script>
+
+    var basisReihe=new Array();
+    var vergleichsReihe=new Array();
+    var laengeBasisReihe;  //  bestimmt wieviel Elemente angezeigt und abgeprüft werden sollen
+    var basisReihe=new Array();
+    var geklickteReihe=new Array();
+    var laengeVergleichsReihe=3;
+    var anzahllVergleichsObjekte=20; // Anzahl der Elemente insgesamt
+    var cardCompare;
+    var imgArray = new Array();
+    var timerRun=false;
+    var vergleichccr;
+    var vergleichcbr;
+    var control;
+    var anzahlKlicks;
+    var anzahlKarten;
+    var kartenArt;
+    var ausgangsKarten;
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+ function loadPics()
+ // Lädt die Bilder in ein Array
+ // anzahlVergleichsObjekte: Anzahl vorhandener Bilder insgesamt
+
+     {
+
+         for (var i = 0; i < anzahllVergleichsObjekte; i++)
+          {
+          imgArray[i] = new Image();
+          imgArray[i].src = ausgangsKarten + (i) + '.jpg';
+         }
+      }
+
+
+ function BasisReiheErmitteln(vk,cb)
+  // vk: laengeBasisReihe => Gibt an wieviel Karten angezeigt und abgeprüft werden sollen
+  // cb: laengeBasisReiheInsgesamt => Anzahl vorhandener Bilder
+  // basisReihe => Array gefüllt mit Zufallszahlen zwischen 0 und Anzahl vorhandener Bilder
+  // Es werden Bilder entsprechend dieser Reihe angezeigt
+  {
+         for (var i=0; i< vk;i++)
+           {
+              basisReihe[i]=Math.floor(Math.random() * cb) ;
+
+                    for (var j=0;j<i;j++)
+                    {
+                      if (basisReihe[j]==basisReihe[i])
+                      {
+                      i=i-1;
+                      j=i;
+                      }
+                    }
+            }
+            for (i=0;i<vk;i++){
+
+            geklickteReihe[i]=-1;
+            }
+          console.log(" basisreihe " + basisReihe + "  " + geklickteReihe );
+          
+        }
+
+
+ function VergleichsReiheErmitteln(ck,rn,cb)
+ // ck: cardCompare => bestimmt wieviel Elemente zum Vergleich mit basisReihe
+ //angezeigt werden sollen.
+ //rn: basisReihe siehe oben
+ //cb: laengeBasisReiheInsgesamt => Anzahl vorhandener Bilder
+ //vergleichsReihe => Array enthält die indizes der Bilder die zum Vergleich angezeigt werden
+ // Dabei darf ein Index aus basisReihe nicht in der indexreihe vergleichsReihe enthalten sein
+
+  {
+            for (var i=0; i< ck;i++)
+           {
+              vergleichsReihe[i]=Math.floor(Math.random() * cb) ;
+
+                    for (var j=0;j< rn.length;j++)
+                     {
+
+                      if (vergleichsReihe[i]==rn[j])
+                          {
+                              i=i-1;
+                              j=rn.length+1;
+                          }
+
+                          else
+                           {
+                               for (var jj=0;jj<i;jj++)
+                              {
+
+                                  if (vergleichsReihe[jj]==vergleichsReihe[i])
+                                  {
+                                  i=i-1;
+                                  j=i;
+                                  }
+                              }
+                           }
+
+                    }
+            }
+       // console.log(" vergleichsReihe " + vergleichsReihe);
+       }
+
+
+
+  function ZeigBasisReihe(zz,rr)
+    // zz:  basisReihe,
+    // rr:  "ersteReihe" => ist ein div
+    // zeigt die Bilder gemäß der Indizes in basisReihe an
+    // Diese Bilder muss man sich merken da nach einer bestimmten Zeit gemäß der Funktion timeMove()
+    // später die Bilderreihe gelöscht wird
+      {
+
+          var gallerie = document.getElementById(rr);
+           gallerie.innerHTML ="";
+          // console.log ( "zz  " + zz);
+            for (var i = 0; i < zz.length; i++)
+            {
+            //console.log(" 1. zz " + zz[i] + "   i  " + i );
+
+            var im = imgArray[zz[ i ]];
+            gallerie.appendChild(im);
+
+            }
+      }
+
+
+
+   function timeMove()
+
+          {
+
+          // Die Funktion wird benutzt um dem Anwender Zeit zu geben sich die Karten(Bilder)gemäß basisReihe
+          // zu merken. Gesteuert wird das über width und die globale Variable timeForFind
+          // Nach ablauf der Zeit wird die Bildreihe gelöscht und es wird die Bildreihe lt.vergleichsReihe
+          // angezeigt. Der Anwender muss entscheiden welches Karte in der Vergleichskarten din den Basiskarten warer
+          //
+
+           var elem = document.getElementById("myTimeBar");
+           var width = 0;
+           var id = setInterval(frame, 400);
+           function frame()            {
+
+             if (width >= 100)
+
+                    {
+                      width=0;
+                      elem.style.width = width +'%';
+                      clearInterval(id);
+
+                      ZeigVergleichsReihe(vergleichsReihe,"ersteReihe");
+                      control.value="Welches Bild wurde vorher gezeigt? ";
+                      //playSound();
+                      }
+
+               else
+               {
+                 width= width+(100/10);
+                 elem.style.width = width +'%';
+                }
+              }
+            }
+
+  function ZeigVergleichsReihe(zz,rr)
+     // zz: vergleichsReihe => Array enthält die indizes der Bilder die zum Vergleich angezeigt werden
+     // rr: div "ersteReihe"
+     // der Anwender muss das Bild anklicken, das aus randomNumber Basic hinzugefügt wurde.
+     // Das erfolgt in der Funktion prepare()
+     //
+    {
+          VergleichsReiheErmitteln(cardCompare,basisReihe,anzahllVergleichsObjekte);  // Vergleichskarten werden bestimmt
+          prepare();  // die zu findene Karte wird eingefügt.
+          //
+          var gallerie = document.getElementById(rr);
+          gallerie.innerHTML ="";
+            for (var i = 0; i < vergleichsReihe.length; i++)
+            {
+              // console.log ( " zz(i) " + zz[i]  + "  i  " + i);
+               var im = imgArray[zz[ i ]];
+               gallerie.appendChild(im);
+
+                   im.addEventListener("click", function(idx)
+                      {
+                       return function()
+                      {
+
+                        if (!gallerie.getAttribute("data-locked"))
+                         {
+                         gallerie.setAttribute("data-locked", "true");
+                         }
+
+
+                             if (vergleichccr == idx)
+                                {
+
+                                 control.value = "Ok, WEITER";
+                                 anzahlKlicks++;
+
+                                 }
+                              else
+                                 {
+                                   control.value = "Falsch. Starte neu";
+                                   document.getElementById("btnStart").disabled = false;
+
+                                 }if ( anzahlKlicks == laengeBasisReihe)
+
+         {
+           control.value="Alle Bilder erfolgreich gefunden" ;
+           document.getElementById("btnStart").disabled = false;
+           document.getElementById("btnWeiter").disabled = true;
+
+         }
+
+
+
+                    };
+
+
+                }(i));
+            }
+
+      }
+
+  function prepare()
+  {
+
+  // Hier wird ein Bild aus basisReihe zufällig ausgewählt . Es ersetzt ein zufällig
+  // ausgewähltes Bild aus vergleichsReihe
+
+   do
+   {
+    var cbr=random(basisReihe.length );
+    //console.log ( " cbr  " + cbr + "  geklickteReihe[cbr] " + geklickteReihe[cbr]);
+    }
+    while (geklickteReihe[cbr] ==0);
+
+    var ccr=random(vergleichsReihe.length );
+    vergleichccr=ccr;
+    vergleichcbr=cbr;
+    vergleichsReihe[ccr]=basisReihe[cbr];
+    geklickteReihe[cbr]=0;
+   // console.log ( " vergleichsreihe 2  " + vergleichsReihe );
+
+   }
+
+
+
+      function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ function start()
+ {
+
+
+ laengeBasisReihe = document.getElementById("anzahlKarten").value;
+ ausgangsKarten = document.getElementById("kartenArt").value;
+
+
+ document.getElementById("btnStart").disabled = true;
+ document.getElementById("btnWeiter").disabled = false;
+ // document.getElementById("wrapper").style.width="450px";
+ document.getElementById("ersteReihe").style.width="420px";
+ control= document.getElementById("textBox");
+ control.value="Merk dir die folgenden Bilder für den späteren Vergleich";
+ anzahlKlicks=0;
+ cardCompare=laengeVergleichsReihe;
+        loadPics();
+        BasisReiheErmitteln(laengeBasisReihe,anzahllVergleichsObjekte);  // Liefert die Nummern der Karten die angezeigt und abgeprüft werden sollen
+        ZeigBasisReihe(basisReihe,"ersteReihe");   // zeigt die Bilder gemäß der Indizes in basisReihe an
+        timeMove();
+
+ }
+
+  function weiter()
+  // vergleichcbr : Index des Bildes aus basisReihe, das für den Vergleich in randomNumberComparev eingefügt wurde.
+  // Das gefundene Bild wird für den weiteren Vergleich gelöscht.
+  // Es sollen der Reihe nach die Bilder gemäß basisReihe gefunden werden.
+
+  {
+    document.getElementById("btnStart").disabled = true;
+    control.value="Welches Bild wurde vorher gezeigt? ";
+
+    var element = document.getElementById("ersteReihe");
+    console.log ( " anzahlKlicks  " +  anzahlKlicks + "   " + laengeBasisReihe);
+
+    ZeigVergleichsReihe(vergleichsReihe,"ersteReihe");
+
+
+
+  }
+
+
+  </script>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#FF0000" alink="#FF0000" vlink="#FF0000">
+<div id="wrapper">
+
+<div id="sect10" >
+        <p><h4>W&auml;hle Karten</h4><p>
+        <select id="kartenArt">
+                 <option value='Images/Namen/Name'>      Namen
+                <option value='ImageVerkehr/verk'>       Verkehrszeichen
+                <option value=3>                         Zahlen
+        </select>
+  </div>
+
+ <div id="sect11" >
+        <p><h4>Anzahl Karten</h4><p>
+        <select  id="anzahlKarten">
+                <option        value="2">                2 Karten
+                <option        value="3">                3 Karten
+                <option        value="4">                4 Karten
+                <option        value="5">                5 Karten
+                <option        value="6">                6 Karten
+        </select>
+ </div>
+
+<div id='ersteReihe'></div>
+
+<input type="text" value="Beginne mit Start " id="textBox"/>
+
+ <div id="myTimeProgress">
+  <div id="myTimeBar">
+    <div id="TimeLabel">Merkzeit</div>
+  </div>
+</div>
+ <button onclick='start()' class='gallerieButons'id="btnStart" >Start</button>
+ <button onclick='weiter()' class='gallerieButons'id="btnWeiter" >WEITER</button>
+ </div>
+ </body>
+</html>

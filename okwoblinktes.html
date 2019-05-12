@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">   
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+
+Canvas {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   border: 1px red solid;
+   background-color: #FFEFDB;
+}
+</style>
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="500" height="600"></canvas>
+     
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var cW = ctx.canvas.width, cH = ctx.canvas.height;  
+
+var xBreite=50 , yHoehe=50;
+var myVar; // für setInterval
+var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
+var durchLaeufe, treffer;
+var bgColor="lightblue";
+var blinkReihe=[];
+var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
+var blocken;
+
+var xCoord=[], yCoord=[];
+var zeilen = 5, spalten=5;
+
+
+var xAbstand=30,yAbstand = 120;     // Verschiebt die Matrix nach rechts und unten
+var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtestdis=10, ytextdis=25;
+var yBasis2= 490, wBasis2=120, yErhoehung=50; 
+var xTextRechts=xBasis + 2 * (wBasis2+ dBasis);
+var yTextHoehe=yBasis2 -30;
+var zaehlerClick,zaehlerTreffer,iterator,anzahlBlinks=4;
+var audio;
+
+//Rechtecke für die Bilder
+var rects = [ {x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
+ 
+var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
+            {na: "Abbruch", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+            {na: "Blinks +", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+            {na: "Blinks -", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+
+function ladeGame() 
+    {   
+        meldung("Übe die Merkspanne","20","Arial","black",40, 30);  
+        meldung("Merke dir die Blinks : Position und Reihenfolge","18","Arial","black",40, 60);     
+        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);
+        erzeugeButton(0,3);
+        buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
+        aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
+        treffer=0;
+        durchLaeufe=0;
+       
+     
+    }
+   
+function aufbauMatrix(zeilen,spalten,breite,hoehe)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+    for (let i = 0; i<zeilen; i++)
+    {
+        var y=yAbstand+hoehe*i;
+        for(let j=0;j < spalten;j++)
+        {            
+            var x=xAbstand + breite*j;  
+            ctx.lineWidth="3";
+            ctx.strokeStyle="red";       
+            ctx.strokeRect(x,y,xBreite,yHoehe);            
+           
+           
+            //linke, obere Koordinaten der Rechtecke
+            xCoord.push(x);
+            yCoord.push(y);
+       
+        }
+    }   
+}  
+
+function auswahlBlinkZellen(zeilen,spalten)
+{
+var zw=[];
+for (var i =0; i<zeilen*spalten;i++)
+    {
+        zw.push(i);    
+        
+    }
+return shuffle(zw);
+}
+
+canv.addEventListener('click', function(event)
+ {   
+    if (blocken == false)
+    {
+            xclick = event.clientX; 
+            yclick = event.clientY;  
+        
+    if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
+                        &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe))
+       {
+            zaehlerClick++;        
+            var zwert = geglicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
+            var zw =blinkReihe[zaehlerClick];
+
+               
+                    if (zw == zwert)
+                        {
+                            zaehlerTreffer++;
+                            xxclick=(Math.floor(xclick/xBreite))*xBreite;
+                            yyclick=(Math.floor(yclick/yHoehe))*yHoehe;   
+                            ctx.fillStyle="green";
+                            ctx.fillRect(xCoord[blinkReihe[zaehlerClick]] +8 ,yCoord[blinkReihe[zaehlerClick]]+8 ,xBreite-16,yHoehe-16);
+                       
+                        }
+                        else {
+                                meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"18","Arial","red",30,420);  
+                                rundeAus=true ;
+                                blocken=true;
+                                rundeAus=true ;
+                                akustischeMeldung("audio/up.mp3");   
+                                meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
+                                meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
+                             }
+            
+                    if (zaehlerTreffer == anzahlBlinks)
+                    {
+                       treffer++
+                       meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
+                       meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
+                       rundeAus=true;
+                       
+                    }
+            }  
+    }  
+
+} , false); 
+
+
+
+function geglicktesFeld(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
+    // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
+    var zw;
+    for (var i=0;i<spalten*zeilen;i++){
+
+        if ((xCoord[i] < xc) && (xc < xCoord[i] + xBreite ) &&
+            (yCoord[i] < yc) && (yc < yCoord[i]+ yHoehe))
+            {
+            zw=i;     
+            }
+        else{
+           // console.log(" i =  " ,i,  "   " + "xC[i]  " + xCoord[i]  + "yc[i]  " + yCoord[i]) ;   
+            } 
+     }  
+  return zw;  
+}
+
+
+function start()
+{
+    ctx.clearRect(30,420-30,400,35);
+    ctx.clearRect(xBasis ,370,400,30);
+    iterator=0; 
+    zaehlerClick=0;
+    zaehlerTreffer=0;
+    durchLaeufe++;
+    loescheMatrix();
+    aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
+    blinkReihe=auswahlBlinkZellen(zeilen,spalten);
+    myVar=setInterval(zeige,1000);
+    blocken="true"; 
+}
+
+
+function loescheMatrix()
+{
+
+    for (i = 0;i<spalten*zeilen;i++){
+        ctx.clearRect(xCoord[i],yCoord[i],xBreite,yHoehe);
+    }
+}
+
+function zeige()
+{
+    // Funktion wird von setInterval aufgerufen
+
+    iterator++;
+
+    if (iterator <= anzahlBlinks)
+        {
+        ctx.beginPath();
+        ctx.fillStyle= "red";
+        ctx.arc(xCoord[blinkReihe[iterator]]+25,yCoord[blinkReihe[iterator]]+25,20,0,2*Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        }
+
+    if (iterator>1)
+        {
+        ctx.clearRect(xCoord[blinkReihe[iterator-1]]+4,yCoord[blinkReihe[iterator-1]]+4,xBreite-8,yHoehe-8);            
+        }
+    if (iterator>anzahlBlinks)
+        {
+        ctx.clearRect(xCoord[blinkReihe[iterator]]+4,yCoord[blinkReihe[iterator]]+4,xBreite-8,yHoehe-8);
+            clearInterval(myVar);
+            blocken=false;  
+        }            
+  
+}
+
+canv.addEventListener('click', function(e)
+     {
+       // verwaltet die Buttons 
+        var rect = angetippt(rects, e.offsetX, e.offsetY);        
+        if (rect)
+        {          
+            auswahlButton();         
+               }
+                }, false);
+
+function abbruch()
+
+    {
+        
+       
+        ctx.clearRect(xBasis,420-30,400,30);   
+        meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
+        meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
+        clearInterval(myVar);
+    }
+ 
+function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;
+          
+                }
+    }
+    return isCollision;
+}
+
+function erzeugeButton(a,b)
+{
+       for (var i = a;i <= b; i++) {
+        ctx.strokeStyle="blue";
+        ctx.lineWidth="5";  
+        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+             
+        ctx.fillStyle=rects[i].col;         
+       ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+      }
+}
+
+function buttonText()
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+
+    for (var i =0, len = 4; i < len; i++) 
+    
+    {      
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }
+        
+}
+
+
+
+function auswahlButton()
+    {
+               switch (getipptRechteck) 
+              {
+                   
+                    case 0:
+                        start();                       
+                        break;                            
+                    case 1:
+                        abbruch();                        
+                        break;
+                    case 2:
+                       anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
+                       var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
+                       meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);
+                        break;
+                     case 3:
+                        anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
+                        var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
+                        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);                        
+                        break;
+                       default:
+                        alert("Sorry");
+                }             
+    }
+
+    function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 20 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+    function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function plusMinus(ausgang,delta,unten,oben)
+{
+  let anz=ausgang; 
+  if ((anz + delta)< oben && delta>0)
+  {anz=anz + delta; }
+  if ((anz + delta)> unten && delta<=0)
+  {anz=anz + delta; }
+  
+  return anz;
+}
+function akustischeMeldung(a)
+    {
+        var audio = new Audio(a);
+        audio.play();
+    }
+
+</script>
+  
+<p>Enjoy !</p>
+
+</body>
+</html>

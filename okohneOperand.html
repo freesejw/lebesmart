@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8">   
+<style>
+
+Canvas {
+   position: absolute;
+   top: 20px;
+   left: 20px;
+   border: 1px red solid;
+   background-color: #FFEFDB;
+}
+</style>
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="500" height="600"></canvas>
+     
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var xCoord=[], yCoord=[];
+var operand;
+var bgColor="lightblue";
+var rechenSchritte=3, schrittWeite=1,string;
+var durchLaeufe, treffer;
+var z1, z2;
+var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+var yBasis2= 460, wBasis2=120, yErhoehung=50; 
+
+var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
+
+var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
+
+          
+
+
+var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
+           {na: "Lösung", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+           {na: "Mehr Zahlen", x: (xBasis + 10+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+           {na: "Weniger", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+
+           
+
+function ladeGame()
+    {
+        
+        meldung("Erhöhe deine geistige Ausdauer","20px Arial","black",65, 35);  
+        meldung("Welche Rechenzeichen ( +  -  * ) werden gesucht?","18px Arial","black",xBasis, 100); 
+        //meldung( "3 ? 4 ? ....... = ..","18px Arial","black",xBasis,140);
+        meldung("Anzahl Operanden = " + rechenSchritte,"20px Arial","black",xBasis ,320); 
+        //meldung(( "Anzahl Treffer :  0"),"18px Arial","black",xBasis, 350);   
+        buttonErstellen()
+        buttonText();
+        aufbauZeile(rechenSchritte,breite,hoehe);
+        
+    };
+
+
+function start()
+    {
+        ctx.clearRect(0,y,500,35); // Löschen Anzahl operanden
+        ctx.clearRect(0,350,500,24);
+        ctx.clearRect(xBasis, 380 - 30, 500, 35);   // Löschen Lösung Anzeige
+      
+        
+        treffer=0;
+        //meldung(( "Anzahl Treffer :  " + treffer),"18px Arial","black",xBasis, 350);  
+      
+        durchLaeufe=0;
+        aufbauZeile(rechenSchritte,breite,hoehe);
+       
+    }
+function aufbauZeile(ele,breite,hoehe)
+{
+   // legt eine Zeile an . In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
+
+var anzahlZahlen=ele+1;
+var anzahlOperanden=ele;
+var anzahlFelder=ele*2 + 1 + 2; // + 2 sind für = ergebnis
+var operanden=["+" , " - " , "*"];
+string="";
+xCoord=[];
+yCoord=[];
+
+    for (let i = 0; i<anzahlFelder; i++)
+    {
+        
+            var x=breite*i;  
+            //ctx.lineWidth="0";
+            //ctx.strokeStyle="black";       
+            //ctx.rect(x + xAbstand,y,breite,hoehe);
+            //ctx.stroke();            
+            //inke, obere Koordinaten der Rechtecke
+            xCoord.push(x);
+            yCoord.push(y);
+
+    }
+   
+    for (let i = 0 ; i <anzahlZahlen;i++)
+    {
+            ctx.fillStyle="black";
+            ctx.font= "22px Arial";
+            var rr=random(9); 
+            string=string + rr;  
+            ctx.fillText(rr,xCoord[i*2]+xAbstand + xDist,yCoord[i*2]+yDist);
+
+            if (i < anzahlOperanden){
+            var oo=operanden[random(3)];
+            ctx.fillStyle="red"; 
+            ctx.font= "18px Arial";  
+            ctx.fillText("?",xCoord[i*2+1]+xAbstand + xDist,yCoord[i*2+1]+yDist);
+            string=string +oo.valueOf();  
+            }
+            else{
+                ctx.fillText("=",xCoord[i*2+1]+xAbstand + xDist,yCoord[i*2+1]+yDist); 
+                //var erg=eval(string); Liefert Lösung incl Rechenregeln
+                var erg=ergebnisKette(string);
+                ctx.fillText(erg,xCoord[i*2+2]+xAbstand + xDist,yCoord[i*2+2]+yDist);      
+            }
+         
+    }
+
+  
+}
+ 
+ 
+  function ergebnisKette(kette)
+   {
+        var zw=kette.match(/(\d+)|([\+\*\-\/\:])/g).reduce((accu, curr) => isNaN(curr) ? 
+        (accu + (curr === ':' ? '/' : curr)) : eval(accu + curr));  
+        return zw;
+   }  
+
+function loesung()
+    {
+       
+        ctx.clearRect(xBasis, 380, 500, -24);               
+        meldung("Loesung : " + string,"20px Arial","red",xBasis,380);  
+       
+    }
+
+
+ canv.addEventListener('click', function(e)
+     {       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        if (rect) 
+        {
+            auswahlButton();  
+            //vergleich();         
+        }}, false);
+
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;           
+            
+                }
+    }
+    return isCollision;
+}
+
+function auswahlButton()
+    {
+        switch (getipptRechteck) 
+                {
+                    case 0:                                         
+                        start();
+                        break;
+                    case 1:
+                        loesung();                        
+                        break;
+                    case 2:
+                        rechenSchritte= plusMinus(rechenSchritte,1,0,11); 
+                        ctx.clearRect(xBasis,320 -20, 300, 20); 
+                        meldung("Anzahl Operanden = " + rechenSchritte , "20px Arial","black",xBasis ,320); 
+                        start();                         
+                        break;
+                    case 3:
+                        rechenSchritte= plusMinus(rechenSchritte,-1,0,11); 
+                        ctx.clearRect(xBasis,320 -20, 300, 20); 
+                        meldung("Anzahl Operanden = " + rechenSchritte , "20px Arial","black",xBasis ,320);                                            
+                        start();
+                        break;
+                     case 4:
+                     //links getippt
+                        vergleich(4);                        
+                        break;  
+                     case 5:
+                     //rechts getippt
+                        vergleich(5);                        
+                        break;                 
+                    default:
+                       alert("ups");
+                }             
+    }
+
+
+
+function buttonErstellen()
+{
+       for (var i = 0, len = rects.length; i < len; i++) {
+        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+        ctx.stroke();  
+        ctx.fillStyle=rects[i].col;  
+        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+        
+      }
+}
+
+function buttonText()
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+
+    for (var i = 0, len = texts.length; i < len; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }
+        
+}
+
+function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+function auswahlOperand(a1,a2)
+    {
+        var vv= random(3);
+        //console.log("  operand  " + vv);
+        switch(vv)
+        {
+            
+            case 0:
+                operand= "+";
+               return z1 + z2;               
+                break;
+            case 1:
+                operand="-"; 
+                return z1 - z2;   
+                break;
+            case 2:
+                operand="*"; 
+                return z1 * z2;   
+                break;
+             case 3:
+                operand= "+";
+                return z1 + z2;
+                break;
+           
+            default:
+            alert("was falsch");
+        } 
+    }
+
+function boxMeldung(melde,x,y,w,h,k1,k2,o)
+    {       
+        ctx.rect(x,y,w,h);
+        ctx.stroke();
+        ctx.fillStyle=bgColor;
+        ctx.fillRect(x,y,w,h);      
+        meldung(melde,"25px Arial","black",x+30,y+45  );
+    }
+
+
+   function plusMinus(ausgang,delta,unten,oben)
+{
+        // Mehr oder weniger Zeit zum Suchen
+        let anz=ausgang; 
+        if ((anz + delta)< oben && delta>0)
+        {anz=anz + delta; }
+        if ((anz + delta)> unten && delta<=0)
+        {anz=anz + delta; }
+        
+        return anz;
+}         
+
+function Minus(sw)
+{
+rechenSchritte=rechenSchritte + sw 
+ var lg = 20 + ctx.measureText("Anzahl Operanden = " + rechenSchritte ).width 
+ ctx.clearRect(xBasis,320, lg, -20); 
+ meldung("Anzahl Operanden = " + rechenSchritte , "20px Arial","black",xBasis ,320);
+}
+
+function meldung(text, schrift,farbe,xm,ym)
+   {
+        ctx.fillStyle = farbe;
+        ctx.font = schrift;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+</script>
+
+
+       
+<p>Enjoy !</p>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title></title>
+<meta name="author" content="chef">
+<meta name="editor" content="html-editor phase 5">
+
+
+        <style>
+            table td img {
+                width: 300px;
+                height: 200px;
+            }
+        </style>
+</head>
+ <body>          
+            <script>
+            var images = {};
+          images.img1 = new Image();
+          images.img2 = new Image();
+          images.img3 = new Image();
+          images.img4 = new Image();
+          images.img5 = new Image();
+          images.img6 = new Image();
+          images.img11 = new Image();
+          images.img12 = new Image();
+          images.img13 = new Image();
+          images.img14 = new Image();
+          images.img15 = new Image();
+
+          images.img1.src = "Terrorist1.jpg";
+          images.img2.src = "Terrorist2.jpg";
+          images.img3.src = "Terrorist3.jpg";
+          images.img4.src = "Freund1.jpg";
+          images.img5.src = "freund2.jpg";
+          images.img6.src = "ballon.jpg";
+          images.img11.src = "ToterTerrorist0.jpg";
+          images.img12.src = "ToterTerrorist1.jpg";
+          images.img13.src = "ToterTerrorist1.jpg";
+          images.img14.src = "ToterFreund1.jpg";
+          images.img15.src = "ToterFreund2.jpg";
+
+
+
+            anzahlBilder = 3;
+            for (var i = 0; i < anzahlBilder; i++) {
+                var im = document.createElement("img");
+                document.getElementById('bl' + i).appendChild(im);
+            }
+            function Zwei() {
+                for (var i = 0; i < anzahlBilder; i++) {
+                    document.querySelector('#bl' + i + ' img').src = images['img' + (i + 11)].src;
+                }
+            }
+            function Eins() {
+                for (var i = 0; i < anzahlBilder; i++) {
+                    document.querySelector('#bl' + i + ' img').src = images['img' + (i + 1)].src;
+                }
+            }
+
+ </script>
+
+
+<table>
+            <tr>
+                <td id="bl0" onclick="hitColor('bl0')"></td>
+                <td id="bl1" onclick="hitColor('bl1')"></td>
+                <td id="bl2" onclick="hitColor('bl2')"></td>
+            </tr>
+        </table>
+        <input type="button" id="button1" value="eins" onclick="Eins()">Eins
+        <input type="button" id="button2" value="zwei" onclick="Zwei()">Zwei
+</body>
+        </html>
+

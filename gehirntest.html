@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/21.0.0/jcanvas.js"></script>
+  <style type="text/css">
+    body {
+      background-color: #F3EFF9;
+      margin: 30px;
+      margin-top: 10px;
+    }
+
+    #Canvas {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      border: 1px red solid;
+      #thing;
+      background-color: #FFEFDB;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="Canvas" width="640" height="460"></canvas>
+  <script>
+     function Flieg() {
+
+$('canvas').drawArc({
+    layer: true,
+    name: 'myBox-' + j,
+    fillStyle: '#' + Math.floor(Math.random() * 16777215).toString(16),
+    x: Math.floor(Math.random() * 600) + 100,
+    y: 400,
+    radius: 40,
+    click: function (layer) {
+        layer.fillStyle = 'blue';
+    }
+});
+$('canvas').animateLayer('myBox-' + j, {
+    y: 80
+}, {
+        duration: 2000,
+        easing: 'linear',
+        step: function (now, fx, layer) {
+            // do something for each step of the animation
+        },
+        complete: animation
+    });
+j++;
+
+}
+function animation(layer) {
+var iAni = 1, maxAni = 6, xPos = layer.x, yPos = layer.y;
+var  iFly = layer.name.split('-')[1];
+layer.visible = false;
+$('canvas').drawImage({
+    layer: true,
+    name: 'ani' + iFly,
+    source: 'images/frame1.jpg',
+    x: xPos, y: yPos
+});
+var timer = setInterval(function () {
+    iAni++;
+    if (iAni <= maxAni) {
+        $('canvas').setLayer(
+            'ani' + iFly, {
+                source: 'images/frame' + iAni + '.jpg'
+            }
+        ).drawLayers();
+    } else {
+        clearInterval(timer);
+    }
+}, 500);
+}
+  </script>
+</body>
+
+</htm 

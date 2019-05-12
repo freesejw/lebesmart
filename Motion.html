@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Motion</title>
+
+
+
+
+        <script>
+                window.onload = function(){
+                    var canvas = document.createElement("canvas"),
+                    c=canvas.getContext("2d");
+
+                    particles = {};
+                    particleIndex = 0;
+                    particleNum = 100;
+
+                    canvas.width=800,
+                    canvas.height=800;
+                    document.body.appendChild(canvas);
+                    c.fillStyle="black";
+                    c.fillRect(0,0,canvas.width,canvas.height);
+                
+                    function Particle(){
+                        this.x = canvas.width/2;
+                        this.y = canvas.height/2;
+                        this.vx = Math.random() * 10 - 5;
+                        this.vy = Math.random() * 10 - 5;
+                        particleIndex++;
+                        particles[particleIndex] = this;   
+                        console.log(particleIndex, ' nummer 1   ' ,particles[particleIndex] );
+                        this.id = particleIndex;
+                        console.log(this.id, "   " ,this);
+                        this.life = 0;
+                        //this.maxLife = Math.random()*10+50;
+                        this.maxLife = 50;
+                        this.color = "rgb("+parseInt(Math.random()*255,10) + ",0,0)";
+
+                    }
+            
+                    Particle.prototype.draw = function(){
+                        this.x += this.vx;
+                        this.y += this.vy; 
+                        this.life++;                      
+                        if (this.life==this.maxLife){
+                            delete particles[this.id];
+                            
+                        }                       
+                        c.fillStyle = this.color;
+                        c.fillRect(this.x, this.y,5,5);
+                };
+                         for (var i = 0; i < particleNum;i++){
+                            new Particle();                           
+                             }
+
+                    setInterval(function(){
+                        c.globalCompositeOperation = 'source-over';
+                        c.fillStyle="black";
+                        c.fillRect(0,0,canvas.width,canvas.height);  
+                        
+                             c.globalCompositeOperation="lighter";
+                        for ( var i in particles){
+                            particles[i].draw();
+                        }
+                    },30);
+                };
+                
+               
+            </script>  
+ <style>
+    body,html{
+               margin : 0px;
+               padding : 0px;
+           }     
+   
+   </style>
+   </head>
+   
+   <body>              
+</body>
+</html>

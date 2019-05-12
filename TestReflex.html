@@ -1,0 +1,663 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>TypeGame</title>
+<meta name="author" content="chef">
+<meta name="editor" content="html-editor phase 5">
+
+<script language="javascript">
+
+
+
+var index;
+var objBox;
+var box;
+var iTimesAnimate;
+var blnGameStarted;
+var wrongClicks;
+var TotalDisplay;
+
+index=10;
+blnGameStarted = false;
+wrongClicks=0;
+
+TotalDisplay = 0;
+
+
+function changeColorOn(abc)
+{
+
+        abc.color="white";
+        abc.backgroundColor="black"
+}
+
+function changeColorOff(abc)
+{
+        abc.color="black";
+        abc.backgroundColor="white"
+}
+
+function animate()
+{
+        document.buzzy.btnStart.disabled = true;
+        if(index < 102)
+        {
+                document.all[index-1].style.backgroundColor="white";
+                document.all[index].style.backgroundColor="yellowgreen";
+                setTimeout('animate()',75);
+                index = index + 1;
+        }
+
+        else
+
+        {
+                setTimeout('document.all[101].style.backgroundColor="white"',75);
+                initialize();
+
+        }
+
+}
+
+
+
+function checkClick(objBox1)
+{
+        if(blnGameStarted)
+        {
+                objBox = objBox1;
+                if(objBox.backgroundColor == "yellowgreen")
+                {
+                        document.buzzy.txtScore.value = eval(document.buzzy.txtScore.value) + 1;
+
+                }
+
+                else
+
+                {
+                        wrongClicks = wrongClicks + 1;
+
+                        objBox.backgroundColor = "red";
+
+                        setTimeout('objBox.backgroundColor = "white"',200);
+
+                }
+
+        }
+
+}
+
+
+
+function getRandom()  { return (Math.round(Math.random()*(97-9)))+9; }
+
+function highlightBox()
+{
+
+        if(blnGameStarted)
+
+        {
+                box = getRandom();
+                document.all[box].style.backgroundColor = "yellowgreen";
+                TotalDisplay = TotalDisplay + 1;
+                setTimeout('document.all[box].style.backgroundColor = "white"',700);
+                setTimeout('highlightBox()',800);
+
+        }
+
+}
+
+
+
+function startTime()
+
+{
+
+        if(eval(document.buzzy.txtTime.value)  != 0)
+
+        {
+
+                document.buzzy.txtTime.value = eval(document.buzzy.txtTime.value) - 1;
+
+                setTimeout('startTime()',1000);
+
+        }
+
+        else
+
+        {
+
+                alert('Time Up!! You Scored ' + document.buzzy.txtScore.value + " out of " + TotalDisplay + "\n\n No. of drunkard%$# clicks: " + wrongClicks);
+
+                document.buzzy.btnStart.disabled = false;
+
+                blnGameStarted = false;
+
+        }
+
+}
+
+
+
+function initialize()
+
+{
+
+        blnGameStarted = confirm('Are you ready to start testing your reflexes??')
+
+        if(blnGameStarted)
+
+        {
+
+                document.buzzy.txtTime.value = 60;
+
+                document.buzzy.txtScore.value = 0;
+
+                setTimeout('startTime()',10);
+
+                highlightBox();
+
+        }
+
+        else
+
+                document.buzzy.btnStart.disabled = false;
+
+}
+
+</script>
+
+
+
+</HEAD>
+
+
+
+<!-- STEP TWO: Copy this code into the BODY of your HTML document  -->
+
+
+
+<BODY>
+
+
+
+<!-- This script and many more are available free online at -->
+
+<!-- The JavaScript Source!! http://www.javascriptsource.com -->
+
+<!-- Original:  Pankaj Singh (pankaj040@lycos.com) -->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+
+        <tr>
+
+                <td align="center" valign="middle">
+
+                        <table width="400" border="4" cellpadding="8" cellspacing="0" style="border-color:blue;boder-style:outset">
+
+                                <tr>
+
+                                        <input type='hidden' name="9"></font>
+
+                                        <td name="10" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="11" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="12" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="13" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="14" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="15" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="16" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="17" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="18" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="19" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="20" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="21" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="22" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="23" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="24" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="25" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="26" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="27" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="28" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="29" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="30" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="31" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="32" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="33" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="34" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="35" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="36" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="37" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="38" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="39" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="40" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="41" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="42" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="43" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="44" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="45" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="46" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="47" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="48" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="49" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="50" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="51" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="52" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="53" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="54" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="55" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="56" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="57" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="58" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="59" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="60" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="61" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="62" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="63" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="64" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="65" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="66" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="67" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="68" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="69" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="70" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="71" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="72" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="73" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="74" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="75" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="76" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="77" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="78" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="79" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td name="80" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="81" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="82" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="83" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="84" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="85" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="86" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="87" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="88" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                        <td name="89" onclick="javascript:checkClick(this.style);">
+
+                                        </td>
+
+                                </tr>
+
+                        </table>
+
+                </td>
+
+        </tr>
+
+        <tr>
+
+                <td align="center">
+
+                        <form name="buzzy">
+
+                                <table width="400" border="0" cellpadding="8" cellspacing="0">
+
+                                        <tr>
+
+                                                <td>
+
+
+
+                                                </td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                                <td align="left">
+
+                                                        <b>Score:</b><input type="text" name="txtScore" value=0 readonly char="10" style="font-weight:bold;" style="width:75px">
+
+                                                </td>
+
+                                                <td align="center">
+
+                                                        <input type="button" name="btnStart" value="Start" onclick="javascipt:document.buzzy.btnStart.disabled = true;initialize();" style="width:75px">
+
+                                                </td>
+
+                                                <td align="right">
+
+                                                        <b>Time:</b><input type="text" name="txtTime" value=60 readonly char="10" style="font-weight:bold;" style="width:75px">
+
+                                                </td>
+
+                                        </tr>
+
+                                </table>
+
+                        </form>
+
+                </td>
+
+        </tr>
+
+        <tr>
+
+                <td align="center">
+
+                        <table width="400" border="0" cellpadding="8" cellspacing="0">
+
+                                <tr>
+
+                                        <td align="center">
+
+                                                <strong><font face="Arial, Helvetica, sans-serif" size="6">Buzzy!!</font></strong>
+
+                                        </td>
+
+                                </tr>
+
+                                <tr>
+
+                                        <td>
+
+                                                The objective of this game is to click on as many Green Boxes as possible.
+
+                                                The time limit is 60 seconds. Let's check your reflexes, how many you can hit.
+
+                                                Enjoy and Best of luck.
+
+                                        </td>
+
+                                </tr>
+
+                        </table>
+
+                </td>
+
+        </tr>
+
+</table>
+
+
+
+<p><center>
+
+<font face="arial, helvetica" size"-2">Free JavaScripts provided<br>
+
+by <a href="http://javascriptsource.com">The JavaScript Source</a></font>
+
+</center><p>
+
+
+
+<!-- Script Size:  12.92 KB -->
+</head>
+
+<BODY>
+
+
+
+</body>
+</html>

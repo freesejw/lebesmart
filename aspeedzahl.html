@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+       
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    
+    border: 1px red solid;
+     background-color: #FFEFDB;
+   cursor: url(Images/fadenkreuz.png),  auto; 
+
+
+}
+</style>
+</head>
+<body onload="ladeGame()"></body>
+<body >
+    <canvas id = "findeZahl"></canvas>
+<script>
+
+
+var canv = document.getElementById("findeZahl");
+var ctx = canv.getContext("2d");
+canv.width=500;
+canv.height=550;
+
+var xAbstand=30,yAbstand = 90;     // Verschiebt die Matrix nach rechts und unten
+var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
+var breite = 43, hoehe=43; // Abmessungen der Zellen
+var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
+var anzahlFelder = zeilenZahl*spaltenZahl;
+
+var xCoord = [];  // x Koordinate links oben im Feld
+var yCoord = [];  // y Koordinate links oben im Feld
+var zahlenSpeicher= [];  // zahlenspeicher enthält die ziffer der Matrix als Vektor
+var indexReihe = []; // enhält die Indizes der ausgewählten Zahl ( ziffern der Zahl)
+var indexDoppelt = [];
+var audio;
+var punkteGesamt = new Array();
+var trefferListe = new Array();
+var treffer;
+var xPos, yPos,xclick, yclick;;
+var zaehlerTreffer,anzahlTreffer,durchLauf;
+var rundeAus;
+var blocken;
+var bgColor="lightblue";
+
+var zeitSchranke = 8; // max. Zeit zum finden der Zahl in Sekunden
+var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
+
+var xBasis=20, yBasis=490, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Start"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
+
+
+var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na: "Mehr Zeit", x: (xBasis + xtestdis -10+  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na: "Weniger Zeit", x: ((xBasis + xtestdis-10) + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+
+
+
+function ladeGame(){
+    meldung("Steigere deine Denk - Geschwindigkeit","20" ,"Arial","black",xAbstand, 30); 
+    meldung("Finde die Zahl, die bei Spielbeginn ( Go on) erscheint","18" ,"Arial","black",xAbstand, 60); 
+    meldung("Suchzeit: " +  zeitSchranke + " Sek.","18","Arial","black",5 + xAbstand + breite* spaltenZahl, 470);
+    ermittleBasisZahlen(zeilenZahl,spaltenZahl);
+    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
+    buttonErstellen();
+   buttonText();
+   anzahlTreffer=0;
+   durchLauf=0;
+   blocken=false;
+}
+
+
+function start() { 
+   
+    ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
+    
+    zaehlerTreffer=0;
+    durchLauf++; 
+    zeitAusgang = 0;
+    zahlenSpeicher=[];
+    indexReihe=[];
+    zeitAusgang=0;
+    rundeAus=false;
+    blocken=true
+    ctx.clearRect(xBasis,460,280,-20); // löscht zeitlimit überschritten  
+    //ctx.clearRect(xAbstand+ breite* spaltenZahl, 80,460,100);  
+    ctx.clearRect(xAbstand+2*30 + breite* spaltenZahl, 40+(2*yAbstand),150,-50) // löscht text2 ( gesuchte Zahl);
+    ermittleBasisZahlen(zeilenZahl,spaltenZahl); // ermittelt die Zahlen für die Matrix, gespeichert in zahlenSpeicher
+    //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
+    auswahlZahlen(zeilenZahl,spaltenZahl);  // ermittelt die Zahl,die gesucht werden soll 
+    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
+    id=setInterval(zeitPruef,1000);
+        }
+
+function zeitPruef()
+   {
+    // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
+    // gesteuert über zeitAusgang und zeitSchranke
+
+    zeitAusgang=zeitAusgang + 1;
+ 
+    if(zeitAusgang >= zeitSchranke)  
+        { 
+            ctx.clearRect(xBasis,460,230,-20);      
+            meldung("Zeitlimit überschritten" ,"18","Arial","red",xBasis,460);  
+            akustischeMeldung("audio/up.mp3");           
+            clearInterval(id);
+            blocken=false;
+            }
+    if (rundeAus)
+        {
+            clearInterval(id);
+            blocken=false;
+        }
+    }
+
+canv.addEventListener('click', function(event) { 
+  
+
+        xclick = event.clientX;
+        yclick = event.clientY; 
+        xclick = xclick - xAbstand ;
+        yclick = yclick - yAbstand ;
+       
+        //if ((xCoord[0] < xclick) && (xclick < (xCoord[spaltenZahl-1]) + breite ) &&
+        //        (yCoord[0] < yclick) && (yclick < yCoord[zeilenZahl-1]+ hoehe)){
+
+        var treffer=false;    
+        var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des geklicktenb FGeldes
+
+        if (zwert>=0) { treffer= true}
+            if ( treffer == true) 
+            {
+            
+                var zw =indexReihe.indexOf(zwert);
+            
+                if (zw>=0)
+                        {
+                            zaehlerTreffer++;
+                            xxclick=(Math.floor(xclick/breite))*breite;
+                            yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+                            ctx.fillStyle="green";
+                            ctx.font= "bolder 22px Arial";
+                            ctx.fillText(zahlenSpeicher[indexReihe[zw]],xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);
+                            ctx.lineWidth="5";
+                            ctx.strokeStyle="green";       
+                            ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe);         
+                            treffer=false;
+                                                 }
+                        else {
+                            ctx.clearRect(xBasis,460,200,-20);
+                            meldung("Falsches Feld ==> go on" ,"18","Arial","red",xBasis,460);  
+                            akustischeMeldung("audio/up.mp3"); 
+                            rundeAus=true ;
+                            blocken=false;
+                                            
+                            }
+            }
+            if (zaehlerTreffer == indexReihe.length){
+               alert("hi");
+                anzahlTreffer++;               
+                var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
+                meldung(" Bisher : " + aa ,"18","Arial","black",xBasis,420); 
+                rundeAus=true;
+                blocken=false;
+            }
+        //}    
+}, false); 
+
+canv.addEventListener('click', function(e)
+     {
+       
+        let rect = angetippt(rects, e.offsetX, e.offsetY);        
+        if (rect) 
+        {
+            auswahlButton();           
+        } 
+
+    }, false);
+
+function buttonErstellen()
+{
+       for (var i = 0, len = rects.length; i < len; i++) 
+       {
+        ctx.strokeStyle="blue";
+        ctx.lineWidth="5";
+        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);            
+        ctx.fillStyle=rects[i].col;  
+        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+       }
+}
+
+function buttonText()
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+    for (var i = 0, len = texts.length; i < len; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }      
+}
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;
+            
+                }
+    }
+    return isCollision;
+}
+
+function auswahlButton()
+    {
+        switch (getipptRechteck) 
+        {
+            case 0:  
+            if (blocken==false) {start();  }                  
+            break;
+            case 1:
+                zeitSchranke=plusMinus(zeitSchranke,1,2,60);
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","18","Arial","blue",5 +xAbstand + breite* spaltenZahl, 470);                         
+                break;
+            case 2:
+                zeitSchranke=plusMinus(zeitSchranke,-1,2,60);
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","18","Arial","blue",5 + xAbstand + breite* spaltenZahl, 470);                            
+                break;
+            default:
+                alert("Sorry");
+        }             
+    }
+
+function getroffen(){
+    {
+        xxclick=(Math.floor(xclick/breite))*breite;
+        yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+        
+        meldung(zahlenSpeicher[indexReihe[1]] ,"18","Arial","black",xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);    
+        treffer=false;
+                }
+
+}    
+
+function aufbauMatrix(zeilen,spalten,breite,hoehe,zahlen)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+    for (let i = 0; i<zeilen; i++)
+    {
+        var y=hoehe*i;
+        for(let j=0;j < spalten;j++)
+        {            
+            var x=breite*j;  
+            ctx.lineWidth="1";
+            ctx.strokeStyle="red";       
+            ctx.strokeRect(x+xAbstand,y+yAbstand,breite,hoehe);
+            ctx.fillStyle="black";
+            ctx.font= "22px Arial";
+
+            var xx=zahlenSpeicher[i*spalten +j];            
+            ctx.fillText(xx,x+xAbstand + xDist,y+yAbstand+yDist);
+           
+            //linke, obere Koordinaten der Rechtecke
+            xCoord.push(x);
+            yCoord.push(y);
+               }
+    }   
+}
+
+function ermittleBasisZahlen(zeilen,spalten)
+    {
+    for (let i = 0;i<zeilen*spalten;i++ )
+            {
+            zahlenSpeicher.push(random(10)-1);
+            }
+            console.log ("  zahlenSpeicher ",zahlenSpeicher);
+
+    }
+
+function auswahlZahlen(zeilen,spalten){
+ var laenge; 
+ var zw=random(9);
+ var anz = zeilen*spalten;
+ var text1="Suche : "  ;
+ var text2="";
+ var zwZahl="";
+// zw ermittelt die Anzahl der Ziffern der zu findenen Zahl
+if (zw < 7) {laenge=2;}    
+    else {laenge=3 ;}  
+
+// finden StartIndex, der ersten Ziffer in der zu suchenden Zahl 
+var startIndex=random((zeilen*spalten)-laenge);
+var xz = Math.floor(startIndex/spalten);
+var xs = startIndex - (xz*spalten)+1;
+
+if (xs > (spalten - laenge) + 1)
+    {
+        startIndex=(xz+1)*spalten - laenge;
+    }
+
+
+// ermitteln der IndexReihe , der Zahl insgesamt
+for (i=0; i < laenge;i++)
+{
+    indexReihe.push(startIndex + i);
+    text2= text2+zahlenSpeicher[indexReihe[i]];
+    zwZahl=zwZahl+ zahlenSpeicher[indexReihe[i]] + ",";
+} 
+console.log("zwZahl   " + zwZahl);
+// prüft ob ausgesuchte Zahl öfters auftritt
+
+var patt1 = new RegExp(zwZahl,"g");
+
+while (patt1.test(zahlenSpeicher)==true)
+  {
+    var zww=patt1.lastIndex-zwZahl.length;
+    zww=(zww+2)/2-1;
+    indexDoppelt.push(zww);
+    console.log("  zww  " + zww);
+  }
+  
+console.log(indexDoppelt);
+// Tritt zahl mehrmals auf, dann erfolgt Korrektur
+  if (indexDoppelt.length>1)
+      {
+          zahlenSpeicher=aendereSpeicherZahlen(indexDoppelt,indexReihe,zahlenSpeicher)
+          console.log("doppelter index" + zahlenSpeicher);
+      }
+ 
+
+  function aendereSpeicherZahlen(doppelt,basis,zahlen){
+          // doppelt enthält ersen index der gleichen Zahlen wie die ausgewählte Zahl
+          //basis enthälte die indizes der ausgeählten Zahl ( der Ziffern)
+          // zahlen enthälte die Ziffern der Martix als Vektor
+  
+  
+  // Die zu suchende Zahl wird aus den gefundenen Zahlen entfernt
+  for( var i = 0; i < doppelt.length; i++)
+      { 
+          if ( doppelt[i] == basis[0]) 
+            {
+                    doppelt.splice(i, 1); 
+            }
+        
+      }
+  // die doppelten Zahlen werden durch neue Zufallszahlen ersetzt
+  for ( var i=0;i<doppelt.length;i++)
+      {
+       for (var j=0;j<basis.length;j++){      
+       zahlen[doppelt[i]+j]=random(9);  
+       }
+
+  }
+return zahlen;
+}
+    meldung(text1,"18","Arial","black",xAbstand+30 + breite* spaltenZahl, 2*yAbstand);  
+    meldung(text2,"bolder 30","Arial","red",xAbstand+2*30 + breite* spaltenZahl, 40+(2*yAbstand));  
+} 
+
+function feldNummerSchuss(xc,yc)
+{    // xc und yc sind die Koordinaten des Klicks 
+    // Liefert deie Nummer des Feldes wenn ein Treffer erfolgte. Dabei wird noch nicht nach Gruppe unterschieden
+    var zw;
+    for (var i=0;i<anzahlFelder;i++){
+
+            if ((xCoord[i] < xc) && (xc < xCoord[i] + breite ) &&
+                (yCoord[i] < yc) && (yc < yCoord[i]+ hoehe))
+                {
+                zw=i;   
+                }
+        }
+    return zw;  
+}
+
+ function random(max)
+          {
+            return Math.floor((Math.random() *max)+1);
+          }
+
+
+function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 10 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+function plusMinus(ausgang,delta,unten,oben)
+{
+ // Mehr oder weniger Zeit zum Suchen
+  let anz=ausgang; 
+  if ((anz + delta)< oben && delta>0)
+  {anz=anz + delta; }
+  if ((anz + delta)> unten && delta<=0)
+  {anz=anz + delta; }
+  
+  return anz;
+}
+
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    }
+
+
+</script>
+
+
+</body>
+</html>

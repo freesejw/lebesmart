@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+
+Canvas {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   border: 1px red solid;
+   background-color: #FFEFDB;
+}
+</style>
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="500" height="600"></canvas>
+     
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var erg1, erg2;
+var operand;
+var bgColor="lightblue";
+
+var myVar;
+var reaktionsZeit=2, schrittWeite=0.5,maxDurchlaeufe=3;
+var durchLaeufe, treffer;
+var z1, z2;
+var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+var yBasis2= 460, wBasis2=120, yErhoehung=50; 
+
+var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+
+             {x: xBasis, y: yBasis1 , w: wBasis2, h: hBasis,col: "lightgreen" },
+             {x: 280, y: yBasis1 , w: wBasis2, h: hBasis,col: "lightgreen"}];
+
+
+
+var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
+           {na: "Abbruch", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+           {na: "Mehr Zeit", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+           {na: "Weniger", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis },
+
+           {na: "Links ??", x: (xBasis + xtestdis ),y: yBasis1  + ytextdis },
+           {na: "Rechts ??", x: (280 + xtestdis ),y: yBasis1 +  ytextdis }];
+
+
+function ladeGame()
+    {
+        boxMeldung(("? ? ?"),xBasis,120,140,70);
+        boxMeldung(("? ? ?"),280,120,140,70);
+        meldung("Steigere deine Denk - Geschwindigkeit","20px Arial","black",65, 35);  
+        meldung("Liefert links oder rechts ein hoeheres Ergebnis?","18px Arial","black",xBasis, 100); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","20px Arial","black",xBasis ,320); 
+        meldung(( "Anzahl Treffer :  0"),"18px Arial","black",xBasis, 350);   
+        buttonErstellen()
+        buttonText();
+    };
+
+
+function start()
+    {
+        ctx.clearRect(xBasis, 380, 300, -22);   // Löschen Trefferquote
+        ctx.clearRect(xBasis,350,200,-25);  // Löschen Treffer
+        treffer=0;
+        meldung(( "Anzahl Treffer :  " + treffer),"18px Arial","black",xBasis, 350);  
+      
+        durchLaeufe=0;
+        myVar = setInterval(iteration, reaktionsZeit*1000); 
+        //iteration();
+        
+    }
+
+function iteration()
+{
+        durchLaeufe++;      
+        if (durchLaeufe <= maxDurchlaeufe)
+        {           
+            z1=random(10);
+            z2=random(10);
+            erg1  = auswahlOperand(z1,z2);   
+        
+            boxMeldung((z1.valueOf() +"  " + operand.valueOf() + "  " + z2.valueOf()),xBasis,120,140,70,z1,z2,operand);
+       
+      
+            do {
+                z1=random(10);
+                z2=random(10);
+                erg2  = auswahlOperand(z1,z2);
+            
+                }
+                while(erg1 == erg2);
+
+            boxMeldung((z1.valueOf() +"  " + operand.valueOf() + "  " + z2.valueOf()),280,120,140,70,z1,z2,operand);       
+           // myVar = setInterval(iteration, reaktionsZeit*2000); 
+         }
+
+        else
+            {                    
+            clearInterval(myVar);
+            abbruch();
+            }
+}
+
+function abbruch()
+    {
+        var quote=(treffer)/(durchLaeufe-1);
+        quote=Math.round(quote*100);
+        ctx.clearRect(xBasis, 380, 300, -22);               
+        meldung("Deine Trefferquote :  " + quote + " Prozent","20px Arial","red",xBasis,380);  
+        clearInterval(myVar);   
+        console.log("treffer  " + treffer);
+    }
+
+    canv.addEventListener('click', function(e)
+     {       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        if (rect) 
+        {
+            auswahlButton();   //Liefert die nummer des aneglickten Buttons             
+        }}, false);
+
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;           
+            
+                }
+    }
+    return isCollision;
+}
+
+function auswahlButton()
+    {
+        switch (getipptRechteck) 
+                {
+                    case 0:                                         
+                        start();
+                        break;
+                    case 1:
+                        abbruch();                        
+                        break;
+                    case 2:
+                        plusMinus(schrittWeite);                           
+                        break;
+                    case 3:
+                        plusMinus(-schrittWeite);                           
+                        break;
+                     case 4:
+                     //links getippt
+                        vergleich(4);                        
+                        break;  
+                     case 5:
+                     //rechts getippt
+                        vergleich(5);                        
+                        break;                 
+                    default:
+                       alert("ups");
+                }             
+    }
+
+function vergleich(a)
+{
+    
+    
+        //ctx.clearRect(xBasis, 300, 400, -20);        
+            if((a==4 && erg1>erg2) ||(a==5 && erg1<erg2)) 
+            {
+                treffer++;   
+                ctx.clearRect(xBasis,350,200,-25);     
+                meldung(( "Anzahl Treffer :  " + treffer),"18px Arial","black",xBasis, 350);  
+                
+            }
+      
+    ctx.clearRect(280,120,140,70);
+    ctx.clearRect(xBasis,120,140,70); 
+}
+
+function buttonErstellen()
+{
+       for (var i = 0, len = rects.length; i < len; i++) {
+        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+        ctx.stroke();  
+        ctx.fillStyle=rects[i].col;  
+        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+        
+      }
+}
+
+function buttonText()
+{ 
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+
+    for (var i = 0, len = texts.length; i < len; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }
+        
+}
+
+function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+function auswahlOperand(a1,a2)
+    {
+        var vv= random(1);
+        //console.log("  operand  " + vv);
+        switch(vv)
+        {
+            
+            case 0:
+                operand= "+";
+               return z1 + z2;               
+                break;
+            case 1:
+                operand="-"; 
+                return z1 - z2;   
+                break;
+            case 2:
+                operand="*"; 
+                return z1 * z2;   
+                break;
+             case 3:
+                operand= "+";
+                return z1 + z2;
+                break;
+            case 4:
+                operand="-"; 
+                return z1 - z2;   
+                break;   
+            default:
+            alert("was falsch");
+        } 
+    }
+
+function boxMeldung(melde,x,y,w,h,k1,k2,o)
+    {       
+        ctx.rect(x,y,w,h);
+        ctx.stroke();
+        ctx.fillStyle=bgColor;
+        ctx.fillRect(x,y,w,h);      
+        meldung(melde,"25px Arial","black",x+30,y+45  );
+    }
+
+function plusMinus(sw)
+{
+ reaktionsZeit=reaktionsZeit + sw 
+ var lg = 20 + ctx.measureText("Zeit zum Reagieren = " +  reaktionsZeit + " Sek").width 
+ ctx.clearRect(xBasis,320, lg, -20); 
+ meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","20px Arial","black",xBasis ,320);
+}
+
+function meldung(text, schrift,farbe,xm,ym)
+   {
+        ctx.fillStyle = farbe;
+        ctx.font = schrift;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+</script>
+
+
+       
+<p>Enjoy !</p>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>A script on this page starts this clock:</p>
+
+<p id="demo"></p>
+
+<button onclick="myStopFunction()">Stop time</button>
+
+<script>
+var ii=0;
+var myVar = setInterval(function(){ myTimer() }, 1000);
+
+function myTimer() {
+
+    ii=ii+1;
+    if (ii==3) myStopFunction();
+}
+
+function myStopFunction() {
+    clearInterval(myVar);
+    alert("hallo");
+}
+</script>
+
+</body>
+</html>
