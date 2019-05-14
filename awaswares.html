@@ -255,14 +255,23 @@ function rechteckeText()
         
 }
 
-function plusMinus(sw)
+function plusMinus(ausgang,delta,unten,oben)
 {
-    maxDurchlaeufe=maxDurchlaeufe + sw
- 
- var lg = 20 + ctx.measureText("Anzahl Durchläufe  = " +  maxDurchlaeufe).width 
-
- meldung("Anzahl Durchläufe = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);
+ // Mehr oder weniger Zeit zum Suchen
+  let anz=ausgang; 
+  if ((anz + delta)< oben && delta>0)
+  {anz=anz + delta; }
+  if ((anz + delta)> unten && delta<=0)
+  {anz=anz + delta; }
+  
+  return anz;
 }
+
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    }
 
 function auswahlButton()
     {
@@ -283,9 +292,13 @@ function auswahlButton()
                         abbruch();                        
                         break;
                     case 7:
+                        maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,60);
+                        meldung("Anzahl Durchläufe = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);
                         plusMinus(schrittWeite);                        
                         break;
                      case 8:
+                        maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,60);
+                        meldung("Anzahl Durchläufe = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);
                         plusMinus(-schrittWeite);                        
                         break;
    
