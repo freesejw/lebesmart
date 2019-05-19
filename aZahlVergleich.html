@@ -33,8 +33,8 @@ var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
 
-             {x: xBasis, y: yBasis1 , w: wBasis2, h: hBasis,col: "lightgreen" },
-             {x: 280, y: yBasis1 , w: wBasis2, h: hBasis,col: "lightgreen"}];
+             {x: xBasis, y: 120 , w: wBasis2, h: 3* hBasis,col: "lightgreen" },
+             {x: 280, y: 120 , w: wBasis2, h: 3*hBasis,col: "lightgreen"}];
 
 
 
@@ -43,20 +43,24 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
            {na: "Mehr Zeit", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
            {na: "Weniger", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis },
 
-           {na: "Links !!", x: (xBasis + xtestdis ),y: yBasis1  + ytextdis },
-           {na: "Rechts !!", x: (280 + xtestdis ),y: yBasis1 +  ytextdis }];
+           {na: "Links !!", x: (xBasis + xtestdis ),y: yBasis1  + ytextdis/2 },
+           {na: "Rechts !!", x: (280 + xtestdis ),y: yBasis1 +  ytextdis/2 }];
 
 
 function ladeGame()
     {
-        boxMeldung(("?"),xBasis,120,100,100,25);
-        boxMeldung(("?"),280,120,100,100,25);
-        meldung("Steigere deine Denk - Geschwindigkeit","20px Arial","black",65, 35);  
-        meldung("Ist die Zahl links oder rechts hoeher?","18px Arial","black",xBasis, 100); 
-        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18px Arial","black",xBasis ,360); 
-        meldung(( "Anzahl Treffer :  0"),"18px Arial","black",xBasis, 400);   
+       // boxMeldung(("?"),xBasis,120,100,100,25);
+       // boxMeldung(("?"),280,120,100,100,25);
+        meldung("Steigere deine Denk - Geschwindigkeit","20","Arial","black",65, 35);  
+        meldung("Ist die Zahl links oder rechts höher?","18","Arial","black",xBasis, 100); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","black",xBasis ,360); 
+        meldung(( "Anzahl Treffer :  0"),"18","Arial","black",xBasis, 400);   
         buttonErstellen()
         buttonText();
+        ctx.fillStyle="lightgreen";
+        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
+
     };
 
 
@@ -65,8 +69,12 @@ function start()
         ctx.clearRect(xBasis, 440, 300, -20);   // Löschen Trefferquote
         ctx.clearRect(xBasis,400,200,-20);  // Löschen Anzahl Treffer
         treffer=0;
-        meldung(( "Anzahl Treffer :  " + treffer),"18px Arial","black",xBasis, 400);  
-      
+        meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","black",xBasis, 400);  
+        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
+        ctx.fillStyle="lightred";
+       // ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        //ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
         durchLaeufe=0;
         myVar = setInterval(iteration, reaktionsZeit*1000); 
         
@@ -75,13 +83,16 @@ function start()
 
 function iteration()
 {
-        durchLaeufe++;      
+        durchLaeufe++;  
+        ctx.fillStyle="lightblue";
+        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);    
         if (durchLaeufe <= maxDurchlaeufe)
         {           
             z1=getRnd(1,10); 
             var schriftGroesse=getRnd(15,80);
                 
-            boxMeldung(z1.valueOf() ,xBasis,120,100,100,schriftGroesse);
+            meldung(z1.valueOf() ,schriftGroesse,"Arial","black",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
        
             do {
                 
@@ -90,7 +101,8 @@ function iteration()
                 }
                 while(z1 == z2);
 
-            boxMeldung(z2.valueOf() ,280,120,100,100,schriftGroesse);       
+            meldung(z2.valueOf() ,schriftGroesse,"Arial","black",280 + rects[5].w*.3,120+rects[5].h*0.7);
+             
            // myVar = setInterval(iteration, reaktionsZeit*1000); 
          }
 
@@ -106,7 +118,7 @@ function abbruch()
         var quote=(treffer)/(durchLaeufe-1);
         quote=Math.round(quote*100);
         ctx.clearRect(xBasis, 440, 300, -18);               
-        meldung("Deine Trefferquote war " + quote + " Prozent","18px Arial","red",xBasis,440);  
+        meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","red",xBasis,440);  
         clearInterval(myVar);   
         console.log("treffer  " + treffer);
     }
@@ -126,15 +138,14 @@ function angetippt(rects, x, y) {
     var zw;
     var isCollision = false;
     for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;           
-            
+            var left = rects[i].x, right = rects[i].x+rects[i].w;
+            var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+            if (right >= x
+                && left <= x
+                && bottom >= y
+                && top <= y) {
+                    isCollision = rects[i];   
+                    getipptRechteck=i;          
                 }
     }
     return isCollision;
@@ -176,18 +187,17 @@ function vergleich(a)
             if((a==4 && z1>z2) ||(a==5 && z1<z2))
             {
                 treffer++;   
-                ctx.clearRect(xBasis,400,200,-20);     
-                meldung(( "Anzahl Treffer :  " + treffer),"18px Arial","black",xBasis, 400);  
+               // ctx.clearRect(xBasis,400,200,-20);     
+                meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","black",xBasis, 400);  
                 
-            }
-      
-    ctx.clearRect(280,120,100,100);
-    ctx.clearRect(xBasis,120,100,100); 
+            }    
+    
+    
 }
 
 function buttonErstellen()
 {
-       for (var i = 0, len = rects.length; i < len; i++) {
+       for (var i = 0, len = rects.length; i < len -2; i++) {
         ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
         ctx.stroke();  
         ctx.fillStyle=rects[i].col;  
@@ -201,7 +211,7 @@ function buttonText()
     ctx.fillStyle = "black";
     ctx.font = "18px Arial";
 
-    for (var i = 0, len = texts.length; i < len; i++) 
+    for (var i = 0, len = texts.length; i < len-2; i++) 
     {
        ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
         
@@ -209,41 +219,37 @@ function buttonText()
         
 }
 
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
-
-
-
-function boxMeldung(melde,x,y,w,h,sg)
-    {       
-        ctx.rect(x,y,w,h);
-        ctx.stroke();
-        ctx.fillStyle=bgColor;
-        ctx.fillRect(x,y,w,h);      
-        meldung(melde,sg+"px Arial","black",x+50,y + 80  );
-    }
-
-function plusMinus(sw)
-{
- reaktionsZeit=reaktionsZeit + sw 
- var lg = 20 + ctx.measureText("Zeit zum Reagieren = " +  reaktionsZeit + " Sek").width 
- ctx.clearRect(xBasis,360, lg, -20); 
- meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18px Arial","black",xBasis ,360);
-}
-
-function meldung(text, schrift,farbe,xm,ym)
-   {
-        ctx.fillStyle = farbe;
-        ctx.font = schrift;
-        ctx.fillText(text, xm ,ym); 
-    }
 
   function getRnd(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 } 
 
+function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 10 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }
+
+function plusMinus(ausgang,delta,unten,oben)
+{
+ // Mehr oder weniger Zeit zum Suchen
+  let anz=ausgang; 
+  if ((anz + delta)< oben && delta>0)
+  {anz=anz + delta; }
+  if ((anz + delta)> unten && delta<=0)
+  {anz=anz + delta; }
+  
+  return anz;
+}
+
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    }
 </script>
 
 

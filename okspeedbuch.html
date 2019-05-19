@@ -66,8 +66,8 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
 
 
 function ladeGame(){
-    meldung("Steigere deine Denk - Geschwindigkeit","20" ,"Arial","black",xAbstand, 30); 
-    meldung("Finde Buchstabenkombination, die bei Spielbeginn erscheint","16" ,"Arial","black",xAbstand, 60); 
+    meldung("Steigere deine Denk - Geschwindigkeit","20" ,"Arial","black",xBasis, 30); 
+    meldung("Finde die Buchstabenkombination, die bei Spielbeginn erscheint","16" ,"Arial","black",xBasis, 60); 
     meldung("Suchzeit: " +  zeitSchranke + " Sek.","18","Arial","black",5 + xAbstand + breite* spaltenZahl, 470);
     ermittleBasisBuch(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,buchstabenSpeicher);
