@@ -20,13 +20,14 @@ Canvas {
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
 var bgColor="lightblue";
-
+var audi0;
 var myVar;
-var reaktionsZeit=2, schrittWeite=0.5,maxDurchlaeufe=10;
+var reaktionsZeit=1.5,maxDurchlaeufe=10;
 var durchLaeufe, treffer;
 var z1, z2;
+var offenButton; 
 var xBasis=20, yBasis1=280, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var yBasis2= 460, wBasis2=120, yErhoehung=50; 
+var yBasis2= 460, wBasis2=120, yErhoehung=50;
 
 var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
@@ -52,15 +53,18 @@ function ladeGame()
        // boxMeldung(("?"),xBasis,120,100,100,25);
        // boxMeldung(("?"),280,120,100,100,25);
         meldung("Steigere deine Denk - Geschwindigkeit","20","Arial","black",65, 35);  
-        meldung("Ist die Zahl links oder rechts höher?","18","Arial","black",xBasis, 100); 
+        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","18","Arial","black",xBasis, 100); 
+        meldung("Es gibt 10 Durchgänge, dann Neustart mit Go on Button","18,"," Arial","black",xBasis ,320); 
         meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","black",xBasis ,360); 
         meldung(( "Anzahl Treffer :  0"),"18","Arial","black",xBasis, 400);   
         buttonErstellen()
         buttonText();
-        ctx.fillStyle="lightgreen";
+        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);  
+        ctx.fillStyle="mistyrose";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
-
+        offenButton=true;
     };
 
 
@@ -70,40 +74,37 @@ function start()
         ctx.clearRect(xBasis,400,200,-20);  // Löschen Anzahl Treffer
         treffer=0;
         meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","black",xBasis, 400);  
-        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
-        ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
-        ctx.fillStyle="lightred";
-       // ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
-        //ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
+       // ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+       // ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);        
         durchLaeufe=0;
         myVar = setInterval(iteration, reaktionsZeit*1000); 
-        
+        offenButton=false;
         
     }
 
 function iteration()
 {
         durchLaeufe++;  
-        ctx.fillStyle="lightblue";
+        ctx.fillStyle="lightgreen";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);    
         if (durchLaeufe <= maxDurchlaeufe)
         {           
             z1=getRnd(1,10); 
-            var schriftGroesse=getRnd(15,80);
+            var schriftGroesse1=getRnd(15,90);
                 
-            meldung(z1.valueOf() ,schriftGroesse,"Arial","black",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
+            meldungOhne(z1.valueOf() ,schriftGroesse1,"Arial","black",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
        
             do {
                 
                 z2=getRnd(1,10);
-                schriftGroesse=getRnd(15,80);
+                schriftGroesse2=getRnd(15,90);
+                //console.log(" nr 1 " + schriftGroesse1 + " nr 2   " + schriftGroesse2 + " hallo  " + (Math.abs( schriftGroesse1  - schriftGroesse2))) ;
                 }
-                while(z1 == z2);
+                while ((Math.abs(schriftGroesse1-schriftGroesse2 ) < 25) || (z1 == z2));
 
-            meldung(z2.valueOf() ,schriftGroesse,"Arial","black",280 + rects[5].w*.3,120+rects[5].h*0.7);
-             
-           // myVar = setInterval(iteration, reaktionsZeit*1000); 
+            meldungOhne(z2.valueOf() ,schriftGroesse2,"Arial","black",280 + rects[5].w*.3,120+rects[5].h*0.7);
+            //console.log("Zufallstahl #1: " + z1 + " | Zufallszahl #2: " + z2 + " | Differenz: " + (z1-z2) + " | Schriftgrößenunterschied: " + (Math.abs( schriftGroesse1  - schriftGroesse2)))
          }
 
         else
@@ -114,13 +115,20 @@ function iteration()
 }
 
 function abbruch()
+
+
+
     {
+        offenButton=true;
         var quote=(treffer)/(durchLaeufe-1);
         quote=Math.round(quote*100);
         ctx.clearRect(xBasis, 440, 300, -18);               
         meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","red",xBasis,440);  
         clearInterval(myVar);   
         console.log("treffer  " + treffer);
+        ctx.fillStyle="lightgreen";
+        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
     }
 
 
@@ -129,8 +137,8 @@ function abbruch()
         var rect = angetippt(rects, e.offsetX, e.offsetY);
         if (rect) 
         {
-            auswahlButton();  
-            //vergleich();         
+            auswahlButton(); 
+                   
         }}, false);
 
 
@@ -162,10 +170,18 @@ function auswahlButton()
                         abbruch();                        
                         break;
                     case 2:
-                        plusMinus(schrittWeite);                           
-                        break;
+                    if (offenButton==true)
+                    {
+                    reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","black",xBasis ,360);                      
+                    }                                       
+                    break;
                     case 3:
-                        plusMinus(-schrittWeite);                           
+                    if (offenButton==true)
+                    {
+                    reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","black",xBasis ,360); 
+                    }                     
                         break;
                      case 4:
                      //links getippt
@@ -183,15 +199,15 @@ function auswahlButton()
 function vergleich(a)
 {
     
-        //ctx.clearRect(xBasis, 300, 400, -20);        
+       
             if((a==4 && z1>z2) ||(a==5 && z1<z2))
             {
                 treffer++;   
-               // ctx.clearRect(xBasis,400,200,-20);     
+                ctx.clearRect(xBasis,400,200,-20);     
                 meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","black",xBasis, 400);  
                 
             }    
-    
+    else{akustischeMeldung("audio/up.mp3");   }
     
 }
 
@@ -227,11 +243,20 @@ function buttonText()
 function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
    {
         var lg = 10 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
         ctx.fillStyle = farbe;        
         ctx.font = schriftGroesse + "px "+ schriftTyp;
         ctx.fillText(text, xm ,ym); 
     }
+
+ function meldungOhne(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 10 + ctx.measureText(text).width 
+       //ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }   
 
 function plusMinus(ausgang,delta,unten,oben)
 {
