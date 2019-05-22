@@ -32,14 +32,15 @@ var zeiten=new Array;
 var fehler=0;
 var bgColor="lightblue";
 var elapsedTime;
-var xBasis=20, yBasis=340, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+var warten;
+var audio;
+var noClickStop;
 
+var xBasis=20, yBasis=340, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Start"},
              {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
              {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
-
 var bild = {x:200, y: 60, w: 100,h: 100 };
-
 var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
            {na: "Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
            {na: "Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
@@ -54,7 +55,8 @@ function ladeGame()
         einlesenBilder();
         zeigBild("ImageVerkehr/auge.gif");
         buttonErstellen();  // Start ; Stop ; Abbruch  
-        buttonText();   
+        buttonText();  
+        noClickStop=true; 
     }
 
     canv.addEventListener('click', function(e)
@@ -73,26 +75,33 @@ function start()
     {
         ctx.clearRect(200, 190, 250, -60);
         ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
-        setzeAmpel("rot");  
-        
+        setzeAmpel("rot");          
         startIndex=random(anzahlBilder);    
         zeigBild(pic[startIndex]); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
-        myVar = setTimeout(folgeBilder, 3000);        
+
+        warten=0;
+        myVar = setInterval(folgeBilder, 1000); 
+               
     }
 
-function folgeBilder(){
-    setzeAmpel("gruen");
-    clearTimeout(myVar);
-    aktIndex=random(anzahlBilder); // 
-    zeigBild(pic[aktIndex])  ; // aktuelle Bilder. Sie werden mit Basisbild verglichen
-    startTime = Date.now();
-    console.log ("  aktIndex  " + aktIndex );  
-    ident=setTimeout(folgeBilder, 1000);  
-    
-}
+function folgeBilder()
+    {
+       warten++;
+       if (warten > 2)
+       {
+     if (warten==3){   
+        setzeAmpel("gruen"); 
+        akustischeMeldung("audio/schuss.mp3"); 
+        noClickStop=false;
+     }
+        aktIndex=random(anzahlBilder); // 
+        zeigBild(pic[aktIndex])  ; // aktuelle Bilder. Sie werden mit Basisbild verglichen
+        startTime = Date.now(); 
+       }   
+    }
 
 function stop()
-// Wenn Basisbild mit dem geklickten Bild indentisch ist Treffermeldung und Abbruch
+    // Wenn Basisbild mit dem geklickten Bild indentisch ist Treffermeldung und Abbruch
     {
     
      uebungStart=true;
@@ -102,9 +111,7 @@ function stop()
             elapsedTime = Date.now() - startTime;
             elapsedTime = (elapsedTime / 1000).toFixed(2);       
             zeiten.push(elapsedTime)
-            boxMeldung(box.x,box.y,box.w,box.h,elapsedTime);
-            
-       //alert(zeiten);
+            boxMeldung(box.x,box.y,box.w,box.h,elapsedTime);     
         }
         else
             {            
@@ -113,17 +120,18 @@ function stop()
             }
 
         zeigBild("ImageVerkehr/auge.gif");
-       
-        clearTimeout(ident);   
+        noClickStop=true;
+        clearInterval(myVar);   
     }
  
 function einlesenBilder()
+     // wird beim Spielinitialisierung ladeGame aufgrufen 
     {
         for (i=0;i<= anzahlBilder;i++)
         {
-            pic[i]=  "ImageVerkehr/verk" + i + ".jpg" 
+            pic[i]=  "ImageVerkehr/verk" + i + ".jpg" ;
         } 
-    };
+    }
 
 function zeigBild(a)
 {
@@ -140,7 +148,7 @@ function setzeAmpel(a)
     var img = new Image();
     img.onload = function ()
      {
-        ctx.drawImage(img, 50 ,120,30,70);
+        ctx.drawImage(img, 90 ,75,40,90);
      }
     img.src = ("ImageVerkehr/ampel" + a + ".jpg");
 }
@@ -199,7 +207,8 @@ function auswahlButton()
                         start();                       
                         break;
                     case 1:
-                        stop();                        
+                    if(noClickStop==false){
+                        stop(); }                       
                         break;
                     case 2:
                         abbruch();                        
@@ -212,7 +221,7 @@ function auswahlButton()
 function abbruch()
     {
         setzeAmpel("rot");    
-        clearTimeout(ident);
+        clearInterval(myVar);
         zeigBild("ImageVerkehr/auge.gif");
     }
 
@@ -231,6 +240,20 @@ function boxMeldung(x,y,w,h,time)
         meldung(("Vergleich:  "  + zeiten),"12px Arial","black", x + 10, y+ h*0.66 );
     }
 
+    function omeldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+   {
+        var lg = 20 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.fillText(text, xm ,ym); 
+    }
+   
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    } 
 
 </script>
   
