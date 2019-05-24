@@ -54,10 +54,24 @@ function ladeGame()
         meldung("Verbessere die Reaktionszeit / übe die Konzentration","20px Arial","black",10, 25);    
         einlesenBilder();
         zeigBild("ImageVerkehr/auge.gif");
-        buttonErstellen();  // Start ; Stop ; Abbruch  
-        buttonText();  
+        buttonErstellen();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
     }
+
+function start()
+    {   
+        ctx.clearRect(200, 190, 250, -60);
+        ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
+        setzeAmpel("rot");          
+        startIndex=random(anzahlBilder);    
+        zeigBild(pic[startIndex]); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
+
+        warten=0;
+        myVar = setInterval(folgeBilder, 1000); 
+           
+    }
+
+
 
     canv.addEventListener('click', function(e)
      {
@@ -70,30 +84,19 @@ function ladeGame()
 
     }, false);
 
-function start()
 
-    {
-        ctx.clearRect(200, 190, 250, -60);
-        ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
-        setzeAmpel("rot");          
-        startIndex=random(anzahlBilder);    
-        zeigBild(pic[startIndex]); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
-
-        warten=0;
-        myVar = setInterval(folgeBilder, 1000); 
-               
-    }
 
 function folgeBilder()
     {
        warten++;
        if (warten > 2)
        {
-     if (warten==3){   
-        setzeAmpel("gruen"); 
-        akustischeMeldung("audio/schuss.mp3"); 
-        noClickStop=false;
-     }
+            if (warten==3)
+            {   
+                setzeAmpel("gruen"); 
+                akustischeMeldung("audio/schuss.mp3"); 
+                noClickStop=false;
+            }
         aktIndex=random(anzahlBilder); // 
         zeigBild(pic[aktIndex])  ; // aktuelle Bilder. Sie werden mit Basisbild verglichen
         startTime = Date.now(); 
@@ -178,25 +181,21 @@ function angetippt(rects, x, y) {
 
 function buttonErstellen()
 {
-       for (var i = 0, len = rects.length; i < len; i++) {
+     for (var i = 0, len = rects.length; i < len; i++) 
+       {
         ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
         ctx.stroke();     
         ctx.fillStyle=rects[i].col;  
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
       }
-}
-
-function buttonText()
-{ 
     ctx.fillStyle = "black";
     ctx.font = "18px Arial";
 
     for (var i = 0, len = texts.length; i < len; i++) 
-    {
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }
-        
+        {
+        ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+            
+        }
 }
 
 function auswahlButton()
