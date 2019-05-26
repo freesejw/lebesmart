@@ -78,7 +78,7 @@ function start()
     
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);    
     auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt sie an 
-    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit)" ,"18","Arial","blue",xBasis,395); 
+    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","blue",xBasis,395); 
  
    id=setInterval(zeitAbfrage,1000);
 }
@@ -87,7 +87,7 @@ function zeitAbfrage()
    {
     // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
     
-    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit)" ,"18","Arial","blue",xBasis,395); 
+    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","blue",xBasis,395); 
 
     zeitAusgang=zeitAusgang + 1;
    
@@ -223,12 +223,18 @@ function auswahlButton()
                         start();                       
                     break;
                     case 1:
+                        if (blocken==false)
+                        {
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
                         meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420); 
+                        }
                     break; 
                     case 2:
+                    if (blocken==false)
+                        {
                         anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420);                                        
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420);  
+                        }                                      
                     break;                    
                     default:
                     alert("Sorry");

@@ -64,12 +64,11 @@ var texts =[{na: " Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
 
 function ladeGame() 
     {   
-        meldung("Verbessere Konzentration und visuelle Umsetzung","20px Arial","black",40, 25);     
-        meldung("Was flitzt denn gleich ( Go on) oben vorbei?","18px Arial","black",xBasis, 225);        
-        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);
-
-        //meldung("Bisherige Treffer : " + " ... "  + "  Bisherige Trefferquote :  " + "   " + " %","18px Arial","red",xBasis,390);  
-        
+        meldung("Verbessere Konzentration und visuelle Umsetzung","20","Arial","black",30, 25);     
+        meldung("Was flitzt denn gleich ( Go on) oben vorbei?","18","Arial","black",xBasis, 225);        
+        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","blue",xBasis,60);     
+        //meldung("Bisherige Treffer : " + " ... "  + "  Bisherige Trefferquote :  " + "   " + " %","18","Arial","red",xBasis,390);  
         erstelleBasisBild();  // dient nur zur Ansicht
         speed=5;
         renner();// dient nur zur Ansicht
@@ -79,26 +78,20 @@ function ladeGame()
         quote=0;
     }
 
-function erstelleBasisBild()
-    {
-        buttonErstellen(5,8);
-        buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
-        einlesenFlitzerBilder();
-        indexBilder=indexVergleichsBilder();                   
-        zeichneVergleichsBilder();
-        rennerIndex=random(zeigBilder);    
-    }
+
     
 
-function steuerung()
+function start()
 {
     ctx.clearRect(xBasis,390-30,400,30);
     ctx.clearRect(xBasis,420-30,400,30);
+    ctx.clearRect(xBasis,60-25,480,25);
     treffer=0;
-    durchLaeufe=0;
+    //durchLaeufe=0;
     anzahlSek=0;
     myVar=setInterval(zeige,1000); 
-}
+    console.log("start");
+    }
 
 function zeige()
 {
@@ -108,8 +101,16 @@ function zeige()
         {
             if(anzahlSek==zeitSchiene[i])
               {
-                speed=speedSchiene[i];    
-                durchgang();            
+                speed=speedSchiene[i]; 
+
+                xx=0; // ist die x position vom bild, dass animiert wird
+                durchLaeufe++;  
+                blocke=false;          
+                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330); 
+
+                erstelleBasisBild();                        
+                renner();     
+                           
               }
         if ( durchLaeufe==maxDurchlaeufe) 
        // if ( anzahlSek==zeitSchiene[zeitSchiene.length-1]|| durchLaeufe==maxDurchlaeufe) 
@@ -120,18 +121,17 @@ function zeige()
         }
 }
 
-function durchgang()
-   {
-    
-        xx=0; // ist die x position vom bild, dass animiert wird
-        durchLaeufe++;  
-        blocke=false;          
-        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);                
-        erstelleBasisBild();                        
-        renner();   
-        
+function erstelleBasisBild()
+    {
+        buttonErstellen(5,8);
+        buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
+        einlesenFlitzerBilder();
+        indexBilder=indexVergleichsBilder();                   
+        zeichneVergleichsBilder();
+        rennerIndex=random(zeigBilder);    
     }
-    
+
+   
 function renner()
 {  
     ctx.clearRect(xx, yy-hBasis, -cW, hBasis+80); 
@@ -153,7 +153,7 @@ function renner()
 
 canv.addEventListener('click', function(e)
      {
-       
+        console.log(durchLaeufe);
         var rect = angetippt(rects, e.offsetX, e.offsetY);        
         if (rect)
         {          
@@ -163,13 +163,13 @@ canv.addEventListener('click', function(e)
                 { 
                     treffer++;
                     blocke= true; 
-                    meldung("Treffer : " + treffer ,"18px Arial","red",xBasis,390);            
+                    meldung("Treffer : " + treffer ,"18","Arial","red",xBasis,390);            
                 }  
                 else{
                   if (getipptRechteck< 5)  {
                      
                      akustischeMeldung("audio/up.mp3");  
-                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"18px Arial","red",xBasis,390);     
+                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"18","Arial","red",xBasis,390);     
                 }} 
         }
         
@@ -202,12 +202,9 @@ function abbruch()
        // console.log (durchLaeufe);
         quote=Math.round(treffer/durchLaeufe)*100; 
         ctx.clearRect(xBasis,420-30,400,30);
-      // meldung(" Trefferquote :  " +quote + " %","18px Arial","red",xBasis,420);
-    //quote=Math.round(treffer/durchLaeufe)*100;
-    
-   // meldung("Treffer : " + treffer + "  Trefferquote :  " +quote + " %","18px Arial","red",xBasis,390);
-               
-            clearInterval(myVar);
+        durchLaeufe=0;
+     
+         clearInterval(myVar);
     }
  
 function random(max)
@@ -304,18 +301,18 @@ function auswahlButton()
                     vergleichIndex=indexBilder[getipptRechteck];                   
                     break;   
                     case 5:
-                        steuerung();                        
+                    if ( durchLaeufe==0){start(); }                       
                         break;                            
                     case 6:
                         abbruch();                        
                         break;
                     case 7:
                         maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,60);
-                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);                                          
+                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);                                          
                         break;
                      case 8:
                         maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,60);
-                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18px Arial","black",xBasis ,330);S                                           
+                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);S                                           
                         break;
    
 
@@ -324,14 +321,12 @@ function auswahlButton()
                 }             
     }
 
-function meldung(text, schrift,farbe,xm,ym)
+    function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
    {
-     
-        var lg = 30 + ctx.measureText(text).width 
-        ctx.clearRect(xm,ym,lg,-20);
-        ctx.clearRect(xm,ym,lg,-20);
-        ctx.fillStyle = farbe;
-        ctx.font = schrift;
+        var lg = 10 + ctx.measureText(text).width 
+        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = schriftGroesse + "px "+ schriftTyp;
         ctx.fillText(text, xm ,ym); 
     }
 
