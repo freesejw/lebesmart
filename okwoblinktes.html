@@ -129,9 +129,9 @@ canv.addEventListener('click', function(event)
                         }
                         else {
                                 meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"18","Arial","red",30,420);  
-                                rundeAus=true ;
+                               
                                 feldBlocken=true;
-                                rundeAus=true ;
+                                buttonBlocken=false;                               
                                 akustischeMeldung("audio/up.mp3");   
                                 meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
                                 meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
@@ -142,7 +142,7 @@ canv.addEventListener('click', function(event)
                        treffer++
                        meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
                        meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
-                       rundeAus=true;
+                       buttonBlocken=false; 
                        
                     }
             }  
@@ -295,6 +295,8 @@ function buttonText()
 
 
 
+
+
 function auswahlButton()
     {
                switch (getipptRechteck) 
@@ -306,11 +308,9 @@ function auswahlButton()
                     case 1:
                         abbruch();                        
                         break;
-                    case 2:
-                    alert(buttonBlocken);
+                    case 2:                   
                     if (buttonBlocken==false)
-                      {
-                        alert(buttonBlocken);
+                      {                      
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
                             meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);
