@@ -52,7 +52,7 @@ function ladeGame()
     {
        // boxMeldung(("?"),xBasis,120,100,100,25);
        // boxMeldung(("?"),280,120,100,100,25);
-        meldung("Steigere deine Denk - Geschwindigkeit","20","Arial","black",65, 35);  
+        meldung("Verbessere deine Reaktionszeit und Konzentration","20","Arial","black",30, 35);  
         meldung("Ist die Zahl links oder rechts höher? Klick sie an !","18","Arial","black",xBasis, 100); 
         meldung("Es gibt 10 Durchgänge, dann Neustart mit Go on Button","18,"," Arial","black",xBasis ,320); 
         meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","black",xBasis ,360); 
@@ -125,7 +125,7 @@ function abbruch()
         ctx.clearRect(xBasis, 440, 300, -18);               
         meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","red",xBasis,440);  
         clearInterval(myVar);   
-        console.log("treffer  " + treffer);
+      
         ctx.fillStyle="lightgreen";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
