@@ -92,7 +92,7 @@ function start() {
     //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
     //---auswahlZahlen(zeilenZahl,spaltenZahl);  // ermittelt die Zahl,die gesucht werden soll 
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
-    id=setInterval(zeitPruef,1000);
+    //id=setInterval(zeitPruef,1000);
         }
 
 function zeitPruef()
@@ -308,6 +308,42 @@ function ermittleBasisZahlen(zeilen, spalten)
         }
     }
 
+    function beseitigeDreier(matrix) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+
+        for(var i = 0; i < zeilen; i++) {
+            for(var j = 0; j < spalten; j++) {
+                
+                var k = 1;
+                while(j + k < spalten && matrix[i][j+k] == matrix[i][j])
+                {
+                    k += 1;
+                }
+                
+                if( k >= 3)
+                {
+                    var alternativen = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(
+                            function(value, index, arr) {
+                                return value != matrix[i][j];
+                            }
+                        );
+                    console.log(JSON.stringify(alternative));    
+                    for(var l = 2; l < k; l++) {
+                        console.log(k + "er gefunden!");
+
+                        var alternative = random(alternativen.length - 1);
+                        alternativen.splice(alternativen.indexOf(alternative), 1);
+                        console.log(JSON.stringify(alternative));
+                        matrix[i][j+l] = alternative;
+                    }
+                }
+
+                j += k - 1;
+            }
+        }
+    }
+
     /**
      *  Wählt aus der übergebenen Matrix ein zufällige Ziffernfolge aus
      *  und gibt diese zurück. Die Ziffern liegen immer in einer Zeile.
@@ -362,6 +398,7 @@ function ermittleBasisZahlen(zeilen, spalten)
                 return gesuchteZahl.indexOf(value) == -1;
             }
         );
+
         console.log("=== eliminiereDoppelte: Mögliche Alternativen zu " + gesuchteZahl + " sind: " + gültigeAlternativen);
         // Entferne einen zufällig gewählten Treffer, 
         // damit die Treffer bei doppelten nicht immer in den oberen Zeilen liegen.
@@ -419,6 +456,14 @@ function ermittleBasisZahlen(zeilen, spalten)
     var zahlenLänge = erzeugeLänge();
     var matrix = erzeugeMatrix(zeilen, spalten);
     fülleMatrix(matrix);
+    matrix[0][0] = 1;
+    matrix[0][1] = 1;
+    matrix[0][2] = 1;
+    matrix[0][3] = 1;
+    matrix[0][4] = 1;
+    matrix[0][5] = 1;
+    matrix[0][6] = 1;
+    beseitigeDreier(matrix);
     console.log(matrix);
 
     var gesuchteZahl = wähleZahl(matrix, zahlenLänge);
@@ -433,92 +478,6 @@ function ermittleBasisZahlen(zeilen, spalten)
     meldung("Suche:","18","Arial","black", xAbstand+30 + breite * spaltenZahl, 2 * yAbstand);  
     meldung(gesuchteZahl.join(""),"bolder 30","Arial","red", xAbstand + 2 * 30 + breite * spaltenZahl, 40 + (2 * yAbstand));
 }
-
-function ermittleBasisZahlen2(zeilen,spalten)
-    {
-    for (let i = 0;i<zeilen*spalten;i++ )
-            {
-            zahlenSpeicher.push(random(10)-1);
-            }
-    }
-
-function auswahlZahlen(zeilen,spalten){
- var laenge; 
- var zw=random(9);
- var anz = zeilen*spalten;
- var text1="Suche : "  ;
- var text2="";
- var zwZahl="";
-// zw ermittelt die Anzahl der Ziffern der zu findenen Zahl
-if (zw < 7) {laenge=2;}    
-    else {laenge=3 ;}  
-
-// finden StartIndex, der ersten Ziffer in der zu suchenden Zahl 
-var startIndex=random((zeilen*spalten)-laenge);
-// Die Positionenen in der Matrix werden in Vektorpositionen umgesezt
-var xz = Math.floor(startIndex/spalten);
-var xs = startIndex - (xz*spalten)+1;
-
-if (xs > (spalten - laenge) + 1)
-    {
-        startIndex=(xz+1)*spalten - laenge;
-    }
-
-
-// ermitteln der IndexReihe , der Zahl insgesamt
-for (i=0; i < laenge;i++)
-{
-    indexReihe.push(startIndex + i);
-    text2= text2+zahlenSpeicher[indexReihe[i]];
-    zwZahl=zwZahl+ zahlenSpeicher[indexReihe[i]] + ",";
-} 
-
-// prüft ob ausgesuchte Zahl öfters auftritt
-
-var patt1 = new RegExp(zwZahl,"g");
-
-while (patt1.test(zahlenSpeicher)==true)
-  {
-    var zww=patt1.lastIndex-zwZahl.length;
-    zww=(zww+2)/2-1;
-    indexDoppelt.push(zww);
-  }
-  // Tritt zahl mehrmals auf, dann erfolgt Korrektur
-  if (indexDoppelt.length>1)
-      {
-          zahlenSpeicher=aendereSpeicherZahlen(indexDoppelt,indexReihe,zahlenSpeicher)
-       }
- 
-
-  function aendereSpeicherZahlen(doppelt,basis,zahlen){
-          // doppelt enthält ersen index der gleichen Zahlen wie die ausgewählte Zahl
-          //basis enthälte die indizes der ausgeählten Zahl ( der Ziffern)
-          // zahlen enthälte die Ziffern der Martix als Vektor
-  
-  
-  // Die zu suchende Zahl wird aus den gefundenen Zahlen entfernt
-  for( var i = 0; i < doppelt.length; i++)
-      { 
-          if ( doppelt[i] == basis[0]) 
-            {
-                    doppelt.splice(i, 1); 
-            }
-        
-      }
-  // die doppelten Zahlen werden durch neue Zufallszahlen ersetzt
-  for ( var i=0;i<doppelt.length;i++)
-      {
-       for (var j=0;j<basis.length;j++){      
-       zahlen[doppelt[i]+j]=random(9);  
-       }
-
-  }
-return zahlen;
-}
-    meldung(text1,"18","Arial","black",xAbstand+30 + breite* spaltenZahl, 2*yAbstand);  
-    meldung(text2,"bolder 30","Arial","red",xAbstand+2*30 + breite* spaltenZahl, 40+(2*yAbstand));  
-} 
-
 
 function feldNummerSchuss(xc,yc)
 {    // xc und yc sind die Koordinaten des Klicks 
