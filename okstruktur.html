@@ -119,9 +119,7 @@ if (blocken==false)
             {            
                 
                 var zw =indexReihe.indexOf(zwert);    
-                console.log( " zwert   " + zwert + "  zw  " + zw);
-                console.log ("indexreihe   " + indexReihe  + "   " + "  indexreihe(0)  " + indexReihe[0] + " indexreihe.indexOf[zwert]  " + indexReihe.indexOf(zwert));
-                console.log (" indexreihe.indexOf[0]  " + indexReihe.indexOf(0));
+             
                 if (zw>=0)
                         {
                             // Richtige Ziffer == Treffer 
@@ -130,9 +128,8 @@ if (blocken==false)
                             yyclick=(Math.floor(yclick/hoehe))*hoehe;   
                         
                             ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);
-                            zeigBild("augeGruen.gif",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                                
-                            //console.log("grün  " + "  zw  " +  zw + xCoord[indexReihe[zw]] + "  " +yCoord[indexReihe[zw]] +indexReihe);
-                            
+                            zeigBild("augeGruen.gif",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
+                         
                          }
                         else {    
                             //falsche Ziffer                      
@@ -262,7 +259,7 @@ function auswahlZellen(zeilen,spalten)
 // Wählt und zeigt die Zellen an, die gesucht werden sollen
 for (var i =0; i<anzahlBilder;i++)
  {
-    var zw =(random(zeilen*spalten));    
+    var zw =(random(zeilen*spalten)) - 1;    
      if (indexReihe.indexOf(zw) <0)
         {               
                     indexReihe.push(zw);}
@@ -281,15 +278,8 @@ function feldNummerSchuss(xc,yc){    // xc und yc sind die Koordinaten des Klick
         if ((xCoord[i] < xc) && (xc < xCoord[i] + breite ) &&
             (yCoord[i] < yc) && (yc < yCoord[i]+ hoehe))
             {
-            zw=i;      
-            console.log(" i =  " ,i,  "   " + "xC[i]  " + xCoord[i]  + "yc[i]  " + yCoord[i]) ;   
-            console.log( "xc  " + xc + "  yc  " +  yc );
-            console.log("  ZW  " + zw);
-        }
-        else{
-           // console.log(" i =  " ,i,  "   " + "xC[i]  " + xCoord[i]  + "yc[i]  " + yCoord[i]) ;   
-            //console.log( "xc  " + xc + "  yc  " +  yc );
-        } 
+            zw=i;    
+            }       
      }
      
   return zw;  

@@ -90,7 +90,7 @@ function start() {
     ctx.clearRect(xAbstand+2*30 + breite* spaltenZahl, 40+(2*yAbstand),150,-50) // löscht text2 ( gesuchte Zahl);
     ermittleBasisZahlen(zeilenZahl,spaltenZahl); // ermittelt die Zahlen für die Matrix, gespeichert in zahlenSpeicher
     //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
-    auswahlZahlen(zeilenZahl,spaltenZahl);  // ermittelt die Zahl,die gesucht werden soll 
+    //---auswahlZahlen(zeilenZahl,spaltenZahl);  // ermittelt die Zahl,die gesucht werden soll 
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
     id=setInterval(zeitPruef,1000);
         }
@@ -282,7 +282,159 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe,zahlen)
     console.log(yCoord);  
 }
 
-function ermittleBasisZahlen(zeilen,spalten)
+function ermittleBasisZahlen(zeilen, spalten)
+{
+    function erzeugeLänge() {
+        var zufall = random(9);
+        if(zufall < 7)
+            return 2;
+        else
+            return 3;
+    }
+
+    function erzeugeMatrix(zeilen, spalten) {
+        var matrix = new Array(zeilen);
+        for(var i = 0; i < zeilen; i++) {
+            matrix[i] = new Array(spalten)
+        }
+        return matrix;
+    }
+
+    function fülleMatrix(matrix) {
+        for(var i = 0; i < matrix.length; i++) {
+            for(var j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = random(9)
+            }
+        }
+    }
+
+    /**
+     *  Wählt aus der übergebenen Matrix ein zufällige Ziffernfolge aus
+     *  und gibt diese zurück. Die Ziffern liegen immer in einer Zeile.
+     *
+     *  @returns {Number|Array} Liste der Ziffern der gesuchten Zahl. Reihenfolge ist wichtig!
+     */
+    function wähleZahl(matrix, längeAusgewählterZahl) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+
+        var zufallsZeile = random(zeilen - 1);
+        var zufallsSpalte = random(spalten - längeAusgewählterZahl)
+
+        console.log("wähleZahl === Zeile: " + zufallsZeile + " | Spalte: " + zufallsSpalte);
+        var ziffern = [];
+        for(var i = 0; i < längeAusgewählterZahl; i++) {
+            ziffern.push(matrix[zufallsZeile][zufallsSpalte + i])
+        }
+        console.log("wähleZahl === Wert: " + ziffern);
+        return ziffern;
+    }
+
+    function findeAllePositionen(matrix, ausgewählteZahl) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+        var längeAusgewählterZahl = ausgewählteZahl.length;
+
+        var treffer = [];
+        for(var i = 0; i < zeilen; i++) {
+            for(var j = 0; j < spalten - längeAusgewählterZahl + 1; j++) {
+                var übereinstimmung = true;
+                for(var k = 0; k < längeAusgewählterZahl; k++) {
+                    if(matrix[i][j+k] != ausgewählteZahl[k]) {
+                        übereinstimmung = false;
+                    }
+                }
+
+                if(übereinstimmung) {
+                    treffer.push([i, j]);
+                }
+            }
+        }
+
+        return treffer;
+    }
+
+    function eliminiereDoppelte(matrix, doppelte, gesuchteZahl) {
+        // Baut einen Array aus Ziffern die bedenkenlos gewählt werden können, 
+        // da sich nicht Teil der gesuchten Zahl sind.
+        var gültigeAlternativen = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(
+            function(value, index, arr) {
+                return gesuchteZahl.indexOf(value) == -1;
+            }
+        );
+        console.log("=== eliminiereDoppelte: Mögliche Alternativen zu " + gesuchteZahl + " sind: " + gültigeAlternativen);
+        // Entferne einen zufällig gewählten Treffer, 
+        // damit die Treffer bei doppelten nicht immer in den oberen Zeilen liegen.
+        if(doppelte.length == 1) {
+            doppelte = [];
+        } else {
+            doppelte.splice(random(doppelte.length - 1), 1);
+        }
+        console.log("=== eliminiereDoppelte: zu löschende Elemente:" + doppelte);
+
+        if(doppelte.length > 0) {
+            for(var i = 0; i < doppelte.length; i++) {
+                for(var j = 0; j < gesuchteZahl.length; j++) {
+                    var zeile = doppelte[i][0];
+                    var spalte = doppelte[i][1] + j;
+                    var indexAlternative = random(gültigeAlternativen.length - 1);
+                    console.log(indexAlternative);
+                    var alternative = gültigeAlternativen[indexAlternative];
+                    console.log("Ersetze [" + zeile + "][" + spalte + "] (" + matrix[zeile][spalte] + ") mit " + alternative);
+                    matrix[zeile][spalte] = alternative;
+                }
+            }
+        }
+
+        return matrix;
+    }
+
+    function arrayEbnen (matrix) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+
+        var eindimensional = [];
+        for(var i = 0; i < zeilen; i++) {
+            for(var j = 0; j < spalten; j++) {
+                eindimensional.push(matrix[i][j]);
+            }
+        }
+        return eindimensional;
+    }
+
+    function baueIndexReihe (matrix, gesuchteZahl) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+        var position = findeAllePositionen(matrix, gesuchteZahl)[0];
+        var index = position[0] * spalten + position[1];
+
+        var indizes = [];
+        for(var i = 0; i < gesuchteZahl.length; i++) {
+            indizes.push(index + i);
+        }
+
+        return indizes;
+    }
+
+    var zahlenLänge = erzeugeLänge();
+    var matrix = erzeugeMatrix(zeilen, spalten);
+    fülleMatrix(matrix);
+    console.log(matrix);
+
+    var gesuchteZahl = wähleZahl(matrix, zahlenLänge);
+
+    var doppelte = findeAllePositionen(matrix, gesuchteZahl);
+    console.log("Alle Positionen: " + doppelte);
+    eliminiereDoppelte(matrix, doppelte, gesuchteZahl);
+    
+    zahlenSpeicher = arrayEbnen(matrix);
+    indexReihe = baueIndexReihe(matrix, gesuchteZahl);
+    console.log("IndexReihe: " + indexReihe);
+    meldung("Suche:","18","Arial","black", xAbstand+30 + breite * spaltenZahl, 2 * yAbstand);  
+    meldung(gesuchteZahl.join(""),"bolder 30","Arial","red", xAbstand + 2 * 30 + breite * spaltenZahl, 40 + (2 * yAbstand));
+}
+
+function ermittleBasisZahlen2(zeilen,spalten)
     {
     for (let i = 0;i<zeilen*spalten;i++ )
             {
@@ -303,6 +455,7 @@ if (zw < 7) {laenge=2;}
 
 // finden StartIndex, der ersten Ziffer in der zu suchenden Zahl 
 var startIndex=random((zeilen*spalten)-laenge);
+// Die Positionenen in der Matrix werden in Vektorpositionen umgesezt
 var xz = Math.floor(startIndex/spalten);
 var xs = startIndex - (xz*spalten)+1;
 
@@ -365,6 +518,7 @@ return zahlen;
     meldung(text1,"18","Arial","black",xAbstand+30 + breite* spaltenZahl, 2*yAbstand);  
     meldung(text2,"bolder 30","Arial","red",xAbstand+2*30 + breite* spaltenZahl, 40+(2*yAbstand));  
 } 
+
 
 function feldNummerSchuss(xc,yc)
 {    // xc und yc sind die Koordinaten des Klicks 
