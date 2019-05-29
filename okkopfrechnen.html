@@ -140,8 +140,8 @@ function aufbauZeile(ele,breite,hoehe)
                 xx =ergebnisKette(string);                
                 oo=operanden[random(operanden.length)].trim(); 
                 if(i==anzahlOperanden-1) 
-                
-                    oo="+";
+               // Als letzter Operand wird das / ausgeschlossen
+                    oo= oo=operanden[random(operanden.length-1)].trim(); "+";
             
                 ctx.fillStyle="red"; 
                 ctx.font= "18px Arial";  
