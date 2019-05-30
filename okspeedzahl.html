@@ -325,20 +325,13 @@ function ermittleBasisZahlen(zeilen, spalten)
                 {
                     var alternativen = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(
                             function(value, index, arr) {
-                                return value != matrix[i][j];
+                                return value != matrix[i][j] && value != matrix[i][k];
                             }
                         );
                     console.log(JSON.stringify(alternativen));
                     for(var l = 2; l < k; l++) {
-                        console.log(k + "er gefunden!");
-			console.log("Alle Alternativen:");
-    			console.log(JSON.stringify(alternativen));
                         var alternative = alternativen[random(alternativen.length - 1)];
                         alternativen.splice(alternativen.indexOf(alternative), 1);
-    			console.log("Alternative entfernt:");
-                        console.log(JSON.stringify(alternative));
-			console.log("übrige Alternativen:");
-    			console.log(JSON.stringify(alternativen));
                         matrix[i][j+l] = alternative;
                     }
                 }
@@ -460,13 +453,6 @@ function ermittleBasisZahlen(zeilen, spalten)
     var zahlenLänge = erzeugeLänge();
     var matrix = erzeugeMatrix(zeilen, spalten);
     fülleMatrix(matrix);
-    matrix[0][0] = 1;
-    matrix[0][1] = 1;
-    matrix[0][2] = 1;
-    matrix[0][3] = 1;
-    matrix[0][4] = 1;
-    matrix[0][5] = 1;
-    matrix[0][6] = 1;
     beseitigeDreier(matrix);
     console.log(matrix);
 
