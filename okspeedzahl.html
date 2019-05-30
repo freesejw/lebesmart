@@ -328,13 +328,17 @@ function ermittleBasisZahlen(zeilen, spalten)
                                 return value != matrix[i][j];
                             }
                         );
-                    console.log(JSON.stringify(alternative));    
+                    console.log(JSON.stringify(alternativen));
                     for(var l = 2; l < k; l++) {
                         console.log(k + "er gefunden!");
-
-                        var alternative = random(alternativen.length - 1);
+			console.log("Alle Alternativen:");
+    			console.log(JSON.stringify(alternativen));
+                        var alternative = alternativen[random(alternativen.length - 1)];
                         alternativen.splice(alternativen.indexOf(alternative), 1);
+    			console.log("Alternative entfernt:");
                         console.log(JSON.stringify(alternative));
+			console.log("übrige Alternativen:");
+    			console.log(JSON.stringify(alternativen));
                         matrix[i][j+l] = alternative;
                     }
                 }
