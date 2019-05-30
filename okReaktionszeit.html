@@ -53,7 +53,7 @@ function ladeGame()
     {   
         meldung("Verbessere die Reaktionszeit / übe die Konzentration","20px Arial","black",10, 25);    
         einlesenBilder();
-        zeigBild("ImageVerkehr/auge.gif");
+        zeigBild("imageverkehr/auge.gif");
         buttonErstellen();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
     }
@@ -122,7 +122,7 @@ function stop()
             fehler++;
             }
 
-        zeigBild("ImageVerkehr/auge.gif");
+        zeigBild("imageverkehr/auge.gif");
         noClickStop=true;
         clearInterval(myVar);   
     }
@@ -132,7 +132,7 @@ function einlesenBilder()
     {
         for (i=0;i<= anzahlBilder;i++)
         {
-            pic[i]=  "ImageVerkehr/verk" + i + ".jpg" ;
+            pic[i]=  "imageverkehr/verk" + i + ".jpg" ;
         } 
     }
 
@@ -153,7 +153,7 @@ function setzeAmpel(a)
      {
         ctx.drawImage(img, 90 ,75,40,90);
      }
-    img.src = ("ImageVerkehr/ampel" + a + ".jpg");
+    img.src = ("imageverkehr/ampel" + a + ".jpg");
 }
 
 function random(max)
@@ -221,7 +221,7 @@ function abbruch()
     {
         setzeAmpel("rot");    
         clearInterval(myVar);
-        zeigBild("ImageVerkehr/auge.gif");
+        zeigBild("imageverkehr/auge.gif");
     }
 
 function meldung(text, schrift,farbe,xm,ym)
