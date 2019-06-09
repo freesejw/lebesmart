@@ -88,8 +88,7 @@ function start()
     treffer=0;
     durchLaeufe=0;
     anzahlSek=0;
-    blocken=true;
-    console.log("start");
+    blocken=true;    
     myVar=setInterval(zeige,1000); 
   
     }
@@ -309,14 +308,14 @@ function auswahlButton()
                         abbruch();                        
                         break;
                     case 7:
-                    if (blocken==false){
-                        maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,60);
-                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);  }                                        
+                       if (blocken==false){
+                            maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,60);
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);  }                                        
                         break;
                      case 8:
-                       if (blocken==false){
-                        maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,60);
-                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330); 
+                        if (blocken==false){
+                            maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,60);
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330); 
                        }                                          
                         break;
    
