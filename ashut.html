@@ -34,7 +34,7 @@ var punkteGesamt = new Array();
 var trefferListe = new Array();
 var treffer;
 var bilderGesamt = new Array();
-var zeilenZahl = 9, spaltenZahl = 18; // Felder pro Spalte und Zeile
+var zeilenZahl =8, spaltenZahl = 9; // Felder pro Spalte und Zeile
 var breite = 80, hoehe=100;
 var anzahlFelder = zeilenZahl*spaltenZahl;
 var maxFeinde = 5, minFeinde = 2, sumFeinde = 10, maxFreunde =5, minFreunde = 3,sumFreunde =9;
@@ -53,13 +53,12 @@ startSpiel();
 function startSpiel() {  
  
   
-  this.interval = setInterval(update, 80009);  
+  this.interval = setInterval(update, 8000);  
 
     canv.addEventListener('click', function(event) {   
          
     var xclick = event.clientX;
-    var yclick = event.clientY; 
-    if (xclick>=xPos){}   
+    var yclick = event.clientY;    
     var treffer=false;    
     var zwert = positionAktive.indexOf(feldNummerSchuss(xclick,yclick)) // liefert den Index des getroffenen Feind/Freund/Umfeld 
     if (zwert>=0) { treffer= true}
@@ -73,43 +72,10 @@ function startSpiel() {
 
         if( punkteGesamt[zwert]==punktFeind )   { schrei( "evil.mp3"); }  
         if( punkteGesamt[zwert]==punktFreund )  { schrei( "scream-01.wav" ); }         
-            
+         meldungen();   
         treffer=false
     };
-    var elem = document.getElementById('Canvas'),
-    elemLeft = elem.offsetLeft,
-    elemTop = elem.offsetTop,
-    context = elem.getContext('2d'),
-    elements = [];
-
-// Add event listener for `click` events.
-elem.addEventListener('click', function(event) 
-{
-    var x = event.pageX - elemLeft,
-        y = event.pageY - elemTop;
-    console.log(x, y);
-    elements.forEach(function(element) {
-        if (y > element.top && y < element.top + element.height && x > element.left && x < element.left + element.width) {
-            alert('clicked an element');
-        }
-    });
-
-}, false);
-
-// Add element.
-elements.push({
-    colour: '#05EFFF',
-    width: 150,
-    height: 100,
-    top: 20,
-    left: 15
-});
-
-// Render elements.
-elements.forEach(function(element) {
-    context.fillStyle = element.colour;
-    context.fillRect(element.left, element.top, element.width, element.height);
-});
+   
     }, false); 
 
 
@@ -121,8 +87,8 @@ update();
 
 
 function update() {
-    xPos = 0;
-    yPos=50;
+      xPos = 0;
+      yPos=50;
       imgFeinde = ladenBilder(sumFeinde,"Fe");  // lädt die Bilder der Gruppe Feinde für weitere Verarbeitung
       imgFreunde = ladenBilder(sumFreunde,"Fr");
       imgUmland = ladenBilder(sumUmland,"Um");
@@ -209,11 +175,7 @@ function feldNummerSchuss(xc,yc){
             {
             zw=i;      
             console.log(i,  "  " + "xC[i]  " + xCoord[i]  + " xi+1  "  + xCoord[i+1] +"  " + "yd[i]  " + yCoord[i]  + " yi+1  "  + yCoord[i+spaltenZahl+1] );
-        }
-        else{
-            console.log(" i =  " ,i,  "  " + "xC[i]  " + xCoord[i]  + " xi+1  "  + xCoord[i+1] +"  " + "yd[i]  " + yCoord[i]  + " yi+1  "  + yCoord[i+spaltenZahl+1] );   
-            console.log( "xc  " + xc + "  yc  " +  yc );
-        } 
+        }        
      }
   return zw;  
 }
@@ -385,29 +347,8 @@ function schrei(vox)
 
 
 
-
-function myMove() {
-  
-  
-  // alert("hi"); 
-  var lauf1 = new Image();  
- 
- if ( xPos > canv.width)
-    {xPos=xPos +10;}
- else 
-     {xPos=xPos+20;}
-
-  lauf1.src="bird.png";      
-  ctx.drawImage(lauf1, xPos,yPos);  
-  wiederherstellungHintergrund("Images/Hintergrund.png",xPos-100,yPos,80,30,xPos-100,yPos,80,30); 
- 
-  requestAnimationFrame(myMove)
-}
-
-
-
       </script>
 
-<p>The red square is actually being drawn 50 times per second.</p>
+
 </body>
 </html>

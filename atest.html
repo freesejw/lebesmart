@@ -36,7 +36,7 @@ var brickOffsetLeft = 30;
 var score = 0;
 var lives = 3;
 var myVar;
-
+var stopp=false;
 var bricks = [];
 for(var c=0; c<brickColumnCount; c++) {
   bricks[c] = [];
@@ -84,7 +84,8 @@ function collisionDetection() {
           score++;
           if(score == brickRowCount*brickColumnCount) {
             clearInterval(myVar);
-           start();// document.location.reload();
+            alert("ok");
+          // start();// document.location.reload();
           }
         }
       }
@@ -135,30 +136,43 @@ function drawLives() {
 }
 
 function draw() {
+
+  //wird von Start mit setInterval aufgerufen
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
   drawPaddle();
   drawScore();
   drawLives();
+if (stopp ==true){clearInterval(myVar);}
   collisionDetection();
 
+// Ball innerhalb Spielfeld breite
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-  if(y + dy < ballRadius) {
+  // Ball innerhlb Spielfeld Y UND nicht im Aus verhindert durch Paddle
+  if(y + dy < ballRadius) 
+  {
     dy = -dy;
   }
-  else if(y + dy > canvas.height-ballRadius) {
-    if(x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
-    }
-    else {
-      lives--;
-      if(!lives) {
-        clearInterval(myVar);
-        //document.location.reload();
+  else 
+  if(y + dy > canvas.height-ballRadius)
+    {
+      if(x > paddleX && x < paddleX + paddleWidth) {
+        dy = -dy;
       }
+    
+    else 
+       {
+        lives--;
+        if(!lives)
+         {
+            drawLives;
+            clearInterval(myVar);
+            document.location.reload();
+            stopp=true;
+            }
       else {
         x = canvas.width/2;
         y = canvas.height-30;

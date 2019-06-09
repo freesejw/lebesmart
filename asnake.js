@@ -25,11 +25,11 @@ const box = 30;
 
 // load images
 
-const ground = new Image();
-ground.src = "ground.png";
+const Boden = new Image();
+Boden.src = "Boden.png";
 
-const foodImg = new Image();
-foodImg.src = "food.png";
+const essenImg = new Image();
+essenImg.src = "essen.png";
 
 // load audio files
 
@@ -54,9 +54,9 @@ let snake = [];
 
 snake[0] = {    x : 9 * box,    y : 10 * box};
 
-// create the food
+// create the essen
 
-let food = {
+let essen = {
 x : Math.floor(Math.random()*10+1) * box,
 y : Math.floor(Math.random()*12+3) * box
 };
@@ -89,10 +89,10 @@ function direction(event){
   //  console.log("   1   " +(snakeX) +  "  d  " +d);  
 }
 
-// cheack collision function
-function collision(head,array){
+// prüfen auf Kollision
+function collision(Kopf,array){
     for(let i = 0; i < array.length; i++){
-        if(head.x == array[i].x && head.y == array[i].y){
+        if(Kopf.x == array[i].x && Kopf.y == array[i].y){
             return true;
         }
     }
@@ -104,20 +104,15 @@ function collision(head,array){
 function draw()
 {
    
-    ctx.drawImage(ground,xPlus,yPlus,480,420);
+    ctx.drawImage(Boden,xPlus,yPlus,480,420);
     drawSnake();
-     ctx.drawImage(foodImg, food.x, food.y);
+     ctx.drawImage(essenImg, essen.x, essen.y);
     
-    // old head position Ist immer an der Spitze; also Array[0];
+    // Alte Kopf Position Ist immer an der Spitze; also Array[0];
     let snakeX = snake[0].x;     let snakeY = snake[0].y;
 
     
-    // which direction
-   
- 
- //   
-
-    if( d == "LEFT" ) {snakeX-=box;      
+      if( d == "LEFT" ) {snakeX-=box;      
     snakeX=(1-snakeX<box)*snakeX;}
     
     if( d == "RIGHT") snakeX += box;
@@ -135,12 +130,12 @@ function draw()
 
    
     
-    // if the snake eats the food
-    if(snakeX == food.x && snakeY == food.y)
+    // Snake ist mit dem Kopf auf dem Essen
+    if(snakeX == essen.x && snakeY == essen.y)
     {
         score++;
         eat.play();
-        food = {
+        essen = {
             x : Math.floor(Math.random()*16+1) * box,
             y : Math.floor(Math.random()*13) * box
                }
@@ -151,19 +146,19 @@ function draw()
            snake.pop();           
         }
     
-    // add new Head
+    // Neuer Kopf
     
-    let newHead = { x : snakeX, y : snakeY }
+    let neuerKopf = { x : snakeX, y : snakeY }
     
     // game over
     
-    //if(snakeX <30 || snakeX > (16 * box)-15 || snakeY < 2*box || snakeY > 15*box || collision(newHead,snake)){
+    //if(snakeX <30 || snakeX > (16 * box)-15 || snakeY < 2*box || snakeY > 15*box || collision(neuerKopf,snake)){
        
       //  
       //  dead.play();
    
     
-    snake.unshift(newHead);
+    snake.unshift(neuerKopf);
     
     ctx.fillStyle = "black";
     ctx.font = "20px Changa one";
@@ -193,27 +188,24 @@ cvs.addEventListener('click', function(e)
 
 function buttonErstellen()
 {
-       for (var i = 0, len = rects.length; i < len; i++) {
+       for (var i = 0, len = rects.length; i < len; i++) 
+       {
         ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
         ctx.stroke();  
         ctx.fillStyle=rects[i].col;  
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
         
-      }
+       }
+        ctx.fillStyle = "black";
+        ctx.font = "18px Arial";
+
+        for (var i = 0, len = texts.length; i < len; i++) 
+        {
+         ctx.fillText(texts[i].na,texts[i].x, texts[i].y);         
+        }
 }
 
-function buttonText()
-{ 
-    ctx.fillStyle = "black";
-    ctx.font = "18px Arial";
 
-    for (var i = 0, len = texts.length; i < len; i++) 
-    {
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }
-        
-}
 function meldung(text, schrift,farbe,xm,ym)
    {
     var lg = 20 + ctx.measureText(text).width 
@@ -272,9 +264,8 @@ function plusMinus(sw)
 
 function basisErstellen()
 {
-    buttonErstellen();
-    buttonText(); 
-   // ctx.drawImage(ground,xPlus,yPlus,455,420)
+    buttonErstellen();   
+   // ctx.drawImage(Boden,xPlus,yPlus,455,420)
     meldung("Verbessere spielerisch deine Motorik","20px Arial","black",65, 35);  
 }
 
