@@ -31,7 +31,7 @@ var durchLaeufe, treffer;
 var bgColor="lightblue";
 var anzahlBilder=15, pic =new Array, zeigBilder=5;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
-var repeator, warten=false ;
+var repeator, blocken=false ;
 var quote;
 var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 460, wBasis2=120, yErhoehung=50; 
@@ -86,10 +86,12 @@ function start()
     ctx.clearRect(xBasis,420-30,400,30);
     ctx.clearRect(xBasis,60-25,480,25);
     treffer=0;
-    //durchLaeufe=0;
+    durchLaeufe=0;
     anzahlSek=0;
-    myVar=setInterval(zeige,1000); 
+    blocken=true;
     console.log("start");
+    myVar=setInterval(zeige,1000); 
+  
     }
 
 function zeige()
@@ -114,6 +116,7 @@ function zeige()
         if ( durchLaeufe==maxDurchlaeufe) 
        // if ( anzahlSek==zeitSchiene[zeitSchiene.length-1]|| durchLaeufe==maxDurchlaeufe) 
             {   
+            blocken=false;
             clearInterval(myVar); 
            // abbruch();  
             }     
@@ -141,11 +144,11 @@ function renner()
         }     
     img.src = pic[indexBilder[rennerIndex]];
     xx=xx+speed;
-    ; 
-    if(xx>cW+wBasis1){ cancelAnimationFrame(repeater) ;// cW Canvas Breite
-       warten=true;  
-      // console.log("renner   " + warten);     
-   }
+  
+    if(xx>cW+wBasis1)
+    { 
+        cancelAnimationFrame(repeater) ;    
+    }
     else {repeater= requestAnimationFrame(renner);}
  } 
  
@@ -201,8 +204,8 @@ function abbruch()
        // console.log (durchLaeufe);
         quote=Math.round(treffer/durchLaeufe)*100; 
         ctx.clearRect(xBasis,420-30,400,30);
-        durchLaeufe=0;
-     
+       
+         blocken=false;
          clearInterval(myVar);
     }
  
@@ -300,18 +303,21 @@ function auswahlButton()
                     vergleichIndex=indexBilder[getipptRechteck];                   
                     break;   
                     case 5:
-                    if ( durchLaeufe==0){start(); }                       
+                    if ( blocken==false){start(); }                       
                         break;                            
                     case 6:
                         abbruch();                        
                         break;
                     case 7:
+                    if (blocken==false){
                         maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,60);
-                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);                                          
+                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);  }                                        
                         break;
                      case 8:
+                       if (blocken==false){
                         maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,60);
-                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);S                                           
+                        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330); 
+                       }                                          
                         break;
    
 
