@@ -27,8 +27,8 @@ var ctx = canv.getContext("2d");
 var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var blocken;
-var reaktionsZeit=2, schrittWeite=0.5;
-var maxDurchlaeufe=5;
+var reaktionsZeit=2;
+var maxDurchlaeufe=3;
 
 var durchLaeufe, treffer;
 var bgColor="lightblue";
@@ -92,7 +92,7 @@ function start()
         blocken = true;
         treffer=0;   
         ctx.strokeRect( 80,60, 200, 40);
-            
+        meldung("                                          ","18","Arial","black",80, 150);   // löscht "" Hier im Beispiel wäre es Blau"
         ctx.clearRect(100,88-20, 180, 25); // Löscht den Text der anzutippenden Farbe       
         ctx.clearRect(xBasis,300-20,300, 20); // löscht : .. Treffer bei ... Durchläufe
         indexFarbe=auswahlIndex(); // Die farbe der Farb rechtecke werden bei jedem start aufruf geändert
@@ -103,16 +103,24 @@ function start()
             ctx.fillStyle=rects[i].col;          
             ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
          }
+         farbeSuch=999;
         myVar = setInterval(folgeFarbe, reaktionsZeit*1000);        
     }
 
 function folgeFarbe()
     {    
-        durchLaeufe++;
-        if(durchLaeufe <=maxDurchlaeufe)
+       
+        var farbeSuchAlt=farbeSuch;
+
+        if(durchLaeufe <maxDurchlaeufe)
             {
-            farbeSuch=random(farbe.length);// Index der Farbe in der das Wort angeboten wird 
-            //console.log("farbeSuch in folgeFarbe  " + farbeSuch);
+                durchLaeufe++;
+                do
+                {
+                    farbeSuch=random(farbe.length);// Index der Farbe in der das Wort angeboten wird            
+                }
+                while(farbeSuchAlt===farbeSuch);    
+           
             farbNamenSuch=random(farbNamen.length); // Index des Namens der Farbe
             ctx.strokeStyle="red";
             ctx.strokeRect(80,60,200,40);
@@ -153,7 +161,7 @@ function abbruch()
     meldung( treffer + " Treffer  bei " + durchLaeufe + " Durchläufe","18" ,"Arial","blue",xBasis, 300);        
      //meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","blue",80,350);
           
-     console.log("durchLaeufe  " + durchLaeufe + " treffer  " + treffer);
+   //  console.log("durchLaeufe  " + durchLaeufe + " treffer  " + treffer);
         clearInterval(myVar);   
     }
  
@@ -179,12 +187,12 @@ function auswahlButton()
                         abbruch();                        
                         break;
                     case 7:
-                    if (blocken ==false){reaktionsZeit =plusMinus(reaktionsZeit,0.5,0.5, 10.5);}
+                    if (blocken ==false){reaktionsZeit =plusMinus(reaktionsZeit,0.25,0.5, 10);}
                     meldung("Reaktionszeit = " ,"18","Arial","blue",340 ,370);
                     meldung(reaktionsZeit + " Sek.","18","Arial","blue",340 ,400);                                     
                     break;
                     case 8:
-                    if (blocken ==false){reaktionsZeit=plusMinus(reaktionsZeit,-0.5,0.5, 10);}
+                    if (blocken ==false){reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0.5, 10);}
                      meldung("Reaktionszeit = " ,"18","Arial","blue",340 ,370);
                      meldung(reaktionsZeit + " Sek.","18","Arial","blue",340 ,400);                                   
                     break;  
