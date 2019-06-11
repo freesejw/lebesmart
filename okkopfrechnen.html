@@ -21,14 +21,15 @@ Canvas {
 var startTime,elapsedTime,zeiten="";
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
-
+var zeiten=[];
+var schnitt;
 var xCoord=[], yCoord=[];
 var operand;
 var bgColor="lightblue";
 var rechenSchritte=5, schrittWeite=1,string;
 var durchLaeufe,richtig;
 var ergebnis, ergebnisIndex;
-
+var summe=0; 
 var xBasis=20, yBasis1=220, wBasis1=40, hBasis=40, dBasis=40, xtextdis=20, ytextdis=25;
 var yBasis2= 500, wBasis2=120, yErhoehung=50; 
 
@@ -81,7 +82,8 @@ function start()
         ctx.clearRect(xCoord[1],yCoord[1]-30,500,130);        
         aufbauZeile(rechenSchritte,breite,hoehe);
         vergleichsZahlen();
-        startTime = Date.now(); 
+        startTime = Date.now();
+        
     }
 
 
@@ -92,7 +94,7 @@ function aufbauZeile(ele,breite,hoehe)
             var anzahlZahlen=ele;
             var anzahlOperanden=ele-1;
             var anzahlFelder=ele*2 + 1 + 2; // + 2 sind für = ergebnis
-            var operanden=["+" , "+", "-", "-" ,"*", "/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
+            var operanden=["+" , "+", "-", "-" ,"+" , "+", "-", "-" ,"*", "/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
             string="";
             xCoord=[];
             yCoord=[];
@@ -140,8 +142,8 @@ function aufbauZeile(ele,breite,hoehe)
                 xx =ergebnisKette(string);                
                 oo=operanden[random(operanden.length)].trim(); 
                 if(i==anzahlOperanden-1) 
-               // Als letzter Operand wird das / ausgeschlossen
-                    oo= oo=operanden[random(operanden.length-1)].trim(); "+";
+               // Als letzter Operand wird das * und / ausgeschlossen
+                    oo= oo=operanden[random(operanden.length-2)].trim(); 
             
                 ctx.fillStyle="red"; 
                 ctx.font= "18px Arial";  
@@ -228,8 +230,22 @@ function vergleich(a)
             meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","18px Arial","blue",xBasis, yBasis1+ytextdis+150);
             elapsedTime = Date.now() - startTime;
             elapsedTime = (elapsedTime / 1000).toFixed(2);       
-            zeiten = zeiten + " "  + Math.round( elapsedTime) + ";";          
-            meldung(( "Gebrauchte Zeit ( Sek. ) :  " + zeiten),"18px Arial","black",xBasis, yBasis1+ytextdis+185);
+            zeiten.push( Math.round( elapsedTime)); 
+
+            var ausdruck=zeiten;
+           
+            for (var i= 0;i<zeiten.length-1;i++);
+               {
+               console.log("  1  " + summe );   
+                summe+=zeiten[i];
+                console.log("summe " +summe + "  " + zeiten);
+            }
+           
+            var schnitt=(  summe/richtig); 
+            schnitt=Math.floor(schnitt*10)/10;
+            if(ausdruck.length>10){ausdruck.shift();}        
+            meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"18px Arial","black",xBasis, yBasis1+ytextdis+185);
+            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"18px Arial","black",xBasis, yBasis1+ytextdis+215);
         }
     else 
         {
