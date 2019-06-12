@@ -28,6 +28,7 @@ var durchLaeufe, treffer;
 var z1, z2;
 var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 460, wBasis2=120, yErhoehung=50; 
+var durchgang;
 
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
 
@@ -54,19 +55,19 @@ function ladeGame()
         buttonErstellen()
         buttonText();
         aufbauZeile(rechenSchritte,breite,hoehe);
-        
+        durchgang=0;
     };
 
 
 function start()
     {
         ctx.clearRect(0,y,500,35); // Löschen Anzahl operanden
-        ctx.clearRect(0,350,500,24);
+        ctx.clearRect(0,280-30,500,30);
         ctx.clearRect(xBasis, 380 - 30, 500, 35);   // Löschen Lösung Anzeige
-      
+        durchgang++;
         
         treffer=0;
-        //meldung(( "Anzahl Treffer :  " + treffer),"18px Arial","black",xBasis, 350);  
+        meldung( "Anzahl Durchgänge :  " + durchgang,"18px Arial","black",xBasis, 280);  
       
         durchLaeufe=0;
         aufbauZeile(rechenSchritte,breite,hoehe);
