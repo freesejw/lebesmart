@@ -65,11 +65,13 @@ function start()
 { 
     blocken=true; // Klicken weährend dedr Merkphase verhindern
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl);//Löscht die Matrix 
-    ctx.clearRect(xBasis,420-30,300,30);//löscht text " falsches Feld..."
+    ctx.clearRect(xBasis,220-40,450,40);//löscht text " falsches Feld..."
+
     zaehlerClick=0;
     zaehlerTreffer=0;     
     indexReihe=[]; 
-    zeitAusgang=0; //   
+    zeitAusgang=0; //  
+
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);    
     auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt sie an 
     meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","blue",xBasis,395); 
@@ -93,7 +95,7 @@ function zeitAbfrage()
             for (var i =0; i<anzahlBilder;i++)
             {
                 ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
-                    zeigBild("augeLeer.gif" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+                    zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-2,hoehe-2);
                   //  Hier werden die zu suchenden Zellen anonymisiert
             }            
             clearInterval(id);          
@@ -128,13 +130,14 @@ if (blocken==false)
                             yyclick=(Math.floor(yclick/hoehe))*hoehe;   
                         
                             ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);
-                            zeigBild("augeGruen.gif",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
+                            zeigBild("lichtaufgehen.JPG",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
                          
                          }
                         else {    
                             //falsche Ziffer                      
-                            ctx.clearRect(xBasis,420-30,300,30);
-                            meldung("Falsches Feld ==> Go on" ,"18","Arial","red",xBasis,420);                            
+                            ctx.clearRect(xBasis,420-30,300,30);                            
+                           // meldung("Falsches Feld ==> Go on" ,"18","Arial","red",xBasis,420);
+ meldung("Falsches Feld ==> Go on" ,"30","Arial","red",xBasis,220);
                             akustischeMeldung("audio/up.mp3"); 
                             blocken=false;
                             minusPunkte++;                
@@ -158,8 +161,11 @@ canv.addEventListener('click', function(e)
         {
             switch (getipptRechteck) // kommt aus angetippt()
                 {
-                    case 0:                    
-                        start();                       
+                    case 0:
+                        if (blocken==false)
+                        {               
+                        start();
+                        }                      
                     break;
                     case 1:
                         if (blocken==false)
@@ -232,16 +238,17 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
         for(let j=0;j < spalten;j++)
         {            
             var x=breite*j;  
-            zeigBild("augeLeer.gif",x+xAbstand,y+yAbstand,breite,hoehe);
-            ctx.lineWidth="3";
-            ctx.strokeStyle="red";       
-            ctx.strokeRect(x+xAbstand,y+yAbstand,breite,hoehe);
+            zeigBild("neuesAuge.jpg",x+xAbstand,y+yAbstand,breite-3,hoehe-3);
+           
             
             //linke, obere Koordinaten der Rechtecke
             xCoord.push(x);
             yCoord.push(y);
          }
-    }   
+    }
+    ctx.lineWidth="1";
+            ctx.strokeStyle="blue";       
+            ctx.strokeRect(xCoord[0]+xAbstand,yCoord[0]+yAbstand,breite*spalten,hoehe*zeilen);    
 }
 
 function zeigBild(a,x,y,w,h)
