@@ -42,7 +42,7 @@ var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum finden 
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 
 var xBasis=20, yBasis=440, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Start"},
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Go on"},
              {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
              {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
 var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
@@ -186,7 +186,7 @@ canv.addEventListener('click', function(e)
                 }                        
         } 
         meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","blue",335,300);  
-                meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18","Arial","blue",335,340);  
+                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"18","Arial","blue",335,340);  
     }, false);
 
 
