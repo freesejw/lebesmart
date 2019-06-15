@@ -9,8 +9,7 @@ Canvas {
    position: absolute;
    top: 0px;
    left: 0px;
-   border: 1px red solid;
-   background-color: #FFEFDB;
+   background-color: #e6e6e6;
 }
 </style>
 </head>
@@ -20,7 +19,7 @@ Canvas {
 <script>
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
-var bgColor="lightblue";
+var bgColor="Lavender";
 var audi0;
 var myVar;
 var reaktionsZeit=1.5,maxDurchlaeufe=10;
@@ -35,8 +34,8 @@ var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
 
-             {x: xBasis, y: 120 , w: wBasis2, h: 3* hBasis,col: "lightgreen" },
-             {x: 280, y: 120 , w: wBasis2, h: 3*hBasis,col: "lightgreen"}];
+             {x: xBasis, y: 120 , w: wBasis2, h: 3* hBasis,col: "#ccbadc" },
+             {x: 280, y: 120 , w: wBasis2, h: 3*hBasis,col: "#ccbadc"}];
 
 
 
@@ -53,16 +52,16 @@ function ladeGame()
     {
        // boxMeldung(("?"),xBasis,120,100,100,25);
        // boxMeldung(("?"),280,120,100,100,25);
-        meldung("Verbessere deine Reaktionszeit und Konzentration","20","Arial","black",30, 35);  
-        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","18","Arial","black",xBasis, 100); 
-        meldung("Es gibt 10 Durchgänge, dann Neustart mit Go on Button","18,"," Arial","black",xBasis ,320); 
-        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","black",xBasis ,360); 
-        meldung(( "Anzahl Treffer :  0"),"18","Arial","black",xBasis, 400);   
+        meldung("Verbessere deine Reaktionszeit und Konzentration","20","Arial","blue",30, 35);  
+        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","18","Arial","blue",xBasis, 100); 
+        meldung("Es gibt 10 Durchgänge","18,"," Arial","blue",xBasis ,320); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","blue",xBasis ,360); 
+        meldung(( "Anzahl Treffer :  0"),"18","Arial","blue",xBasis, 400);   
         buttonErstellen()
-        buttonText();
+      
         ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);  
-        ctx.fillStyle="mistyrose";
+        ctx.fillStyle="#9975b9";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
         offenButton=true;
@@ -74,7 +73,7 @@ function start()
         ctx.clearRect(xBasis, 440, 300, -20);   // Löschen Trefferquote
         ctx.clearRect(xBasis,400,200,-20);  // Löschen Anzahl Treffer
         treffer=0;
-        meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","black",xBasis, 400);  
+        meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","blue",xBasis, 400);  
        // ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
        // ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);        
         durchLaeufe=0;
@@ -86,7 +85,7 @@ function start()
 function iteration()
 {
         durchLaeufe++;  
-        ctx.fillStyle="lightgreen";
+        ctx.fillStyle="#ccbadc";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);    
         if (durchLaeufe <= maxDurchlaeufe)
@@ -94,7 +93,7 @@ function iteration()
             z1=getRnd(1,10); 
             var schriftGroesse1=getRnd(15,90);
                 
-            meldungOhne(z1.valueOf() ,schriftGroesse1,"Arial","black",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
+            meldungOhne(z1.valueOf() ,schriftGroesse1,"Arial","blue",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
        
             do {
                 
@@ -104,7 +103,7 @@ function iteration()
                 }
                 while ((Math.abs(schriftGroesse1-schriftGroesse2 ) < 25) || (z1 == z2));
 
-            meldungOhne(z2.valueOf() ,schriftGroesse2,"Arial","black",280 + rects[5].w*.3,120+rects[5].h*0.7);
+            meldungOhne(z2.valueOf() ,schriftGroesse2,"Arial","blue",280 + rects[5].w*.3,120+rects[5].h*0.7);
             //console.log("Zufallstahl #1: " + z1 + " | Zufallszahl #2: " + z2 + " | Differenz: " + (z1-z2) + " | Schriftgrößenunterschied: " + (Math.abs( schriftGroesse1  - schriftGroesse2)))
          }
 
@@ -127,7 +126,7 @@ function abbruch()
         meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","red",xBasis,440);  
         clearInterval(myVar);   
       
-        ctx.fillStyle="lightgreen";
+        ctx.fillStyle="#9975b9";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
     }
@@ -174,14 +173,14 @@ function auswahlButton()
                     if (offenButton==true)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","black",xBasis ,360);                      
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","blue",xBasis ,360);                      
                     }                                       
                     break;
                     case 3:
                     if (offenButton==true)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","black",xBasis ,360); 
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","blue",xBasis ,360); 
                     }                     
                         break;
                      case 4:
@@ -205,7 +204,7 @@ function vergleich(a)
             {
                 treffer++;   
                 ctx.clearRect(xBasis,400,200,-20);     
-                meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","black",xBasis, 400);  
+                meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","blue",xBasis, 400);  
                 
             }    
     else{akustischeMeldung("audio/up.mp3");   }
@@ -221,25 +220,21 @@ function buttonErstellen()
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
         
       }
-}
-
-function buttonText()
-{ 
-    ctx.fillStyle = "black";
-    ctx.font = "18px Arial";
+      ctx.fillStyle = "blue";
+     ctx.font = "18px Arial";
 
     for (var i = 0, len = texts.length; i < len-2; i++) 
     {
        ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
         
      }
-        
 }
 
 
-  function getRnd(min, max) {
+ function getRnd(min, max) 
+  {
   return Math.floor(Math.random() * (max - min)) + min;
-} 
+ } 
 
 function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
    {
