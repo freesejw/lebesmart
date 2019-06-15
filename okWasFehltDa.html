@@ -9,8 +9,8 @@ Canvas {
    position: absolute;
    top: 0px;
    left: 0px;
-   border: 1px red solid;
-   background-color: #FFEFDB;
+   
+   background-color: #e6e6e6;
 }
 </style>
 </head>
@@ -27,7 +27,7 @@ var indexBilder=[], verschwunden;
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 
 var durchLaeufe, treffer;
-var bgColor="lightblue";
+var bgColor="Lavender";
 var anzahlBilder=20, pic =new Array, zeigBilder=12;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var startTime,elapsedTime,zeiten=[];
@@ -68,8 +68,8 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
 
 function ladeGame() 
     {   
-        meldung("Übe dich in Konzentration","bold 20","Arial","black",120, 50);     
-        meldung("Welches Bild von oben taucht unten nicht auf ?","18","Arial","black",xBasis, 320);  
+        meldung("Übe dich in Konzentration","bold 20","Arial","blue",120, 50);     
+        meldung("Welches Bild von oben taucht unten nicht auf ?","18","Arial","blue",xBasis, 320);  
         meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","blue",xBasis,120);     
         erstelleBasisBild();  // dient nur zur Ansicht        
         treffer=0;
@@ -110,7 +110,7 @@ canv.addEventListener('click', function(e)
                 elapsedTime = Date.now() - startTime;
                 elapsedTime = Math.round(elapsedTime / 1000);       
                 zeiten.push(elapsedTime)           
-                meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","black",xBasis, yBasis2+ytextdis+155);        
+                meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","blue",xBasis, yBasis2+ytextdis+155);        
                 }
             if ( (getipptRechteck==12))
                 {
@@ -198,7 +198,7 @@ function zeigBild(a,x,y,w,h)
 
 function rechteckeText()
 { 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.font = "18px Arial";
     
        ctx.fillText("Go on",xBasis + xtestdis -10, yBasis3 + ytextdis);
