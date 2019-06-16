@@ -6,8 +6,8 @@
 <style>
 canvas {
     
-    border: 1px red solid;
-     background-color: #FFEFDB;
+   
+     background-color: #e6e6e6;
      cursor: url(Images/fadenkreuz.png),  auto; 
 }
 </style>
@@ -37,7 +37,7 @@ var falsch;
 var audio;
 
 //Rechtecke für die Buttons
-var bgColor="lightblue";
+var bgColor="Lavender";
 var xBasis=20, yBasis1=220, wBasis1=60, hBasis=30, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 500, wBasis2=120, yErhoehung=50; 
 
@@ -53,7 +53,7 @@ var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + yErhoehung + y
 
 
 function ladeGame(){
-    meldung("Nonogramm  =  Arbeit an der Logik","25","Arial","black",65,30 ); 	
+    meldung("Nonogramm  =  Arbeit an der Logik","25","Arial","blue",65,30 ); 	
     zeigBild("Images/nonogram.PNG",150,198,200,200);
     erklaerung(16,xBasis,100,20);
 
@@ -90,7 +90,7 @@ canv.addEventListener('click', function(event)
                             ctx.clearRect(330,480-25,200,25);
                         }
                         else {
-                            ctx.fillStyle="black";
+                            ctx.fillStyle="blue";
                             ctx.font= "38px Arial";
                             ctx.fillText("x",xCoord[zwert]+xDist-7 ,yCoord[zwert]+yDist+2); 
                         falsch.play();
@@ -162,7 +162,7 @@ function aufbauBasisMatrix(zeilen,spalten,br,ho)
             ctx.strokeStyle="red";       
             ctx.strokeRect (x,y,br,ho);     
             
-            ctx.fillStyle="black";
+            ctx.fillStyle="blue";
            ctx.font= "22px Arial";
 
            //ctx.fillText(grid[i][j],x + xDist,y+yDist);
@@ -186,14 +186,14 @@ function erweiterungZeile(zeilen,spalten,br,ho,co,jj)
         var y=ho*jj;
         var x=br*(spalten +i+1);  
             ctx.lineWidth="2";
-            ctx.strokeStyle="black";  
+            ctx.strokeStyle="blue";  
               
             ctx.strokeRect (x+xAbstand,y + yAbstand,br,ho);     
 
             ctx.fillStyle = "#FFC0CB";    
             ctx.fillRect(x+xAbstand,y+yAbstand,br,ho);
 
-            ctx.fillStyle="black";
+            ctx.fillStyle="blue";
             ctx.font= "22px Arial";
             ctx.fillText(co[i],x+xAbstand + xDist,y+yAbstand+yDist);
 
@@ -210,14 +210,14 @@ function erweiterungSpalten(zeilen,spalten,br,ho,co,jj)
         var y=(zeilen +i +1)*ho;
         var x=br*jj;  
             ctx.lineWidth="2";
-            ctx.strokeStyle="black";  
+            ctx.strokeStyle="blue";  
             ctx.strokeRect(x+xAbstand,y+yAbstand,br,ho);
             ctx.stroke();
 
             ctx.fillStyle = "#FFC0CB";        
             ctx.fillRect(x+xAbstand,y+yAbstand,br,ho);
             
-            ctx.fillStyle="black";
+            ctx.fillStyle="blue";
             ctx.font= "22px Arial";
             ctx.fillText(co[i],x+xAbstand + xDist,y+yAbstand+yDist);
 
@@ -306,7 +306,7 @@ function buttonErstellen(maxI)
 
 function buttonText(maxI)
 { 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.font = "18px Arial";
 
     //for (var i = 0, len = texts.length; i < len; i++) 
@@ -343,7 +343,7 @@ function plusMinus(sw)
   if ( spalten<= 2 || spalten >10) 
   {    
       //meldung("Anzahl Zeilen / Spalten außerhalb des zulässigem Bereichs " ,"20","Arial","red",xBasis ,280);
-      meldung("Nonogramm  = Arbeit an der Logik","20","Arial","black",65,90 );  
+      meldung("Nonogramm  = Arbeit an der Logik","20","Arial","blue",65,90 );  
       spalten=spalten - sw;
       sw=0;
   }
@@ -351,7 +351,7 @@ function plusMinus(sw)
   xAbstand=xAbstand-sw*5;
   yAbstand=yAbstand-sw*15;
   //let lg = 20 + ctx.measureText("Anzahl Zeilen / Spalten  = ").width 
-  //meldung("Anzahl Zeilen / Spalten  " +  spalten,"18","Arial","black",xBasis ,480);
+  //meldung("Anzahl Zeilen / Spalten  " +  spalten,"18","Arial","blue",xBasis ,480);
   
 }
 
@@ -397,7 +397,7 @@ function start(){
     yCoord=[];
     grid=[];
     gridVektor=[];
-    meldung("Nonogramm  = Arbeit an der Logik","20","Arial","black",65,30 );  
+    meldung("Nonogramm  = Arbeit an der Logik","20","Arial","blue",65,30 );  
 	aufbauInhaltMatrix(zeilen,spalten);
 	aufbauBasisMatrix(zeilen,spalten,xBreite,yHoehe);
     buttonErstellen(rects.length);
@@ -409,7 +409,7 @@ function start(){
 
 function abbruch(){
     ctx.clearRect(0,0,canv.width,canv.height);
-    meldung("Nonogramm  = Arbeit an der Logik","20","Arial","black",65,30 );
+    meldung("Nonogramm  = Arbeit an der Logik","20","Arial","blue",65,30 );
     xCoord=[];
     yCoord=[];
     grid=[];
@@ -418,13 +418,13 @@ function abbruch(){
 }
 
 function erklaerung(s,x,y,d){
-    meldung("Die Zahlen hinter jeder Zeile und unter jeder Spalte geben an",s,"Arial","black",x,y );
-    meldung("wie viele Kästchen in der jeweiligen Zeile bzw. Spalte sind.",s," Arial","black",x,y+d);    
-    meldung("Die Zahlenfolge < 1 1 > hinter einer Zeile bedeutet, dass sich in ",s," Arial","black",x,y + 3*d);  
-    meldung("dieser zwei EINZELNE Kästchen verbergen.",s," Arial","black",x,y+4*d);  
-    meldung("Beginne mit < GO on >",s," Arial","black",x,y+17*d);  
-    meldung("Mit < Grösser> und <Kleiner> auf der <Go on> Seite veränderst du",s," Arial","black",x,y+19*d); 
-    meldung("die Anzahl der Zeilen und Spalten. (Minimum 3; Maximum 10)",s," Arial","black",x,y+20*d);    
+    meldung("Die Zahlen hinter jeder Zeile und unter jeder Spalte geben an",s,"Arial","blue",x,y );
+    meldung("wie viele Kästchen in der jeweiligen Zeile bzw. Spalte sind.",s," Arial","blue",x,y+d);    
+    meldung("Die Zahlenfolge < 1 1 > hinter einer Zeile bedeutet, dass sich in ",s," Arial","blue",x,y + 3*d);  
+    meldung("dieser zwei EINZELNE Kästchen verbergen.",s," Arial","blue",x,y+4*d);  
+    meldung("Beginne mit < GO on >",s," Arial","blue",x,y+17*d);  
+    meldung("Mit < Grösser> und <Kleiner> auf der <Go on> Seite veränderst du",s," Arial","blue",x,y+19*d); 
+    meldung("die Anzahl der Zeilen und Spalten. (Minimum 3; Maximum 10)",s," Arial","blue",x,y+20*d);    
 }  
 
 function zeigBild(a,x,y,w,h)
