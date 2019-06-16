@@ -6,8 +6,8 @@
 <style>
 canvas {
     
-    border: 1px red solid;
-     background-color: #FFEFDB;
+    
+     background-color: #e6e6e6;
    cursor: url(Images/fadenkreuz.png),  auto; 
 
 
@@ -37,7 +37,7 @@ var breite = 50, hoehe=50;
 var xPos, yPos,xclick, yclick;
 var zaehlerClick, zaehlerTreffer;
 var blocken;
-var bgColor="lightblue";
+var bgColor="Lavender";
 var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum finden der Zahl in Sekunden
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 
@@ -51,8 +51,8 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
 
 function ladeGame()
 {
-    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","20","Arial","black",xBasis, 30); 
-    meldung("Merke Dir die Bildpositionen","18", "Arial","black",xBasis, 60);   
+    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","20","Arial","blue",xBasis, 30); 
+    meldung("Merke Dir die Bildpositionen","18", "Arial","blue",xBasis, 60);   
     meldung("Anzahl Bilder = " +  anzahlBilder,"16","Arial","blue",335,420);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     buttonErstellen();  
@@ -201,7 +201,7 @@ function buttonErstellen()
         ctx.fillStyle=rects[i].col;  
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
       }
-      ctx.fillStyle = "black";
+      ctx.fillStyle = "blue";
       ctx.font = "18px Arial";
 
             for (var i = 0, len = texts.length; i < len; i++) 

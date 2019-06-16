@@ -25,7 +25,7 @@ var cW = ctx.canvas.width, cH = ctx.canvas.height;
 var xx=0,yy=100;
 var indexBilder=[], verschwunden; 
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
-
+var zeigen=12;
 var durchLaeufe, treffer;
 var bgColor="Lavender";
 var anzahlBilder=20, pic =new Array, zeigBilder=12;
@@ -79,6 +79,7 @@ function ladeGame()
 
     function steuerung(){
         ctx.clearRect(xBasis,120-24,480,40);// löscht " dies ist ein ...."
+        ctx.clearRect(xBasis,190-24,480,40);//
         erstelleBasisBild()
         startTime = Date.now(); 
     }
@@ -112,7 +113,10 @@ canv.addEventListener('click', function(e)
                 zeiten.push(elapsedTime)           
                 meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","blue",xBasis, yBasis2+ytextdis+155);        
                 }
-            if ( (getipptRechteck==12))
+                else{
+                   meldung("Ist es nicht","18","Arial","red",xBasis,490)
+                }
+            if ( (getipptRechteck==zeigen))
                 {
                 steuerung();
                 }
