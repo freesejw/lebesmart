@@ -9,8 +9,8 @@ Canvas {
    position: absolute;
    top: 0px;
    left: 0px;
-   border: 1px red solid;
-   background-color: #FFEFDB;
+  
+   background-color: #efefef;
 }
 </style>
 </head>
@@ -26,7 +26,7 @@ var xBreite=50 , yHoehe=50;
 var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var durchLaeufe, treffer;
-var bgColor="lightblue";
+var bgColor="Lavender";
 var blinkReihe=[];
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var feldBlocken;
@@ -57,9 +57,9 @@ var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
 
 function ladeGame() 
     {   
-        meldung("Übe die Merkspanne","20","Arial","black",40, 30);  
-        meldung("Merke dir die Blinks : Position und Reihenfolge","18","Arial","black",40, 60);     
-        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);
+        meldung("Übe die Merkspanne","20","Arial","blue",40, 30);  
+        meldung("Merke dir die Blinks : Position und Reihenfolge","18","Arial","blue",40, 60);     
+        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","blue",xTextRechts ,yTextHoehe);
         erzeugeButton(0,3);
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
@@ -281,7 +281,7 @@ function erzeugeButton(a,b)
 
 function buttonText()
 { 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.font = "18px Arial";
 
     for (var i =0, len = 4; i < len; i++) 
@@ -313,7 +313,7 @@ function auswahlButton()
                       {                      
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
-                            meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);
+                            meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","blue",xTextRechts ,yTextHoehe);
                       }
                         break;
                      case 3:
@@ -321,7 +321,7 @@ function auswahlButton()
                         {
                                 anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","black",xTextRechts ,yTextHoehe);   
+                                meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","blue",xTextRechts ,yTextHoehe);   
                         }                     
                         break;
                        default:

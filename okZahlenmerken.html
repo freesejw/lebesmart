@@ -15,8 +15,8 @@ body {
    position: absolute;
    top: 0px;
    left: 0px;
-   border: 1px red solid;#thing;
-   background-color : #FFEFDB;
+ 
+   background-color : #efefef;
 }
 </style>
 </head>
@@ -67,7 +67,7 @@ var links=50;
 
     function Start()
       {
-alert("hi");
+
          ziffer="";
          durchlauf=0;
          aufrufTimer1=0;
@@ -145,7 +145,7 @@ alert("hi");
 
         $('canvas').drawText({
                         layer: true,
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 15, y: 15,
                         fontSize: 20,fillStyle: 'blue',
                         fontFamily: 'Verdana, sans-serif',
@@ -161,12 +161,12 @@ alert("hi");
 
 
 
-        var bgColor = '#B5EC9B', textColor = 'black',
-                borderWidth = 2, borderColor = 'black';
+        var bgColor = '#B5EC9B', textColor = 'blue',
+                borderWidth = 2, borderColor = 'blue';
 
        $('canvas').drawRect({
        layer: true,
-       fillStyle: '#88E4EA',
+       fillStyle: 'Lavender',
        strokeStyle: borderColor, strokeWidth: borderWidth,
        x: 75, y: 100,  width: 190, height: 40,
        fromCenter: false
@@ -175,7 +175,7 @@ alert("hi");
 
        $('canvas').drawText({
                         layer: true,
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 75,
                         y: 70,
                         fontSize: 18,
@@ -186,7 +186,7 @@ alert("hi");
        $('canvas').drawText({
                         layer: true,
                          name: 'ausgabeZahl',
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 85,
                         y: 112,
                         fontSize: 20,
@@ -201,14 +201,14 @@ alert("hi");
 
        $('canvas').drawRect({
        layer: true,
-       fillStyle: '#88E4EA',
+       fillStyle: 'Lavender',
        strokeStyle: borderColor, strokeWidth: borderWidth,
        x: 315, y: 100,  width: 60, height: 40,
        fromCenter: false
        });
        $('canvas').drawText({
                         layer: true,
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 315,
                         y: 70,
                         fontSize: 18,
@@ -219,7 +219,7 @@ alert("hi");
            $('canvas').drawText({
                         layer: true,
                          name: 'ausgabePunkte',
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 315 +15,
                         y: 112,
                         fontSize: 20,
@@ -231,9 +231,9 @@ alert("hi");
 
           $('canvas').drawRect({
            layer: true,
-           strokeStyle: 'black',
+           strokeStyle: 'blue',
            strokeWidth: 1,
-           fillStyle: '#88E4EA',
+           fillStyle: 'Lavender',
            x: 50, y: 330, width: 70, height: 30,
            fromCenter: false,
            click: function(layer) {
@@ -243,7 +243,7 @@ alert("hi");
            });
             $('canvas').drawText({
                         layer: true,
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 50 + 15,
                         y: 330 + 5,
                         fontSize: 18,
@@ -255,9 +255,9 @@ alert("hi");
 
             $('canvas').drawRect({
             layer: true,
-            strokeStyle: 'black',
+            strokeStyle: 'blue',
             strokeWidth: 1,
-            fillStyle: '#88E4EA',
+            fillStyle: 'Lavender',
             x: 150, y: 330, width: 70, height: 30,
             fromCenter: false,
             click: function(layer) {
@@ -268,7 +268,7 @@ alert("hi");
 
             $('canvas').drawText({
                         layer: true,
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: 150+ 15,
                         y: 330 + 5,
                         fontSize: 18,
@@ -288,7 +288,7 @@ alert("hi");
             cv.drawRect({
                 name: 'rect' + nr,
                 layer: true,
-                fillStyle: 'lightblue',
+                fillStyle: 'Lavender',
                  strokeStyle: borderColor, strokeWidth: borderWidth,
                 x: x, y: y, width: wrect, height: hrect,
 
@@ -326,7 +326,7 @@ alert("hi");
             }).drawText({
                 name: 'text' + nr,
                 layer: true,
-                fillStyle: 'black',
+                fillStyle: 'blue',
                 x: x + wrect / 2,
                 y: y + hrect / 2,
                 text: nr
@@ -346,8 +346,8 @@ alert("hi");
      {}
    ////////////////////////////////////////////
 
-                var bgColor = '#88E4EA', textColor = 'black',
-                borderWidth = 2, borderColor = 'black';
+                var bgColor = 'Lavender', textColor = 'blue',
+                borderWidth = 2, borderColor = 'blue';
 
        function drawPlusMinus(cv, x, y, h, content, nr)
 
@@ -425,7 +425,7 @@ alert("hi");
             var tex=["Ziffern","Wie oft","Speed"];
             $('canvas').drawText({
                         layer: true,
-                        fillStyle: 'black',
+                        fillStyle: 'blue',
                         x: xwert,
                         y: 365,
                         fontSize: 12,
