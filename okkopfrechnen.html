@@ -9,8 +9,7 @@ Canvas {
    position: absolute;
    top: 20px;
    left: 20px;
-   border: 1px red solid;
-   background-color: #FFEFDB;
+   background-color: #e6e6e6;
 }
 </style>
 </head>
@@ -25,7 +24,7 @@ var zeiten=[];
 var schnitt;
 var xCoord=[], yCoord=[];
 var operand;
-var bgColor="lightblue";
+var bgColor="Lavender";
 var rechenSchritte=5, schrittWeite=1,string;
 var durchLaeufe,richtig;
 var ergebnis, ergebnisIndex;
@@ -57,9 +56,9 @@ function ladeGame()
     {
         // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
         
-        meldung("Verbessere deine Rechen - Geschwindigkeit","20px Arial","black",60,65 ); 
-        meldung( "3 + 4 *  ....... = ?","20px Arial","black",65,120);
-        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","black",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
+        meldung("Verbessere deine Rechen - Geschwindigkeit","20px Arial","blue",60,65 ); 
+        meldung( "3 + 4 *  ....... = ?","20px Arial","blue",65,120);
+        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","blue",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
         buttonErstellen()
         buttonText();
         //aufbauZeile(rechenSchritte,breite,hoehe);
@@ -71,10 +70,10 @@ function ladeGame()
 
 function start()
     {   
-        meldung("Welcher Ergebnisvorschlag ist richtig","18px Arial","black",xBasis, yBasis1+ytextdis+50);       
-        meldung("Klick die Zahl an, die dem Ergebnis entspricht","16px Arial","black",xBasis,yBasis1+ytextdis+80);
+        meldung("Welcher Ergebnisvorschlag ist richtig","18px Arial","blue",xBasis, yBasis1+ytextdis+50);       
+        meldung("Klick die Zahl an, die dem Ergebnis entspricht","16px Arial","blue",xBasis,yBasis1+ytextdis+80);
         meldung("Anzahl Richtige :  " + richtig,"18px Arial","blue",xBasis, yBasis1+ytextdis+150);   
-        //meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","black",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
+        //meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","blue",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
 
         ctx.clearRect(xBasis,yBasis1+ytextdis+120, 500, -25);   // Löschen Lösungsanzeige
         ctx.clearRect(xBasis, 120-25,500,25); // löscht 3+ 4 *... Anzeige
@@ -110,7 +109,7 @@ function aufbauZeile(ele,breite,hoehe)
   
     for ( var i = 0 ; i <anzahlZahlen;i++)
     {
-            ctx.fillStyle="black";
+            ctx.fillStyle="blue";
             ctx.font= "20px Arial";            
           
             if (i < anzahlOperanden)
@@ -244,8 +243,8 @@ function vergleich(a)
             var schnitt=(  summe/richtig); 
             schnitt=Math.floor(schnitt*10)/10;
             if(ausdruck.length>10){ausdruck.shift();}        
-            meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"18px Arial","black",xBasis, yBasis1+ytextdis+185);
-            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"18px Arial","black",xBasis, yBasis1+ytextdis+215);
+            meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"18px Arial","blue",xBasis, yBasis1+ytextdis+185);
+            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"18px Arial","blue",xBasis, yBasis1+ytextdis+215);
         }
     else 
         {
@@ -284,12 +283,12 @@ function auswahlButton()
                         break;
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,1,1,11); 
-                        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","black",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);                          
+                        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","blue",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);                          
                         start();                          
                         break;
                     case 3:
                         rechenSchritte= plusMinus(rechenSchritte,-1,1,11); 
-                        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","black",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
+                        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","blue",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
                         start();                          
                         break;
                      case 4:
@@ -320,7 +319,7 @@ function buttonErstellen()
 
 function buttonText()
 { 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.font = "18px Arial";
     for (var i = 0, len = texts.length; i < len; i++) 
     {
@@ -341,7 +340,7 @@ function boxMeldung(melde,x,y,w,h,k1,k2,o)
         ctx.stroke();
         ctx.fillStyle=bgColor;
         ctx.fillRect(x,y,w,h);      
-        meldung(melde,"25px Arial","black",x+30,y+45  );
+        meldung(melde,"25px Arial","blue",x+30,y+45  );
     }
 
     function plusMinus(ausgang,delta,unten,oben)
