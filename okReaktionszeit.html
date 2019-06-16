@@ -51,7 +51,7 @@ var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
 function ladeGame() 
     {   
-        meldung("Verbessere die Reaktionszeit / übe die Konzentration","20px Arial","blue",10, 25);    
+        meldung("Verbessere die Reaktionszeit / übe die Konzentration","20px Arial","#5BA9D9",10, 25);    
         einlesenBilder();
         zeigBild("imageverkehr/auge.gif");
         buttonErstellen();  // Start ; Stop ; Abbruch         
@@ -140,7 +140,8 @@ function zeigBild(a)
 {
     var img = new Image();
     img.onload = function ()
-     {
+     {        
+       // ctx.scale(1,-1);
         ctx.drawImage(img, bild.x ,bild.y,bild.w,bild.h);
      }
     img.src = a;
@@ -188,7 +189,7 @@ function buttonErstellen()
         ctx.fillStyle=rects[i].col;  
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
       }
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#5BA9D9";
     ctx.font = "18px Arial";
 
     for (var i = 0, len = texts.length; i < len; i++) 
@@ -235,8 +236,8 @@ function boxMeldung(x,y,w,h,time)
     {
         ctx.rect(x, y, w,h);
         ctx.stroke();
-        meldung(("gebrauchte Zeit in Sekunden  "  + time),"12px Arial","blue",x+10,y+h*0.33 );
-        meldung(("Vergleich:  "  + zeiten),"12px Arial","blue", x + 10, y+ h*0.66 );
+        meldung(("gebrauchte Zeit in Sekunden  "  + time),"12px Arial","#5BA9D9",x+10,y+h*0.33 );
+        meldung(("Vergleich:  "  + zeiten),"12px Arial","#5BA9D9", x + 10, y+ h*0.66 );
     }
 
     function omeldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)

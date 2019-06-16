@@ -52,16 +52,16 @@ function ladeGame()
     {
        // boxMeldung(("?"),xBasis,120,100,100,25);
        // boxMeldung(("?"),280,120,100,100,25);
-        meldung("Verbessere deine Reaktionszeit und Konzentration","20","Arial","blue",30, 35);  
-        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","18","Arial","blue",xBasis, 100); 
-        meldung("Es gibt 10 Durchgänge","18,"," Arial","blue",xBasis ,320); 
-        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","blue",xBasis ,360); 
-        meldung(( "Anzahl Treffer :  0"),"18","Arial","blue",xBasis, 400);   
+        meldung("Verbessere deine Reaktionszeit und Konzentration","20","Arial","#5BA9D9",30, 35);  
+        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","18","Arial","#5BA9D9",xBasis, 100); 
+        meldung("Es gibt 10 Durchgänge","18,"," Arial","#5BA9D9",xBasis ,320); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","18,"," Arial","#5BA9D9",xBasis ,360); 
+        meldung(( "Anzahl Treffer :  0"),"18","Arial","#5BA9D9",xBasis, 400);   
         buttonErstellen()
       
         ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);  
-        ctx.fillStyle="#9975b9";
+        ctx.fillStyle="#bf7de0";
         ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
         offenButton=true;
@@ -73,7 +73,7 @@ function start()
         ctx.clearRect(xBasis, 440, 300, -20);   // Löschen Trefferquote
         ctx.clearRect(xBasis,400,200,-20);  // Löschen Anzahl Treffer
         treffer=0;
-        meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","blue",xBasis, 400);  
+        meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","#5BA9D9",xBasis, 400);  
        // ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
        // ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);        
         durchLaeufe=0;
@@ -93,7 +93,7 @@ function iteration()
             z1=getRnd(1,10); 
             var schriftGroesse1=getRnd(15,90);
                 
-            meldungOhne(z1.valueOf() ,schriftGroesse1,"Arial","blue",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
+            meldungOhne(z1.valueOf() ,schriftGroesse1,"Arial","#5BA9D9",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
        
             do {
                 
@@ -103,7 +103,7 @@ function iteration()
                 }
                 while ((Math.abs(schriftGroesse1-schriftGroesse2 ) < 25) || (z1 == z2));
 
-            meldungOhne(z2.valueOf() ,schriftGroesse2,"Arial","blue",280 + rects[5].w*.3,120+rects[5].h*0.7);
+            meldungOhne(z2.valueOf() ,schriftGroesse2,"Arial","#5BA9D9",280 + rects[5].w*.3,120+rects[5].h*0.7);
             //console.log("Zufallstahl #1: " + z1 + " | Zufallszahl #2: " + z2 + " | Differenz: " + (z1-z2) + " | Schriftgrößenunterschied: " + (Math.abs( schriftGroesse1  - schriftGroesse2)))
          }
 
@@ -173,14 +173,14 @@ function auswahlButton()
                     if (offenButton==true)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","blue",xBasis ,360);                      
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","#5BA9D9",xBasis ,360);                      
                     }                                       
                     break;
                     case 3:
                     if (offenButton==true)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","blue",xBasis ,360); 
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","18"," Arial","#5BA9D9",xBasis ,360); 
                     }                     
                         break;
                      case 4:
@@ -204,7 +204,7 @@ function vergleich(a)
             {
                 treffer++;   
                 ctx.clearRect(xBasis,400,200,-20);     
-                meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","blue",xBasis, 400);  
+                meldung(( "Anzahl Treffer :  " + treffer),"18","Arial","#5BA9D9",xBasis, 400);  
                 
             }    
     else{akustischeMeldung("audio/up.mp3");   }
@@ -220,7 +220,7 @@ function buttonErstellen()
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
         
       }
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = "#5BA9D9";
      ctx.font = "18px Arial";
 
     for (var i = 0, len = texts.length; i < len-2; i++) 

@@ -64,10 +64,10 @@ var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
 
 function ladeGame() 
     {   
-        meldung("Verbessere Konzentration und Kurzzeitgedächnis","20","Arial","blue",40, 35); 
-        meldung("Merke dir die Buchstaben/Zahlenkombination","18","Arial","blue",40, 65);    
-        meldung("Anzahl","18","Arial","blue",330 ,yBasis2-60);
-        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","blue",330 ,yBasis2-30);
+        meldung("Verbessere Konzentration und Kurzzeitgedächnis","20","Arial","#5BA9D9",40, 35); 
+        meldung("Merke dir die Buchstaben/Zahlenkombination","18","Arial","#5BA9D9",40, 65);    
+        meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
+        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);
 
         erzeugeButtone(0,3);// Sind die Buttons
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
@@ -84,7 +84,7 @@ function start()
     ctx.clearRect(xBasis,450-25 ,200,30)  // Meldung falsch
     ctx.clearRect(xBasis,470-25,55,25);  // meldung super
 
-    meldung("Merke dir die Buchstaben/Zahlenkombination","18","Arial","blue",40, 65);    
+    meldung("Merke dir die Buchstaben/Zahlenkombination","18","Arial","#5BA9D9",40, 65);    
     iterator=-1; 
     zaehlerClick=-1;
     zaehlerTreffer=0;
@@ -150,7 +150,7 @@ canv.addEventListener('click', function(event)
                     if (treffer == anzahlKombi)
                     {
                        
-                        meldung("super  " ,"18","Arial","blue",xBasis,470);                                           
+                        meldung("super  " ,"18","Arial","#5BA9D9",xBasis,470);                                           
                     }
             } 
             getroffen=false;   
@@ -240,7 +240,7 @@ iterator++;
         if(iterator==anzahlKombi ) // zeigt danach ALLE Kombinationen 
         {
             ctx.clearRect(200, 200-60,400,80);
-            meldung("Klicke die vorher gezeigten Kombinationen an","18","Arial","blue",40, 65);  
+            meldung("Klicke die vorher gezeigten Kombinationen an","18","Arial","#5BA9D9",40, 65);  
            
             for (let i=0;i<16;i++)
             {
@@ -310,7 +310,7 @@ function erzeugeButtone(a,b)
 
 function buttonText()
 { 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#5BA9D9";
     ctx.font = "18px Arial";
     for (let i =0, len = 4; i < len; i++) 
         {      
@@ -346,14 +346,14 @@ function auswahlButton()
                     case 2:
                         anzahlKombi= plusMinus(anzahlKombi,1,1,15); 
                         ctx.clearRect(xBasis,320 -20, 300, 20); 
-                        meldung("Anzahl","18","Arial","blue",330 ,yBasis2-60);
-                        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","blue",330 ,yBasis2-30);                                   
+                        meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
+                        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);                                   
                         break;
                      case 3:
                         anzahlKombi= plusMinus(anzahlKombi,-1,1,15); 
                         ctx.clearRect(xBasis,320 -20, 300, 20); 
-                        meldung("Anzahl","18","Arial","blue",330 ,yBasis2-60);
-                        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","blue",330 ,yBasis2-30);               
+                        meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
+                        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);               
                         break;
                         default:
                         alert("Sorry");

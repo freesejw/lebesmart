@@ -18,8 +18,8 @@ Canvas {
     <canvas id="canvas" width="500" height="600"></canvas>
      
 <script>
-var farbe=["green", "blue", "red", "black", "gray"];
-var farbNamen = ["Grün","Blau","Rot","Schwarz","Grau"]
+var farbe=["green", "#5BA9D9", "red", "black", "#bf7de0"];
+var farbNamen = ["Grün","Blau","Rot","Schwarz","Lila"]
 var farbeSuch, farbNamenSuch;   
 var indexFarbe=[]; 
 var canv = document.getElementById("canvas");
@@ -37,9 +37,9 @@ var audio;
 var xBasis=20, yBasis1=200, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 420, wBasis2=120, yErhoehung=50; 
 //Rechtecke für die Farben
-var rects = [{x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: "gray"},
+var rects = [{x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: "#bf7de0"},
              {x: (xBasis + wBasis1+ dBasis), y: yBasis1, w: wBasis1, h: hBasis,col: "green"},
-             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "blue"},
+             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "#5BA9D9"},
              {x: (xBasis + 3 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "red"},
              {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "black"},
  // Button fuer Go on usw.
@@ -58,14 +58,14 @@ var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
 function ladeGame() 
     {   
-        meldung("Verbessere deine Reaktionszeit","20","Arial","blue",80, 25);
+        meldung("Verbessere deine Reaktionszeit","20","Arial","#5BA9D9",80, 25);
         ctx.fillStyle="Lavender";
         ctx.fillRect( 80,60, 200, 40);  // Rechteck um "RED" Text
         meldung(" Grün ? ","bolder 20", "Arial","red",100, 88);
-        meldung("Tippe die Farbe des angebotenen Wortes","18","Arial","blue",80, 125);
-        meldung("Hier im Beispiel wäre es Rot","18","Arial","blue",80, 150);
-        meldung("Reaktionszeit = " ,"18","Arial","blue",340 ,370);
-        meldung(reaktionsZeit + " Sek.","18","Arial","blue",340 ,400);
+        meldung("Tippe die Farbe des angebotenen Wortes","18","Arial","#5BA9D9",80, 125);
+        meldung("Hier im Beispiel wäre es Rot","18","Arial","#5BA9D9",80, 150);
+        meldung("Reaktionszeit = " ,"18","Arial","#5BA9D9",340 ,370);
+        meldung(reaktionsZeit + " Sek.","18","Arial","#5BA9D9",340 ,400);
         erzeugeButton(0,rects.length); // Rechtecke / Button werden hier gezeichnet 
         buttonText();  // und hier mit Text versehen falls keine Farbe genommen wird 
         blocken=false;
@@ -81,7 +81,7 @@ function ladeGame()
                 auswahlButton();            
                 if ( (vergleichIndex==farbeSuch) && ( getipptRechteck<farbe.length))
                     { treffer++; 
-                    meldung( treffer + " Treffer  bei " + durchLaeufe + " Durchläufe","18" ,"Arial","blue",xBasis, 300);
+                    meldung( treffer + " Treffer  bei " + durchLaeufe + " Durchläufe","18" ,"Arial","#5BA9D9",xBasis, 300);
                     }  
             }   
         }, false);
@@ -93,7 +93,7 @@ function start()
         blocken = true;
         treffer=0;   
         ctx.strokeRect( 80,60, 200, 40);
-        meldung("                                          ","18","Arial","blue",80, 150);   // löscht "" Hier im Beispiel wäre es Blau"
+        meldung("                                          ","18","Arial","#5BA9D9",80, 150);   // löscht "" Hier im Beispiel wäre es Blau"
         ctx.clearRect(100,88-20, 180, 25); // Löscht den Text der anzutippenden Farbe       
         ctx.clearRect(xBasis,300-20,300, 20); // löscht : .. Treffer bei ... Durchläufe
         indexFarbe=auswahlIndex(); // Die farbe der Farb rechtecke werden bei jedem start aufruf geändert
@@ -159,8 +159,8 @@ function abbruch()
     {
     var quote=(treffer)/(durchLaeufe-1);
     quote=Math.round(quote*100);
-    meldung( treffer + " Treffer  bei " + durchLaeufe + " Durchläufe","18" ,"Arial","blue",xBasis, 300);        
-     //meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","blue",80,350);
+    meldung( treffer + " Treffer  bei " + durchLaeufe + " Durchläufe","18" ,"Arial","#5BA9D9",xBasis, 300);        
+     //meldung("Deine Trefferquote war " + quote + " Prozent","18","Arial","#5BA9D9",80,350);
           
    //  console.log("durchLaeufe  " + durchLaeufe + " treffer  " + treffer);
         clearInterval(myVar);   
@@ -189,13 +189,13 @@ function auswahlButton()
                         break;
                     case 7:
                     if (blocken ==false){reaktionsZeit =plusMinus(reaktionsZeit,0.25,0.5, 10);}
-                    meldung("Reaktionszeit = " ,"18","Arial","blue",340 ,370);
-                    meldung(reaktionsZeit + " Sek.","18","Arial","blue",340 ,400);                                     
+                    meldung("Reaktionszeit = " ,"18","Arial","#5BA9D9",340 ,370);
+                    meldung(reaktionsZeit + " Sek.","18","Arial","#5BA9D9",340 ,400);                                     
                     break;
                     case 8:
                     if (blocken ==false){reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0.5, 10);}
-                     meldung("Reaktionszeit = " ,"18","Arial","blue",340 ,370);
-                     meldung(reaktionsZeit + " Sek.","18","Arial","blue",340 ,400);                                   
+                     meldung("Reaktionszeit = " ,"18","Arial","#5BA9D9",340 ,370);
+                     meldung(reaktionsZeit + " Sek.","18","Arial","#5BA9D9",340 ,400);                                   
                     break;  
                     default:
                     alert("Sorry");
@@ -239,7 +239,7 @@ function erzeugeButton(a,b)
 
 function buttonText()
  { 
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "#5BA9D9";
         ctx.font = "18px Arial";
         for (var i =0, len = 4; i < len; i++) 
         {      

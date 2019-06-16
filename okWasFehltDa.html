@@ -68,9 +68,9 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
 
 function ladeGame() 
     {   
-        meldung("Übe dich in Konzentration","bold 20","Arial","blue",120, 50);     
-        meldung("Welches Bild von oben taucht unten nicht auf ?","18","Arial","blue",xBasis, 320);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","blue",xBasis,120);     
+        meldung("Übe dich in Konzentration","bold 20","Arial","#5BA9D9",120, 50);     
+        meldung("Welches Bild von oben taucht unten nicht auf ?","18","Arial","#5BA9D9",xBasis, 320);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","#5BA9D9",xBasis,120);     
         erstelleBasisBild();  // dient nur zur Ansicht        
         treffer=0;
         durchLaeufe=0;
@@ -111,7 +111,7 @@ canv.addEventListener('click', function(e)
                 elapsedTime = Date.now() - startTime;
                 elapsedTime = Math.round(elapsedTime / 1000);       
                 zeiten.push(elapsedTime)           
-                meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","blue",xBasis, yBasis2+ytextdis+155);        
+                meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","#5BA9D9",xBasis, yBasis2+ytextdis+155);        
                 }
                 else{
                    meldung("Ist es nicht","18","Arial","red",xBasis,490)
@@ -202,7 +202,7 @@ function zeigBild(a,x,y,w,h)
 
 function rechteckeText()
 { 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#5BA9D9";
     ctx.font = "18px Arial";
     
        ctx.fillText("Go on",xBasis + xtestdis -10, yBasis3 + ytextdis);

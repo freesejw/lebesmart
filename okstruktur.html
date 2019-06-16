@@ -51,9 +51,9 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
 
 function ladeGame()
 {
-    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","20","Arial","blue",xBasis, 30); 
-    meldung("Merke Dir die Bildpositionen","18", "Arial","blue",xBasis, 60);   
-    meldung("Anzahl Bilder = " +  anzahlBilder,"16","Arial","blue",335,420);
+    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","20","Arial","#5BA9D9",xBasis, 30); 
+    meldung("Merke Dir die Bildpositionen","18", "Arial","#5BA9D9",xBasis, 60);   
+    meldung("Anzahl Bilder = " +  anzahlBilder,"16","Arial","#5BA9D9",335,420);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     buttonErstellen();  
     plusPunkte=0;
@@ -74,7 +74,7 @@ function start()
 
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);    
     auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt sie an 
-    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","blue",xBasis,395); 
+    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","#5BA9D9",xBasis,395); 
  
    id=setInterval(zeitAbfrage,1000);
 }
@@ -83,7 +83,7 @@ function zeitAbfrage()
    {
     // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
     
-    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","blue",xBasis,395); 
+    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","#5BA9D9",xBasis,395); 
 
     zeitAusgang=zeitAusgang + 1;
    
@@ -147,8 +147,8 @@ if (blocken==false)
             {
                 // Richtige Zahl
                 plusPunkte++;                 
-               //meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","blue",335,300);  
-                //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18","Arial","blue",335,340);  
+               //meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","#5BA9D9",335,300);  
+                //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18","Arial","#5BA9D9",335,340);  
                 blocken=false;
             }
         }    
@@ -171,22 +171,22 @@ canv.addEventListener('click', function(e)
                         if (blocken==false)
                         {
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","#5BA9D9",335,420); 
                         }
                     break; 
                     case 2:
                     if (blocken==false)
                         {
                         anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","blue",335,420);  
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","#5BA9D9",335,420);  
                         }                                      
                     break;                    
                     default:
                     alert("Sorry");
                 }                        
         } 
-        meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","blue",335,300);  
-                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"18","Arial","blue",335,340);  
+        meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","#5BA9D9",335,300);  
+                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"18","Arial","#5BA9D9",335,340);  
     }, false);
 
 
@@ -195,13 +195,13 @@ function buttonErstellen()
 {
        for (var i = 0, len = rects.length; i < len; i++) {
         ctx.lineWidth="5";   
-        ctx.strokeStyle="blue";   
+        ctx.strokeStyle="#5BA9D9";   
         ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
        // ctx.stroke();     
         ctx.fillStyle=rects[i].col;  
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
       }
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = "#5BA9D9";
       ctx.font = "18px Arial";
 
             for (var i = 0, len = texts.length; i < len; i++) 
@@ -247,7 +247,7 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
          }
     }
     ctx.lineWidth="1";
-            ctx.strokeStyle="blue";       
+            ctx.strokeStyle="#5BA9D9";       
             ctx.strokeRect(xCoord[0]+xAbstand,yCoord[0]+yAbstand,breite*spalten,hoehe*zeilen);    
 }
 

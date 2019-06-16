@@ -57,9 +57,9 @@ var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
 
 function ladeGame() 
     {   
-        meldung("Übe die Merkspanne","20","Arial","blue",40, 30);  
-        meldung("Merke dir die Blinks : Position und Reihenfolge","18","Arial","blue",40, 60);     
-        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","blue",xTextRechts ,yTextHoehe);
+        meldung("Übe die Merkspanne","20","Arial","#5BA9D9",40, 30);  
+        meldung("Merke dir die Blinks : Position und Reihenfolge","18","Arial","#5BA9D9",40, 60);     
+        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","#5BA9D9",xTextRechts ,yTextHoehe);
         erzeugeButton(0,3);
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
@@ -133,15 +133,15 @@ canv.addEventListener('click', function(event)
                                 feldBlocken=true;
                                 buttonBlocken=false;                               
                                 akustischeMeldung("audio/up.mp3");   
-                                meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
-                                meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
+                                meldung("Treffer : " + treffer ,"18","Arial","#5BA9D9",310,300);
+                                meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","#5BA9D9",310,340);
                              }
             
                     if (zaehlerTreffer == anzahlBlinks)
                     {
                        treffer++
-                       meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
-                       meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
+                       meldung("Treffer : " + treffer ,"18","Arial","#5BA9D9",310,300);
+                       meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","#5BA9D9",310,340);
                        buttonBlocken=false; 
                        
                     }
@@ -239,8 +239,8 @@ function abbruch()
         
         buttonBlocken=false;
         ctx.clearRect(xBasis,420-30,400,30);   
-        meldung("Treffer : " + treffer ,"18","Arial","blue",310,300);
-        meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","blue",310,340);
+        meldung("Treffer : " + treffer ,"18","Arial","#5BA9D9",310,300);
+        meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","#5BA9D9",310,340);
         clearInterval(myVar);
     }
  
@@ -270,7 +270,7 @@ function angetippt(rects, x, y) {
 function erzeugeButton(a,b)
 {
        for (var i = a;i <= b; i++) {
-        ctx.strokeStyle="blue";
+        ctx.strokeStyle="#5BA9D9";
         ctx.lineWidth="5";  
         ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
              
@@ -281,7 +281,7 @@ function erzeugeButton(a,b)
 
 function buttonText()
 { 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "#5BA9D9";
     ctx.font = "18px Arial";
 
     for (var i =0, len = 4; i < len; i++) 
@@ -313,7 +313,7 @@ function auswahlButton()
                       {                      
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
-                            meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","blue",xTextRechts ,yTextHoehe);
+                            meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","#5BA9D9",xTextRechts ,yTextHoehe);
                       }
                         break;
                      case 3:
@@ -321,7 +321,7 @@ function auswahlButton()
                         {
                                 anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","blue",xTextRechts ,yTextHoehe);   
+                                meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","#5BA9D9",xTextRechts ,yTextHoehe);   
                         }                     
                         break;
                        default:
