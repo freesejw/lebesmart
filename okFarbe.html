@@ -9,8 +9,8 @@ Canvas {
    position: absolute;
    top: 0px;
    left: 0px;
-   border: 1px red solid;
-   background-color: #FFEFDB;
+  
+   background-color: #efefef;
 }
 </style>
 </head>
@@ -31,7 +31,7 @@ var reaktionsZeit=2;
 var maxDurchlaeufe=10;
 
 var durchLaeufe, treffer;
-var bgColor="lightblue";
+var bgColor="Lavender";
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var audio;
 var xBasis=20, yBasis1=200, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
@@ -58,11 +58,12 @@ var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
 function ladeGame() 
     {   
-        meldung("Verbessere deine Reaktionszeit","20","Arial","black",80, 25);
-        ctx.strokeRect( 80,60, 200, 40);  // Rechteck um "RED" Text
-        meldung(" Red ? ","bolder 20", "Arial","blue",100, 88);
-        meldung("Tippe die Farbe des angebotenen Wortes","18","Arial","black",80, 125);
-        meldung("Hier im Beispiel wäre es Blau","18","Arial","black",80, 150);
+        meldung("Verbessere deine Reaktionszeit","20","Arial","blue",80, 25);
+        ctx.fillStyle="Lavender";
+        ctx.fillRect( 80,60, 200, 40);  // Rechteck um "RED" Text
+        meldung(" Grün ? ","bolder 20", "Arial","red",100, 88);
+        meldung("Tippe die Farbe des angebotenen Wortes","18","Arial","blue",80, 125);
+        meldung("Hier im Beispiel wäre es Rot","18","Arial","blue",80, 150);
         meldung("Reaktionszeit = " ,"18","Arial","blue",340 ,370);
         meldung(reaktionsZeit + " Sek.","18","Arial","blue",340 ,400);
         erzeugeButton(0,rects.length); // Rechtecke / Button werden hier gezeichnet 
@@ -92,7 +93,7 @@ function start()
         blocken = true;
         treffer=0;   
         ctx.strokeRect( 80,60, 200, 40);
-        meldung("                                          ","18","Arial","black",80, 150);   // löscht "" Hier im Beispiel wäre es Blau"
+        meldung("                                          ","18","Arial","blue",80, 150);   // löscht "" Hier im Beispiel wäre es Blau"
         ctx.clearRect(100,88-20, 180, 25); // Löscht den Text der anzutippenden Farbe       
         ctx.clearRect(xBasis,300-20,300, 20); // löscht : .. Treffer bei ... Durchläufe
         indexFarbe=auswahlIndex(); // Die farbe der Farb rechtecke werden bei jedem start aufruf geändert
@@ -231,12 +232,14 @@ function erzeugeButton(a,b)
         ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);               
         ctx.fillStyle=rects[i].col;         
         ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+
+        
       }
 }
 
 function buttonText()
  { 
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "blue";
         ctx.font = "18px Arial";
         for (var i =0, len = 4; i < len; i++) 
         {      
