@@ -23,15 +23,15 @@ var ctx = canv.getContext("2d");
 var cW = ctx.canvas.width, cH = ctx.canvas.height;  
 
 var xx=0,yy=100;
-var indexBilder=[], verschwunden; 
+var indexBilder=[]; 
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
-var zeigen=12;
+var zeigen=4;
 var durchLaeufe, treffer;
 var bgColor="Lavender";
-var anzahlBilder=20, pic =new Array, zeigBilder=12;
-var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
+var anzahlBilder=14, pic =new Array, zeigBilder=4;
 var startTime,elapsedTime,zeiten=[];
-
+var spiegel;
+var clEvent=false;
 
 
 var yBasis0=150;
@@ -39,7 +39,7 @@ var yBasis1=230;
 var yBasis2=350;
 var yBasis3=550;
 
-var xBasis=20, wBasis1=60, hBasis=40, dBasis=20, xtestdis=20, ytextdis=25;
+var xBasis=20, wBasis1=100, hBasis=140, dBasis=20, xtestdis=20, ytextdis=25;
 
 var wBasis2=120, yErhoehung=50; 
 
@@ -50,18 +50,9 @@ var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: h
              {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
              {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
              {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
-             {x: (xBasis + 4 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
-             {x: (xBasis + 5 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
-
-             {x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
-             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
-             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
-             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
-             {x: (xBasis + 4 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
-             {x: (xBasis + 5 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
-
-  
-             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis,col: bgColor}];
+          
+ 
+             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis-100,col: bgColor}];
            
  
 var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
@@ -69,32 +60,33 @@ var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
 function ladeGame() 
     {   
         meldung("Übe dich in Konzentration","bold 20","Arial","#5BA9D9",120, 50);     
-        meldung("Welches Bild von oben taucht unten nicht auf ?","18","Arial","#5BA9D9",xBasis, 320);  
+        meldung("Welches Bild ist gespiegelt ? KLICK es an","18","Arial","#5BA9D9",xBasis, 360);  
         meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","#5BA9D9",xBasis,120);     
         erstelleBasisBild();  // dient nur zur Ansicht        
         treffer=0;
         durchLaeufe=0;
+        
    
     }
 
-    function steuerung(){
+    function Goon(){
         ctx.clearRect(xBasis,120-24,480,40);// löscht " dies ist ein ...."
         ctx.clearRect(xBasis,190-24,480,40);//
         erstelleBasisBild()
         startTime = Date.now(); 
+        clEvent=true;
+        durchLaeufe++;
     }
 
     function erstelleBasisBild()
     {
-        erzeugeDieRechtecke(0,12); // Rexhteck(12) ist der Go on Button
+        erzeugeDieRechtecke(0,4); // Rexhteck(4) ist der Go on Button
         rechteckeText();  // und hier wird der Go on Button mit Text versehen  
         einlesenBilder();
-        indexBilder=indexVergleichsBilder();          
+        indexBilder=(random(pic.length));              
         zeichneVorgabeBilder();
-        verschwunden=random(zeigBilder);        
-        indexBilder.splice(verschwunden,1);   
-        indexBilder=shuffle(indexBilder);
-        zeichneVergleichsBilder();      
+         
+         
     }
     
   
@@ -104,41 +96,29 @@ canv.addEventListener('click', function(e)
        
         if (rect)
         {          
-            if ( (getipptRechteck==verschwunden)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
+           if (clEvent==true){
+clEvent=false;
+            if ( (getipptRechteck==spiegel)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
                 { treffer++;
                 blocke= true; 
-                meldung("Treffer : " + treffer ,"18","Arial","red",xBasis,490);   
+                meldung("Treffer : " + treffer + "  Durchläufe " + durchLaeufe,"18","Arial","red",xBasis,490);   
                 elapsedTime = Date.now() - startTime;
                 elapsedTime = Math.round(elapsedTime / 1000);       
                 zeiten.push(elapsedTime)           
                 meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","#5BA9D9",xBasis, yBasis2+ytextdis+155);        
                 }
                 else{
-                   meldung("Ist es nicht","18","Arial","red",xBasis,490)
+                   meldung("Ist es nicht   ==> Go on","18","Arial","red",xBasis,490)
                 }
-            if ( (getipptRechteck==zeigen))
+           }
+            if ( (getipptRechteck==zeigen)) // Zeigen istr die Nummer des Buttons Go on
                 {
-                steuerung();
+                Goon();
                 }
         }
         }, false);
 
-function indexVergleichsBilder()
-    {
-    //Bestimmt per Zufall die bildernfolge 
-    var zww=[];
-        for (var i =0; i<zeigBilder;i++)
-        {
-        var zw =(random(pic.length));    
-        if (zww.indexOf(zw) <0)
-            {               
-                zww.push(zw);            
-                }
-                        else
-                        {i=i-1;}        
-        } 
-    return zww;
-    }
+
 
 function random(max)
           {
@@ -173,34 +153,30 @@ function erzeugeDieRechtecke(a,b)
       }
 }
 
-function zeichneVergleichsBilder(){
-    for (let i = 0 ;i<11;i++){
-        var xx =  xBasis + i * (wBasis1 + dBasis);
-        xx=xx-6*(wBasis1+dBasis)*(i>5);
-        var yy = yBasis2 + 50*(i>5);
 
-        var spiegeln = i === 3
-        zeigBild(pic[indexBilder[i]],xx,yy,wBasis1,hBasis, spiegeln);   
-    }
- 
-}
 
-function zeichneVorgabeBilder(){     
-    for (let i=0;i<zeigBilder;i++){ 
-         zeigBild(pic[indexBilder[i]], rects[i].x, rects[i].y, rects[i].w, rects[i].h);     
+function zeichneVorgabeBilder(){
+    spiegel=random(4);
+    for (var i=0;i<zeigBilder;i++)
+    { 
+        zeigBild(pic[indexBilder], rects[i].x, rects[i].y, rects[i].w, rects[i].h,spiegel,i);     
     } 
 }
 
-function zeigBild(a,x,y,w,h, gespiegelt)
+function zeigBild(a,x,y,w,h,sp,i)
 {
+    console.log("index  " + indexBilder + "  i  " + i);
     var img = new Image();
     img.onload = function ()
      {
-        if(gespiegelt === true) {
-            ctx.scale(1,-1)
-            ctx.drawImage(img,x,-1*(y+h),w,h);
+        
+        if(i===sp) {
+            console.log("sp " +sp);
+            ctx.scale(-1,1)
+            //ctx.drawImage(img,x,-1*(y+h),w,h);
+            ctx.drawImage(img,-1*(x+w),y,w,h);
             ctx.restore();
-            ctx.scale(1,-1);
+            ctx.scale(-1,1);
         }
         else
             ctx.drawImage(img, x,y,w,h);
@@ -229,9 +205,9 @@ function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
 
 function einlesenBilder()
     {
-        for (i=0;i<= anzahlBilder;i++)
+        for (i=0;i< anzahlBilder;i++)
         {
-            pic[i]=  "imageverkehr/verk" + i + ".jpg" 
+            pic[i]=  "Spiegeln/sp" + i + ".jpg" 
         } 
     };
 

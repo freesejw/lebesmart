@@ -53,7 +53,7 @@ function ladeGame()
     {   
         meldung("Verbessere die Reaktionszeit / übe die Konzentration","20px Arial","#5BA9D9",10, 25);    
         einlesenBilder();
-        zeigBild("imageverkehr/auge.gif");
+       zeigBild("imageverkehr/auge.gif");        
         buttonErstellen();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
     }
@@ -141,7 +141,7 @@ function zeigBild(a)
     var img = new Image();
     img.onload = function ()
      {        
-       // ctx.scale(1,-1);
+        
         ctx.drawImage(img, bild.x ,bild.y,bild.w,bild.h);
      }
     img.src = a;
@@ -228,7 +228,7 @@ function abbruch()
 function meldung(text, schrift,farbe,xm,ym)
    {
         ctx.fillStyle = farbe;
-        ctx.font = schrift;
+        ctx.font = schrift;        
         ctx.fillText(text, xm ,ym); 
     }
 
