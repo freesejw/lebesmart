@@ -24,7 +24,8 @@ var zeiten=[];
 var schnitt;
 var xCoord=[], yCoord=[];
 var operand;
-var bgColor="Lavender";
+var bgCol="Lavender";
+var vgCol="#8800ff";
 var rechenSchritte=5, schrittWeite=1,string;
 var durchLaeufe,richtig;
 var ergebnis, ergebnisIndex;
@@ -34,21 +35,21 @@ var yBasis2= 500, wBasis2=120, yErhoehung=50;
 
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
 
-var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: vgCol,col2: bgCol},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: vgCol,col2: bgCol},
+             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: vgCol,col2: bgCol},             
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: vgCol,col2: bgCol},
 
 // Lösungs Alternativen  
-             {x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis1+ dBasis), y: yBasis1, w: wBasis1, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: bgColor},
-             {x: (xBasis + 3 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: bgColor},
-             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: bgColor},
-             {x: (xBasis + 5 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: bgColor}];
+             {x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: bgCol},
+             {x: (xBasis + wBasis1+ dBasis), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 3 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 5 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol}];
 
-var texts =[{na: "Go on", x: xBasis + xtextdis -10, y: yBasis2 + ytextdis},
-           {na: "Lösung", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+var texts =[{na: "Go on", x: xBasis + xtextdis -10, y: yBasis2 + ytextdis+yErhoehung},
+           {na: "Lösung", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
            {na: "Mehr Ziffern", x: (xBasis + 10+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
            {na: "Weniger", x: (xBasis + xtextdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
 
@@ -59,7 +60,7 @@ function ladeGame()
         meldung("Verbessere deine Rechen - Geschwindigkeit","20px Arial","#5BA9D9",60,65 ); 
         meldung( "3 + 4 *  ....... = ?","20px Arial","#5BA9D9",65,120);
         meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","#5BA9D9",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
-        buttonErstellen()
+        roundedButton("Lavender")
         buttonText();
         //aufbauZeile(rechenSchritte,breite,hoehe);
         ctx.clearRect(xBasis-10, 240-30,500,ytextdis+50);
@@ -70,8 +71,8 @@ function ladeGame()
 
 function start()
     {   
-        meldung("Welcher Ergebnisvorschlag ist richtig","18px Arial","#5BA9D9",xBasis, yBasis1+ytextdis+50);       
-        meldung("Klick die Zahl an, die dem Ergebnis entspricht","16px Arial","#5BA9D9",xBasis,yBasis1+ytextdis+80);
+        
+        meldung("Klick die obige Zahl an, die dem Ergebnis entspricht","16px Arial","#5BA9D9",xBasis,yBasis1+ytextdis+80);
         meldung("Anzahl Richtige :  " + richtig,"18px Arial","#5BA9D9",xBasis, yBasis1+ytextdis+150);   
         //meldung("Anzahl Ziffern = " + rechenSchritte,"18px Arial","#5BA9D9",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
 
@@ -137,7 +138,7 @@ function aufbauZeile(ele,breite,hoehe)
                         rr = moeglichkeiten[wahl]
                      }
                 string=string + rr;
-                ctx.fillText(rr,xCoord[i*2] +xAbstand *2,yCoord[i*2]+yDist+30);  
+                ctx.fillText(rr,xCoord[i*2] +xAbstand *2,yCoord[i*2]+yDist+10);  
                 xx =ergebnisKette(string);                
                 oo=operanden[random(operanden.length)].trim(); 
                 if(i==anzahlOperanden-1) 
@@ -146,7 +147,7 @@ function aufbauZeile(ele,breite,hoehe)
             
                 ctx.fillStyle="red"; 
                 ctx.font= "18px Arial";  
-                ctx.fillText(oo,xCoord[i*2+1]+xAbstand * 2 ,yCoord[i*2+1]+yDist+30);
+                ctx.fillText(oo,xCoord[i*2+1]+xAbstand * 2 ,yCoord[i*2+1]+yDist+10);
                 string=string +oo.valueOf();  
               
             }
@@ -155,13 +156,13 @@ function aufbauZeile(ele,breite,hoehe)
             {             
             rr =1+random(9); 
             string=string + rr;  
-            ctx.fillText(rr,xCoord[i*2] +xAbstand *2,yCoord[i*2]+yDist+30); // zeigt die letzte Zahl an
+            ctx.fillText(rr,xCoord[i*2] +xAbstand *2,yCoord[i*2]+yDist+10); // zeigt die letzte Zahl an
 
             
-                ctx.fillText("=",xCoord[i*2+1]+xAbstand *2 + xDist,yCoord[i*2+1]+yDist +30); 
+                ctx.fillText("=",xCoord[i*2+1]+xAbstand *2 + xDist,yCoord[i*2+1]+yDist +10); 
                 //var erg=eval(string); Liefert Lösung incl Rechenregeln
                 ergebnis=ergebnisKette(string);               
-                ctx.fillText("?",xCoord[i*2+2]+xAbstand *2 + xDist,yCoord[i*2+2]+yDist+30);      
+                ctx.fillText("?",xCoord[i*2+2]+xAbstand *2 + xDist,yCoord[i*2+2]+yDist+10);      
             }
         
     }
@@ -175,7 +176,7 @@ function vergleichsZahlen()
    // Die Position wird per Zufall generiert
    
     var zz=[];
-    for (i=0;i<6;i++)
+    for (var i=0;i<6;i++)
     {
         var min = ergebnis - 12;
         var max = ergebnis + 12;
@@ -194,6 +195,10 @@ function vergleichsZahlen()
             ctx.fillText(zz[3],(xBasis + 8 + 3 * (wBasis1+ dBasis)),yBasis1+ ytextdis);
             ctx.fillText(zz[4],(xBasis + 8 + 4 * (wBasis1+ dBasis)),yBasis1 +ytextdis );
             ctx.fillText(zz[5],(xBasis + 8 + 5 * (wBasis1+ dBasis)),yBasis1 +ytextdis );
+            for(var i=0;i<6;i++)
+            {
+            filledCircle(rects[4+i].x+20, rects[4+i].y+20,30,0,2,Math.PI);
+            }
 }
  
   function ergebnisKette(kette)
@@ -306,14 +311,13 @@ function auswahlButton()
                 }             
     }
 
-function buttonErstellen()
+function roundedButton()
 {
-       for (var i = 0, len = rects.length; i < len; i++) {
-        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
-        ctx.stroke();  
-        ctx.fillStyle=rects[i].col;  
-        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
-        
+       for (var i = 0, len = rects.length; i < len; i++) {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+       ctx.fillStyle=rects[i].col2 , 
+       roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
       }
 }
 
@@ -329,6 +333,7 @@ function buttonText()
      
 }
 
+
 function random(max)
           {
             return Math.floor((Math.random() *max));
@@ -338,7 +343,7 @@ function boxMeldung(melde,x,y,w,h,k1,k2,o)
     {       
         ctx.rect(x,y,w,h);
         ctx.stroke();
-        ctx.fillStyle=bgColor;
+        ctx.fillStyle=bgCol;
         ctx.fillRect(x,y,w,h);      
         meldung(melde,"25px Arial","#5BA9D9",x+30,y+45  );
     }
@@ -378,12 +383,39 @@ function isPrime(nr) {
   }
 }
 
+function roundedRect(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + radius);
+  ctx.lineTo(x, y + height - radius);
+  ctx.arcTo(x, y + height, x + radius, y + height, radius);
+  ctx.lineTo(x + width - radius, y + height);
+  ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+  ctx.lineTo(x + width, y + radius);
+  ctx.arcTo(x + width, y, x + width - radius, y, radius);
+  ctx.lineTo(x + radius, y);
+  ctx.arcTo(x, y, x, y + radius, radius);
+  ctx.lineWidth = 1;
+  ctx.stroke(); 
+  ctx.fill();
+}
+
+function filledCircle(x,y,r,start,end) {
+    // draw the colored region
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, end * Math.PI, true);
+    ctx.fillStyle = "#E2FFC6";   
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#66CC01";
+    ctx.stroke();
+    ctx.lineWidth=0;
+}
+
 
 </script>
 
 
        
-<p>Enjoy !</p>
+
 
 </body>
 </html>

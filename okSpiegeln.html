@@ -27,11 +27,13 @@ var indexBilder=[];
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var zeigen=4;
 var durchLaeufe, treffer;
-var bgColor="Lavender";
+var bgCol="Lavender";
+var vgCol="#8800ff";
 var anzahlBilder=14, pic =new Array, zeigBilder=4;
 var startTime,elapsedTime,zeiten=[];
 var spiegel;
 var clEvent=false;
+var audio;
 
 
 var yBasis0=150;
@@ -52,7 +54,7 @@ var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: h
              {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
           
  
-             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis-100,col: bgColor}];
+             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis-100,col1: vgCol,col2: bgCol}];
            
  
 var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
@@ -61,7 +63,7 @@ function ladeGame()
     {   
         meldung("Übe dich in Konzentration","bold 20","Arial","#5BA9D9",120, 50);     
         meldung("Welches Bild ist gespiegelt ? KLICK es an","18","Arial","#5BA9D9",xBasis, 360);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","#5BA9D9",xBasis,120);     
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","red",xBasis,120);     
         erstelleBasisBild();  // dient nur zur Ansicht        
         treffer=0;
         durchLaeufe=0;
@@ -108,7 +110,8 @@ clEvent=false;
                 meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","#5BA9D9",xBasis, yBasis2+ytextdis+155);        
                 }
                 else{
-                   meldung("Ist es nicht   ==> Go on","18","Arial","red",xBasis,490)
+                   meldung("Falsch   ==> Go on","18","Arial","red",xBasis,490)
+                   akustischeMeldung("audio/up.mp3");  
                 }
            }
             if ( (getipptRechteck==zeigen)) // Zeigen istr die Nummer des Buttons Go on
@@ -148,7 +151,7 @@ function erzeugeDieRechtecke(a,b)
        for (var i = a;i <= b; i++) {
         ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
         ctx.stroke();          
-        ctx.fillStyle=rects[i].col;         
+        ctx.fillStyle=rects[i].col2;         
        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
       }
 }
@@ -219,7 +222,11 @@ function shuffle(a) {
     }
     return a;
 }
-
+function akustischeMeldung(a)
+    {
+        audio = new Audio(a);
+        audio.play();
+    }
 
 </script>
   

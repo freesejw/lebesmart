@@ -50,15 +50,15 @@ var xAbstand=50,yAbstand = 130;     // Verschiebt die Matrix nach rechts und unt
 var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtestdis=10, ytextdis=25;
 var yBasis2= 490, wBasis2=120, yErhoehung=50; 
 
-var rects = [ {x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+var rects = [ {x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 +yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
 
 // Beschriftung der Buttons
 
-var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
-            {na: "Ergebnis", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis + yErhoehung},
+            {na: "Ergebnis", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
             {na: "Kombis +", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
             {na: "Kombis -", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
 

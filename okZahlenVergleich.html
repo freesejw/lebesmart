@@ -29,8 +29,8 @@ var offenButton;
 var xBasis=20, yBasis1=280, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 460, wBasis2=120, yErhoehung=50;
 
-var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
 
@@ -39,8 +39,8 @@ var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
 
 
 
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
-           {na: "Abbruch", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis + yErhoehung},
+           {na: "Abbruch", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis+yErhoehung} ,
            {na: "Mehr Zeit", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
            {na: "Weniger", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis },
 

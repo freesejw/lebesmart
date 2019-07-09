@@ -32,13 +32,13 @@ var durchgang;
 
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
 
-var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
+var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
 
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
-           {na: "Lösung", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
+var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis +yErhoehung},
+           {na: "Lösung", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + yErhoehung + ytextdis} ,
            {na: "Operanden +", x: (xBasis + 10+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
            {na: "Operanden -", x: (xBasis + 10 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
 
@@ -51,9 +51,11 @@ function ladeGame()
         meldung("Logik // Erhöhe die geistige Ausdauer","20px Arial","#5BA9D9",65, 35);  
         meldung("Welche Rechenzeichen ( +  -  *  ) werden gesucht?","18px Arial","#5BA9D9",xBasis, 100); 
         //meldung( "3 ? 4 ? ....... = ..","18px Arial","#5BA9D9",xBasis,140);
-        meldung("Anzahl Operanden (???) = " + rechenSchritte,"20px Arial","#5BA9D9",xBasis ,320); 
+        meldung("Anzahl Operanden :  " + rechenSchritte,"20px Arial","#5BA9D9",xBasis +240 ,yBasis2 -35); 
         //meldung(( "Anzahl Treffer :  0"),"18px Arial","#5BA9D9",xBasis, 350);   
-        buttonErstellen()      
+        roundedButton("#8800ff","Lavender");
+        textButton();
+        //buttonErstellen()      
         aufbauZeile(rechenSchritte,breite,hoehe);
         durchgang=0;
     };
@@ -64,11 +66,8 @@ function start()
         ctx.clearRect(0,y,500,35); // Löschen Anzahl operanden
         ctx.clearRect(0,280-30,500,30);
         ctx.clearRect(xBasis, 380 - 30, 500, 35);   // Löschen Lösung Anzeige
-       
-        
         treffer=0;
         meldung( "Anzahl Durchgänge :  " + durchgang,"18px Arial","#5BA9D9",xBasis, 280);  
-      
         durchLaeufe=0;
         aufbauZeile(rechenSchritte,breite,hoehe);
        
@@ -138,8 +137,8 @@ yCoord=[];
 function loesung()
     {
        
-        ctx.clearRect(xBasis, 380, 500, -24);               
-        meldung("Loesung : " + string,"20px Arial","red",xBasis,380);  
+        ctx.clearRect(xBasis, 360, 500, -24);               
+        meldung("Lösung : " + string,"20px Arial","red",xBasis,360);  
        
     }
 
@@ -186,14 +185,14 @@ function auswahlButton()
                         break;
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,1,0,11); 
-                        ctx.clearRect(xBasis,320 -20, 300, 20); 
-                        meldung("Anzahl Operanden = " + rechenSchritte , "20px Arial","#5BA9D9",xBasis ,320); 
+                        ctx.clearRect(xBasis+240,yBasis2 -35 -20, 200, 20); 
+                        meldung("Anzahl Operanden :  " + rechenSchritte,"20px Arial","#5BA9D9",xBasis +240 ,yBasis2 -35); 
                         start();                         
                         break;
                     case 3:
                         rechenSchritte= plusMinus(rechenSchritte,-1,0,11); 
-                        ctx.clearRect(xBasis,320 -20, 300, 20); 
-                        meldung("Anzahl Operanden = " + rechenSchritte , "20px Arial","#5BA9D9",xBasis ,320);                                            
+                        ctx.clearRect(xBasis+240,yBasis2 -35 -20, 200, 20); 
+                        meldung("Anzahl Operanden :  " + rechenSchritte,"20px Arial","#5BA9D9",xBasis +240 ,yBasis2 -35);                                                         
                         start();
                         break;
                      case 4:
@@ -210,15 +209,20 @@ function auswahlButton()
     }
 
 
-
-function buttonErstellen()
+    function roundedButton(col1,col2)
 {
-       for (var i = 0, len = rects.length; i < len; i++) {
-        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
-        ctx.stroke();  
-        ctx.fillStyle=rects[i].col;  
-        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);        
+       for (var i = 0, len = rects.length; i < len; i++) {       
+       ctx.fillStyle=col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+       ctx.fillStyle=col2;  
+       roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
       }
+}
+
+
+function textButton()
+{
+      
       ctx.fillStyle = "#5BA9D9";
         ctx.font = "18px Arial";
 
@@ -293,6 +297,23 @@ function meldung(text, schrift,farbe,xm,ym)
         ctx.font = schrift;
         ctx.fillText(text, xm ,ym); 
     }
+
+  function roundedRect(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + radius);
+  ctx.lineTo(x, y + height - radius);
+  ctx.arcTo(x, y + height, x + radius, y + height, radius);
+  ctx.lineTo(x + width - radius, y + height);
+  ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+  ctx.lineTo(x + width, y + radius);
+  ctx.arcTo(x + width, y, x + width - radius, y, radius);
+  ctx.lineTo(x + radius, y);
+  ctx.arcTo(x, y, x, y + radius, radius);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+ // ctx.fillStyle="Lavender";
+  ctx.fill();
+}    
 
 </script>
 

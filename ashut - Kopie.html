@@ -34,11 +34,11 @@ var punkteGesamt = new Array();
 var trefferListe = new Array();
 var treffer;
 var bilderGesamt = new Array();
-var zeilenZahl =6, spaltenZahl = 7; // Felder pro Spalte und Zeile
-var breite = 80, hoehe=100;
+var zeilenZahl =9, spaltenZahl = 10; // Felder pro Spalte und Zeile
+var breite = 50, hoehe=50;
 var anzahlFelder = zeilenZahl*spaltenZahl;
-var maxFeinde = 4, minFeinde = 2, sumFeinde = 10, maxFreunde =5, minFreunde = 3,sumFreunde =9;
-var maxUmland = 8, minUmland = 5, sumUmland = 18;
+var maxFeinde = 4, minFeinde = 4, sumFeinde = 10, maxFreunde =5, minFreunde = 3,sumFreunde =9;
+var maxUmland = 8, minUmland = 1, sumUmland = 18;
 var punktFeind= 4, punktFreund = -6, punktUmland = -2;  // Punkte bei Treffer Objekt
 var positionAktive = new Array(); // enthält die Feldpositionen der aktiven Feinde + Freunde + Umgebung
 var xPos, yPos;
@@ -52,7 +52,7 @@ startSpiel();
 function startSpiel() {  
  
   
-   this.interval = setInterval(update, 3000);  
+   this.interval = setInterval(update, 5000);  
 
     canv.addEventListener('click', function(event) {   
          
@@ -91,7 +91,7 @@ function update() {
      
       Feinde=auswahlGruppenMitglieder(minFeinde,maxFeinde,sumFeinde,punktFeind,imgFeinde);  
       aktiveFeinde=Feinde.aktindex;        // enthält die Indexwerte der ausgewählten Mitglieder der Gruppe Feinde
-      anzaktiveFeinde=Feinde.aktanz;       // Anzahl der Aktiven
+      anzaktiveFeinde=Feinde.aktanz;       // Anzahl der aktiven Feinde
       aktbilderFeinde=Feinde.aktBilder;    // Speichert die ausgewählten Bilder entsprechend der Indexwerte(aktindex)
       punkteFeinde=Feinde.aktWert;         // Speichert die Punkte für den Treffer des Mitglieds der jeweiligen Gruppe
 
@@ -147,7 +147,7 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
 }
 
 function ladenBilder(anzahl,gruppe){
-    // lädt die Bilder der einzelnen Gruppen ( Feinde/Freunde/Umgebung ) hoch
+    // lädt die Bilder der einzelnen Gruppen ( Feinde (Array  imgFeinde) /Freunde/Umgebung ) hoch
     var zw1=[];
 
     for (var i = 0; i < (anzahl); i++) {        
@@ -288,17 +288,17 @@ function trefferKontrolle(basis){
     return zw;
 }    
 
-function meldungen(){
+//function meldungen(){
       console.log("aktive Feinde   " , aktiveFeinde, "  Anzahl   " , anzaktiveFeinde);
       console.log("aktive Freunde  " , aktiveFreunde, "  Anzahl   " , anzaktiveFreunde);
       console.log("aktive Umland   " , aktiveUmland,  "  Anzahl   " , anzaktiveUmland);
 
-      console.log("aktive Gesamt   " , aktiveGesamt); 
-      console.log("Punkte   " , punkteGesamt, );
-      console.log (" trefferliste   ", trefferListe);      
-      console.log("Position Aktive   " , positionAktive);
-      console.log(" x koord ", xCoord, "  ycord ", yCoord);
-    }
+    //  console.log("aktive Gesamt   " , aktiveGesamt); 
+    //  console.log("Punkte   " , punkteGesamt, );
+     // console.log (" trefferliste   ", trefferListe);      
+     // console.log("Position Aktive   " , positionAktive);
+     // console.log(" x koord ", xCoord, "  ycord ", yCoord);
+ //   }
 
 function zeichneSchuss(i,max,x,y,zw) {   
     
