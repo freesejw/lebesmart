@@ -9,13 +9,13 @@ Canvas {
    position: absolute;
    top: 0px;
    left: 0px;
-   border: 1px red solid;
-   background-color: #FFEFDB;
+   
+   background-color: #efefef;
 }
 </style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="600"></canvas>
+ <canvas id="canvas" width="500" height="600"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -28,29 +28,29 @@ var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var schrittWeite=1,maxDurchlaeufe=8;
 var durchLaeufe, treffer;
-var bgColor="light#5BA9D9";
-var anzahlBilder=15, pic =new Array, zeigBilder=5;
+var bgColor="Lavender";
+var anzahlBilder=8, pic =new Array, zeigBilder=5;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var repeator, blocken=false ;
 var quote;
-var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var yBasis2= 460, wBasis2=120, yErhoehung=50; 
+var xBasis=20, yBasis1=280, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+var yBasis2= 490, wBasis2=120, yErhoehung=50; 
 var blocke;
 var audio;
 
 var speed;
-var zeitSchiene=[1,6,12,18,23,28,33,37,41,44];
-var speedSchiene=[6,7,8,9,10,11,12,13,14,15,16,17];
+var zeitSchiene=[1,5,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60];
+var speedSchiene=[6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,23,25,27,29,32,34];
 
-//Rechtecke für die Bilder
+//Rechtecke für die Vergleichsbilder
 
 var rects = [{x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: ""},
              {x: (xBasis + wBasis1+ dBasis), y: yBasis1, w: wBasis1, h: hBasis,col: "green"},
-             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "#5BA9D9"},
+             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "blue"},
              {x: (xBasis + 3 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "red"},
-             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "black"},
+             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "blue"},
 
- // Button fuer durchgang
+ // Buttons "Go on " usw 
              
              {x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
              {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
@@ -64,31 +64,47 @@ var texts =[{na: " Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
 
 function ladeGame() 
     {   
-        meldung("Verbessere Konzentration und visuelle Umsetzung","20","Arial","black",30, 25);     
-        meldung("Was flitzt denn gleich ( Go on) oben vorbei?","18","Arial","black",xBasis, 225);        
-        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","#5BA9D9",xBasis,60);     
-        //meldung("Bisherige Treffer : " + " ... "  + "  Bisherige Trefferquote :  " + "   " + " %","18","Arial","red",xBasis,390);  
-        erstelleBasisBild();  // dient nur zur Ansicht
+        meldung("Verbessere Konzentration und visuelle Umsetzung","20","Arial","blue",30, 25);     
+           
+        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380);        
+        meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold 24","Arial","blue",xBasis,450);  
+        buttonErstellen(5,8);
+        buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
+        einlesenFlitzerBilder();
+        erstelleBasisBild();  // dient hier nur zur Ansicht
+        
         speed=5;
         renner();// dient nur zur Ansicht
         treffer=0;
         durchLaeufe=0;
         anzahlSek=0;
         quote=0;
+        var image = new Image();
+        image.src = 'hinterGrund1.jpg';
+        image.onload = function() 
+        {
+        ctx.drawImage(image,0,50,500,200); // Hintergrund
+        }
+      
     }
-
 
 
 function start()
 {
-    ctx.clearRect(xBasis,390-30,400,30);
-    ctx.clearRect(xBasis,420-30,400,30);
+    ctx.clearRect(xBasis,420-30,400,30); // Kein Treffer
+    ctx.clearRect(xBasis,450-30,500,30); // Dies war ein Beispiel
+
     ctx.clearRect(xBasis,60-25,480,25);
     treffer=0;
     durchLaeufe=0;
     anzahlSek=0;
-    blocken=true;    
+    blocken=true; 
+    var image = new Image();
+    image.src = 'hintenGrund1.jpg';
+    image.onload = function() {
+    ctx.drawImage(image,0,50,500,200);  // Hintergrund
+};
+   
     myVar=setInterval(zeige,1000); 
   
     }
@@ -106,14 +122,17 @@ function zeige()
                 xx=0; // ist die x position vom bild, dass animiert wird
                 durchLaeufe++;  
                 blocke=false;          
-                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330); 
+                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380); 
+                ctx.clearRect(xBasis,yBasis1,550,80);
                 erstelleBasisBild();                        
                 renner();     
                            
               }
+              
         if ( durchLaeufe==maxDurchlaeufe) 
-       // if ( anzahlSek==zeitSchiene[zeitSchiene.length-1]|| durchLaeufe==maxDurchlaeufe) 
-            {   
+        
+            {              
+                 
             blocken=false;
             clearInterval(myVar); 
            // abbruch();  
@@ -123,9 +142,7 @@ function zeige()
 
 function erstelleBasisBild()
     {
-        buttonErstellen(5,8);
-        buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
-        einlesenFlitzerBilder();
+       
         indexBilder=indexVergleichsBilder();                   
         zeichneVergleichsBilder();
         rennerIndex=random(zeigBilder);    
@@ -134,15 +151,20 @@ function erstelleBasisBild()
    
 function renner()
 {  
-    ctx.clearRect(xx, yy-hBasis, -cW, hBasis+80); 
+  // ctx.clearRect(xx, yy-hBasis, -cW, hBasis+80); 
+   var image = new Image();
+    image.src = 'hinterGrund1.jpg';
+    image.onload = function() {
+    ctx.drawImage(image,0,50,500,200);// Hintergrund
+    }
     var img = new Image();
     img.onload = function () 
         {
-        ctx.drawImage(img, xx,yy,80,80);        
+        ctx.drawImage(img, xx,yy,150,100);        
         }     
     img.src = pic[indexBilder[rennerIndex]];
     xx=xx+speed;
-  
+   
     if(xx>cW+wBasis1)
     { 
         cancelAnimationFrame(repeater) ;    
@@ -153,7 +175,7 @@ function renner()
 
 canv.addEventListener('click', function(e)
      {
-        console.log(durchLaeufe);
+        //console.log(durchLaeufe);
         var rect = angetippt(rects, e.offsetX, e.offsetY);        
         if (rect)
         {          
@@ -163,13 +185,15 @@ canv.addEventListener('click', function(e)
                 { 
                     treffer++;
                     blocke= true; 
-                    meldung("Treffer : " + treffer ,"18","Arial","red",xBasis,390);            
-                }  
+
+                    ctx.clearRect(xBasis,420-30,500,30); // Kein Treffer     
+                    meldung("Treffer . Erreichte Treffer : " + treffer ,"18","Arial","red",xBasis,420);
+                                 }  
                 else{
                   if (getipptRechteck< 5)  {
                      
                      akustischeMeldung("audio/up.mp3");  
-                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"18","Arial","red",xBasis,390);     
+                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"18","Arial","red",xBasis,420);     
                 }} 
         }
         
@@ -201,7 +225,7 @@ function abbruch()
     {
        // console.log (durchLaeufe);
         quote=Math.round(treffer/durchLaeufe)*100; 
-        ctx.clearRect(xBasis,420-30,400,30);
+        ctx.clearRect(xBasis,420-30,400,30); // Kein Treffer
        
          blocken=false;
          clearInterval(myVar);
@@ -258,7 +282,7 @@ function zeigBild(a,ii)
 
 function buttonText()
 { 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.font = "18px Arial";
 
     for (var i =0, len = 4; i < len; i++) 
@@ -308,13 +332,13 @@ function auswahlButton()
                         break;
                     case 7:
                        if (blocken==false){
-                            maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,60);
-                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330);  }                                        
+                            maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,20);
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380);  }                                        
                         break;
                      case 8:
                         if (blocken==false){
-                            maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,60);
-                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","black",xBasis ,330); 
+                            maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,20);
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380); 
                        }                                          
                         break;
    
@@ -337,9 +361,9 @@ function einlesenFlitzerBilder()
     {
         for (i=0;i<= anzahlBilder;i++)
         {
-            pic[i]=  "imageverkehr/verk" + i + ".jpg" 
-        } 
-    }
+            pic[i]=  "Transport/t" + i + ".png" 
+        }
+      }
 
     function akustischeMeldung(a)
     {
