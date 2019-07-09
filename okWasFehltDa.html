@@ -178,8 +178,9 @@ function zeichneVergleichsBilder(){
         var xx =  xBasis + i * (wBasis1 + dBasis);
         xx=xx-6*(wBasis1+dBasis)*(i>5);
         var yy = yBasis2 + 50*(i>5);
-        zeigBild(pic[indexBilder[i]],xx,yy,wBasis1,hBasis);   
-    
+
+        var spiegeln = i === 3
+        zeigBild(pic[indexBilder[i]],xx,yy,wBasis1,hBasis, spiegeln);   
     }
  
 }
@@ -190,12 +191,19 @@ function zeichneVorgabeBilder(){
     } 
 }
 
-function zeigBild(a,x,y,w,h)
+function zeigBild(a,x,y,w,h, gespiegelt)
 {
     var img = new Image();
     img.onload = function ()
      {
-        ctx.drawImage(img, x,y,w,h);
+        if(gespiegelt === true) {
+            ctx.scale(1,-1)
+            ctx.drawImage(img,x,-1*(y+h),w,h);
+            ctx.restore();
+            ctx.scale(1,-1);
+        }
+        else
+            ctx.drawImage(img, x,y,w,h);
      }
     img.src = a;
 }
