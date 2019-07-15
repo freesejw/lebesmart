@@ -29,7 +29,7 @@ var z1, z2;
 var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 440, wBasis2=120, yErhoehung=50; 
 var durchgang;
-
+var xtextdis=20;
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
 
 var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
@@ -37,12 +37,12 @@ var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgC
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
 
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis +yErhoehung},
-           {na: "Lösung", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + yErhoehung + ytextdis} ,
-           {na: "Operanden +", x: (xBasis + 10+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
-           {na: "Operanden -", x: (xBasis + 10 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
 
 
+var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10, y: yBasis2 + ytextdis+yErhoehung},
+           {na: String.fromCharCode(9673)+"  Lösung", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
+           {na: String.fromCharCode(43)+"  Operand", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+           {na: String.fromCharCode(45)+"  Operand", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
          
 
 function ladeGame()
@@ -214,8 +214,8 @@ function auswahlButton()
        for (var i = 0, len = rects.length; i < len; i++) {       
        ctx.fillStyle=col1;
        roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-       ctx.fillStyle=col2;  
-       roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+      // ctx.fillStyle=col2;  
+       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
       }
 }
 
@@ -223,7 +223,7 @@ function auswahlButton()
 function textButton()
 {
       
-      ctx.fillStyle = "#5BA9D9";
+      ctx.fillStyle = "white";
         ctx.font = "18px Arial";
 
         for (var i = 0, len = texts.length; i < len; i++) 
