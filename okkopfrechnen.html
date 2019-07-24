@@ -4,6 +4,10 @@
  <meta charset="utf-8">    
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
+
 <style>
 body {
     font-family: 'Comfortaa';
@@ -12,7 +16,6 @@ Canvas {
    position: absolute;
    top: 20px;
    left: 20px;
-   background-color: #F6F6F6;
 }
 </style>
 </head>
@@ -57,7 +60,7 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10
 function ladeGame()
     {
         // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
-       
+        console.log(schriftFarbe);
         meldung("Verbessere deine Rechen - Geschwindigkeit","bold","20","Arial","#5a617b",34,40 ); 
         meldung( "3 + 4 *  ....... = ?","normal","16","Arial","#5a617b",65,120);
         meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16","Arial","#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  

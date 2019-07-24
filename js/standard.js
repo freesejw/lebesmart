@@ -1,0 +1,1 @@
+const schriftFarbe = "#000000";
