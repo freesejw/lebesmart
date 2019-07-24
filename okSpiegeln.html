@@ -10,7 +10,7 @@ Canvas {
    top: 0px;
    left: 0px;
    
-   background-color: #efefef;
+   background-color: #FeFeFe;
 }
 </style>
 </head>
@@ -54,16 +54,16 @@ var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: h
              {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
           
  
-             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis-100,col1: vgCol,col2: bgCol}];
+             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis-100,col1: "82CE86",col2: "#82CE86"}];
            
- 
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
+          
+var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
 
 function ladeGame() 
     {   
-        meldung("Übe dich in Konzentration","bold 20","Arial","#5BA9D9",120, 50);     
-        meldung("Welches Bild ist gespiegelt ? KLICK es an","18","Arial","#5BA9D9",xBasis, 360);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","red",xBasis,120);     
+        meldung("Übe dich in Konzentration","bold","20","Arial","#5a617b",120, 50);     
+        meldung("Welches Bild ist gespiegelt ? KLICK es an","normal","18","Arial","#5a617b",xBasis, 360);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","24","Arial","red",xBasis,120);     
         erstelleBasisBild();  // dient nur zur Ansicht        
         treffer=0;
         durchLaeufe=0;
@@ -72,8 +72,9 @@ function ladeGame()
     }
 
     function Goon(){
-        ctx.clearRect(xBasis,120-24,480,40);// löscht " dies ist ein ...."
-        ctx.clearRect(xBasis,190-24,480,40);//
+        ctx.clearRect(xBasis,120-24,480,30);// löscht " dies ist ein ...."
+        ctx.clearRect(xBasis,490-24,490,30);//
+        //ctx.clearRect(xBasis,490-24,480,30);//
         erstelleBasisBild()
         startTime = Date.now(); 
         clEvent=true;
@@ -103,14 +104,15 @@ clEvent=false;
             if ( (getipptRechteck==spiegel)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
                 { treffer++;
                 blocke= true; 
-                meldung("Treffer : " + treffer + "  Durchläufe " + durchLaeufe,"18","Arial","red",xBasis,490);   
+                meldung("Treffer : " + treffer + "  Durchläufe " + durchLaeufe,"bold","16","Arial","red",xBasis,490);   
                 elapsedTime = Date.now() - startTime;
-                elapsedTime = Math.round(elapsedTime / 1000);       
+                elapsedTime = Math.round(elapsedTime / 100);       
                 zeiten.push(elapsedTime)           
-                meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","#5BA9D9",xBasis, yBasis2+ytextdis+155);        
+                meldung(( "Gebrauchte Zeiten(in ds) :  " + zeiten),"normal","16","Arial","#5a617b",xBasis, yBasis2+ytextdis+155);        
                 }
                 else{
-                   meldung("Falsch   ==> Go on","18","Arial","red",xBasis,490)
+                   ctx.clearRect(xBasis,490-24,490,30);// 
+                   meldung("Falsch   ==> Go on","normal","18","Arial","red",xBasis,490)
                    akustischeMeldung("audio/up.mp3");  
                 }
            }
@@ -189,20 +191,22 @@ function zeigBild(a,x,y,w,h,sp,i)
 
 function rechteckeText()
 { 
-    ctx.fillStyle = "#5BA9D9";
+    ctx.fillStyle = "white";
     ctx.font = "18px Arial";
     
-       ctx.fillText("Go on",xBasis + xtestdis -10, yBasis3 + ytextdis);
+       ctx.fillText(texts[0].na,xBasis + xtestdis -10, yBasis3 + ytextdis);
         
   
 }
-
-function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
    {
+     
+       var sD=schriftDicke;
+       var sG=schriftGroesse;
         var lg = 10 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
         ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
         ctx.fillText(text, xm ,ym); 
     }
 

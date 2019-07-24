@@ -44,31 +44,35 @@ var speedSchiene=[6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,23,25,27,29,32,34];
 
 //Rechtecke für die Vergleichsbilder
 
+
+
+
+
 var rects = [{x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: ""},
              {x: (xBasis + wBasis1+ dBasis), y: yBasis1, w: wBasis1, h: hBasis,col: "green"},
-             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "blue"},
+             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "#5a617b"},
              {x: (xBasis + 3 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "red"},
-             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "blue"},
+             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col: "#5a617b"},
 
  // Buttons "Go on " usw 
-             
-             {x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
- 
-var texts =[{na: " Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis},
-           {na: "Abbruch", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,
-           {na: "Mehr Flitzer", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
-           {na: "Weniger", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+             {x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#ea617b",col2: "#ea617b"},
+             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
+
+var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasis2 + ytextdis+yErhoehung},
+           {na: String.fromCharCode(9673)+"  Ende",   x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
+           {na: String.fromCharCode(43)+"  Flitzer", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+           {na: String.fromCharCode(45)+"  Flitzer", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];            
+            
 
 function ladeGame() 
     {   
-        meldung("Verbessere Konzentration und visuelle Umsetzung","20","Arial","blue",30, 25);     
+        meldung("Verbessere Konzentration und visuelle Umsetzung","bold","20","Arial","#5a617b",30, 25);     
            
-        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380);        
-        meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold 24","Arial","blue",xBasis,450);  
-        buttonErstellen(5,8);
+        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380);        
+        meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold","24","Arial","#5a617b",xBasis,450);  
+        roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         einlesenFlitzerBilder();
         erstelleBasisBild();  // dient hier nur zur Ansicht
@@ -122,7 +126,7 @@ function zeige()
                 xx=0; // ist die x position vom bild, dass animiert wird
                 durchLaeufe++;  
                 blocke=false;          
-                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380); 
+                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380); 
                 ctx.clearRect(xBasis,yBasis1,550,80);
                 erstelleBasisBild();                        
                 renner();     
@@ -187,13 +191,13 @@ canv.addEventListener('click', function(e)
                     blocke= true; 
 
                     ctx.clearRect(xBasis,420-30,500,30); // Kein Treffer     
-                    meldung("Treffer . Erreichte Treffer : " + treffer ,"18","Arial","red",xBasis,420);
+                    meldung("Treffer . Erreichte Treffer : " + treffer ,"bold","16","Arial","red",xBasis,420);
                                  }  
                 else{
                   if (getipptRechteck< 5)  {
                      
                      akustischeMeldung("audio/up.mp3");  
-                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"18","Arial","red",xBasis,420);     
+                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"bold","16","Arial","red",xBasis,420);     
                 }} 
         }
         
@@ -254,15 +258,7 @@ function angetippt(rects, x, y) {
     return isCollision;
 }
 
-function buttonErstellen(a,b)
-{
-       for (var i = a;i <= b; i++) {
-        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
-        ctx.stroke();          
-        ctx.fillStyle=rects[i].col;         
-       ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
-      }
-}
+
 
 function zeichneVergleichsBilder(){     
     for (let i=0;i<zeigBilder;i++){ 
@@ -280,9 +276,20 @@ function zeigBild(a,ii)
     img.src = a;
 }
 
+function roundedButton(col1,col2)
+   {
+       for (var i = 5; i <= 8; i++) 
+       {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+      // ctx.fillStyle=col2;  
+       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+       }
+   }
+
 function buttonText()
 { 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "white";
     ctx.font = "18px Arial";
 
     for (var i =0, len = 4; i < len; i++) 
@@ -333,12 +340,12 @@ function auswahlButton()
                     case 7:
                        if (blocken==false){
                             maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,20);
-                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380);  }                                        
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380);  }                                        
                         break;
                      case 8:
                         if (blocken==false){
                             maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,20);
-                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"18","Arial","blue",xBasis ,380); 
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380); 
                        }                                          
                         break;
    
@@ -348,14 +355,17 @@ function auswahlButton()
                 }             
     }
 
-    function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+    function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
    {
+     
+       var sD=schriftDicke;
+       var sG=schriftGroesse;
         var lg = 10 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
         ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
         ctx.fillText(text, xm ,ym); 
-    }
+    }   
 
 function einlesenFlitzerBilder()
     {
@@ -370,6 +380,23 @@ function einlesenFlitzerBilder()
         audio = new Audio(a);
         audio.play();
     }
+
+function roundedRect(x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x, y + radius);
+        ctx.lineTo(x, y + height - radius);
+        ctx.arcTo(x, y + height, x + radius, y + height, radius);
+        ctx.lineTo(x + width - radius, y + height);
+        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+        ctx.lineTo(x + width, y + radius);
+        ctx.arcTo(x + width, y, x + width - radius, y, radius);
+        ctx.lineTo(x + radius, y);
+        ctx.arcTo(x, y, x, y + radius, radius);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        // ctx.fillStyle="Lavender";
+        ctx.fill();
+}        
 
 </script>
   

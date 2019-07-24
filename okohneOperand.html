@@ -22,7 +22,7 @@ var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
 var xCoord=[], yCoord=[];
 var operand;
-var bgColor="Lavender";
+
 var rechenSchritte=3, schrittWeite=1,string;
 var durchLaeufe, treffer;
 var z1, z2;
@@ -32,10 +32,10 @@ var durchgang;
 var xtextdis=20;
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
 
-var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},             
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
+var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
+             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 
 
@@ -209,15 +209,16 @@ function auswahlButton()
     }
 
 
-    function roundedButton(col1,col2)
-{
-       for (var i = 0, len = rects.length; i < len; i++) {       
-       ctx.fillStyle=col1;
+function roundedButton(col1,col2)
+   {
+       for (var i = 0, len = rects.length; i < len; i++) 
+       {       
+       ctx.fillStyle=rects[i].col1;
        roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
       // ctx.fillStyle=col2;  
        //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
-      }
-}
+       }
+   }
 
 
 function textButton()

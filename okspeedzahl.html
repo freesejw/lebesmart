@@ -6,8 +6,8 @@
 <style>
 canvas
    {   
-   border: 1px red solid;
-   background-color: #FFEFDB;
+   
+   background-color: #FeFeFe;
    cursor: url(Images/fadenkreuz.png),  auto;   
    }
 </style>
@@ -48,25 +48,26 @@ var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 
 var xBasis=20, yBasis=490, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 
-var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Start"},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
-             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na: "Mehr Zeit", x: (xBasis + xtestdis -10+  wBasis + dBasis),y: yBasis + ytextdis} ,
-           {na: "Weniger Zeit", x: ((xBasis + xtestdis-10) + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+
+var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na:  String.fromCharCode(43)+ "  Zeit", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na:  String.fromCharCode(45)+ "  Zeit", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
 
 
 
 function ladeGame(){
-    meldung("Steigere deine Denk - Geschwindigkeit","20" ,"Arial","black",xAbstand, 30); 
-    meldung("Finde die Zahl, die bei Spielbeginn ( Go on) erscheint","18" ,"Arial","black",xAbstand, 60); 
-    meldung("Suchzeit: " +  zeitSchranke + " Sek.","18","Arial","black",5 + xAbstand + breite* spaltenZahl, 470);
+    meldung("Steigere deine Denk - Geschwindigkeit","bold","20" ,"Arial","black",xAbstand, 30); 
+    meldung("Finde die Zahl, die bei Spielbeginn ( Go on) erscheint","normal","16" ,"Arial","black",xAbstand, 60); 
+    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16","Arial","black",5 + xAbstand + breite* spaltenZahl, 470);
     ermittleBasisZahlen(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
-    buttonErstellen();
-   buttonText();
+    roundedButton();
+   textButton();
    anzahlTreffer=0;
    durchLauf=0;
    blocken=false;
@@ -78,8 +79,7 @@ function start() {
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
     
     zaehlerTreffer=0;
-    durchLauf++; 
-    zeitAusgang = 0;
+    durchLauf++;     
     zahlenSpeicher=[];
     indexReihe=[];
     zeitAusgang=0;
@@ -92,7 +92,7 @@ function start() {
     //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
     //---auswahlZahlen(zeilenZahl,spaltenZahl);  // ermittelt die Zahl,die gesucht werden soll 
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);    
-    //id=setInterval(zeitPruef,1000);
+    id=setInterval(zeitPruef,1000);
         }
 
 function zeitPruef()
@@ -100,12 +100,14 @@ function zeitPruef()
     // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
     // gesteuert über zeitAusgang und zeitSchranke
 
-    zeitAusgang=zeitAusgang + 1;
+    zeitAusgang++;
  
     if(zeitAusgang >= zeitSchranke)  
         { 
             ctx.clearRect(xBasis,460,230,-20);      
-            meldung("Zeitlimit überschritten" ,"18","Arial","red",xBasis,460);  
+            meldung("Zeitlimit überschritten" ,"normal","16","Arial","red",xBasis,460); 
+            var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
+            meldung(" Bisher : " + aa ,"bold","16","Arial","black",xBasis,420);  
             akustischeMeldung("audio/up.mp3");           
             clearInterval(id);
             blocken=false;
@@ -155,7 +157,9 @@ canv.addEventListener('click', function(event) {
                                                  }
                         else {
                             ctx.clearRect(xBasis,460,200,-20);
-                            meldung("Falsches Feld ==> go on" ,"18","Arial","red",xBasis,460);  
+                            meldung("Falsches Feld ==> go on" ,"normal","16","Arial","red",xBasis,460); 
+                            var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
+                            meldung(" Bisher : " + aa ,"bold","16","Arial","black",xBasis,420);  
                             akustischeMeldung("audio/up.mp3"); 
                             clickenAus=true ;
                             blocken=false;
@@ -165,7 +169,7 @@ canv.addEventListener('click', function(event) {
             if (zaehlerTreffer == indexReihe.length){             
                 anzahlTreffer++;               
                 var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                meldung(" Bisher : " + aa ,"18","Arial","black",xBasis,420); 
+                meldung(" Bisher : " + aa ,"bold","16","Arial","black",xBasis,420); 
                 clickenAus=true;
                 blocken=false;
             }
@@ -182,27 +186,29 @@ canv.addEventListener('click', function(e)
 
     }, false);
 
-function buttonErstellen()
-{
+    function roundedButton(col1,col2)
+   {
        for (var i = 0, len = rects.length; i < len; i++) 
-       {
-        ctx.strokeStyle="blue";
-        ctx.lineWidth="5";
-        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);            
-        ctx.fillStyle=rects[i].col;  
-        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+       {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+      // ctx.fillStyle=col2;  
+       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
        }
-}
+   }
 
-function buttonText()
-{ 
-    ctx.fillStyle = "black";
-    ctx.font = "18px Arial";
-    for (var i = 0, len = texts.length; i < len; i++) 
-    {
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }      
+
+function textButton()
+{
+      
+      ctx.fillStyle = "white";
+        ctx.font = "18px Arial";
+
+        for (var i = 0, len = texts.length; i < len; i++) 
+        {
+        ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+            
+        }
 }
 
 function angetippt(rects, x, y) {
@@ -232,11 +238,11 @@ function auswahlButton()
             break;
             case 1:
                 zeitSchranke=plusMinus(zeitSchranke,1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","18","Arial","blue",5 +xAbstand + breite* spaltenZahl, 470);                         
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16","Arial","blue",5 +xAbstand + breite* spaltenZahl, 470);                         
                 break;
             case 2:
                 zeitSchranke=plusMinus(zeitSchranke,-1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","18","Arial","blue",5 + xAbstand + breite* spaltenZahl, 470);                            
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16","Arial","blue",5 + xAbstand + breite* spaltenZahl, 470);                            
                 break;
             default:
                 alert("Sorry");
@@ -248,7 +254,7 @@ function getroffen(){
         xxclick=(Math.floor(xclick/breite))*breite;
         yyclick=(Math.floor(yclick/hoehe))*hoehe;   
         
-        meldung(zahlenSpeicher[indexReihe[1]] ,"18","Arial","black",xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);    
+        meldung(zahlenSpeicher[indexReihe[1]] ,"normal","16","Arial","black",xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);    
         treffer=false;
                 }
 
@@ -264,7 +270,7 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe,zahlen)
         {            
             var x=breite*j;  
             ctx.lineWidth="1";
-            ctx.strokeStyle="red";       
+            ctx.strokeStyle="blue";       
             ctx.strokeRect(x+xAbstand,y+yAbstand,breite,hoehe);
             ctx.fillStyle="black";
             ctx.font= "22px Arial";
@@ -278,7 +284,7 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe,zahlen)
         }
     }
    // console.log(xCoord) ;
-    console.log(yCoord);  
+   // console.log(yCoord);  
 }
 
 function ermittleBasisZahlen(zeilen, spalten)
@@ -327,7 +333,7 @@ function ermittleBasisZahlen(zeilen, spalten)
                                 return value != matrix[i][j] && value != matrix[i][k];
                             }
                         );
-                    console.log(JSON.stringify(alternativen));
+                   // console.log(JSON.stringify(alternativen));
                     for(var l = 2; l < k; l++) {
                         var alternative = alternativen[random(alternativen.length - 1)];
                         alternativen.splice(alternativen.indexOf(alternative), 1);
@@ -353,12 +359,12 @@ function ermittleBasisZahlen(zeilen, spalten)
         var zufallsZeile = random(zeilen - 1);
         var zufallsSpalte = random(spalten - längeAusgewählterZahl)
 
-        console.log("wähleZahl === Zeile: " + zufallsZeile + " | Spalte: " + zufallsSpalte);
+       // console.log("wähleZahl === Zeile: " + zufallsZeile + " | Spalte: " + zufallsSpalte);
         var ziffern = [];
         for(var i = 0; i < längeAusgewählterZahl; i++) {
             ziffern.push(matrix[zufallsZeile][zufallsSpalte + i])
         }
-        console.log("wähleZahl === Wert: " + ziffern);
+        //console.log("wähleZahl === Wert: " + ziffern);
         return ziffern;
     }
 
@@ -395,7 +401,7 @@ function ermittleBasisZahlen(zeilen, spalten)
             }
         );
 
-        console.log("=== eliminiereDoppelte: Mögliche Alternativen zu " + gesuchteZahl + " sind: " + gültigeAlternativen);
+       // console.log("=== eliminiereDoppelte: Mögliche Alternativen zu " + gesuchteZahl + " sind: " + gültigeAlternativen);
         // Entferne einen zufällig gewählten Treffer, 
         // damit die Treffer bei doppelten nicht immer in den oberen Zeilen liegen.
         if(doppelte.length == 1) {
@@ -403,7 +409,7 @@ function ermittleBasisZahlen(zeilen, spalten)
         } else {
             doppelte.splice(random(doppelte.length - 1), 1);
         }
-        console.log("=== eliminiereDoppelte: zu löschende Elemente:" + doppelte);
+        //console.log("=== eliminiereDoppelte: zu löschende Elemente:" + doppelte);
 
         if(doppelte.length > 0) {
             for(var i = 0; i < doppelte.length; i++) {
@@ -411,9 +417,9 @@ function ermittleBasisZahlen(zeilen, spalten)
                     var zeile = doppelte[i][0];
                     var spalte = doppelte[i][1] + j;
                     var indexAlternative = random(gültigeAlternativen.length - 1);
-                    console.log(indexAlternative);
+                  //  console.log(indexAlternative);
                     var alternative = gültigeAlternativen[indexAlternative];
-                    console.log("Ersetze [" + zeile + "][" + spalte + "] (" + matrix[zeile][spalte] + ") mit " + alternative);
+                   // console.log("Ersetze [" + zeile + "][" + spalte + "] (" + matrix[zeile][spalte] + ") mit " + alternative);
                     matrix[zeile][spalte] = alternative;
                 }
             }
@@ -453,19 +459,19 @@ function ermittleBasisZahlen(zeilen, spalten)
     var matrix = erzeugeMatrix(zeilen, spalten);
     fülleMatrix(matrix);
     beseitigeDreier(matrix);
-    console.log(matrix);
+    //console.log(matrix);
 
     var gesuchteZahl = wähleZahl(matrix, zahlenLänge);
 
     var doppelte = findeAllePositionen(matrix, gesuchteZahl);
-    console.log("Alle Positionen: " + doppelte);
+    //console.log("Alle Positionen: " + doppelte);
     eliminiereDoppelte(matrix, doppelte, gesuchteZahl);
     
     zahlenSpeicher = arrayEbnen(matrix);
     indexReihe = baueIndexReihe(matrix, gesuchteZahl);
-    console.log("IndexReihe: " + indexReihe);
-    meldung("Suche:","18","Arial","black", xAbstand+30 + breite * spaltenZahl, 2 * yAbstand);  
-    meldung(gesuchteZahl.join(""),"bolder 30","Arial","red", xAbstand + 2 * 30 + breite * spaltenZahl, 40 + (2 * yAbstand));
+    //console.log("IndexReihe: " + indexReihe);
+    meldung("Suche:","normal","16","Arial","black", xAbstand+30 + breite * spaltenZahl, 2 * yAbstand);  
+    meldung(gesuchteZahl.join(""),"bold","30","Arial","red", xAbstand + 2 * 30 + breite * spaltenZahl, 40 + (2 * yAbstand));
 }
 
 function feldNummerSchuss(xc,yc)
@@ -488,15 +494,18 @@ function feldNummerSchuss(xc,yc)
             return Math.floor((Math.random() *max)+1);
           }
 
-
-function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
    {
+     
+       var sD=schriftDicke;
+       var sG=schriftGroesse;
         var lg = 10 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
         ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
         ctx.fillText(text, xm ,ym); 
     }
+
 
 function plusMinus(ausgang,delta,unten,oben)
 {
@@ -516,7 +525,22 @@ function akustischeMeldung(a)
         audio.play();
     }
 
-
+    function roundedRect(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + radius);
+  ctx.lineTo(x, y + height - radius);
+  ctx.arcTo(x, y + height, x + radius, y + height, radius);
+  ctx.lineTo(x + width - radius, y + height);
+  ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+  ctx.lineTo(x + width, y + radius);
+  ctx.arcTo(x + width, y, x + width - radius, y, radius);
+  ctx.lineTo(x + radius, y);
+  ctx.arcTo(x, y, x, y + radius, radius);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+ // ctx.fillStyle="Lavender";
+  ctx.fill();
+}    
 </script>
 
 

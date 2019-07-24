@@ -37,17 +37,19 @@ var breite = 50, hoehe=50;
 var xPos, yPos,xclick, yclick;
 var zaehlerClick, zaehlerTreffer;
 var blocken;
-var bgColor="Lavender";
+
 var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum finden der Zahl in Sekunden
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 
 var xBasis=20, yBasis=440, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col: bgColor,te: "Go on"},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col: bgColor,te:"Stop"},
-             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col: bgColor, te: "Abbruch"}];
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na: "Mehr Bilder", x: (xBasis + xtestdis -10+  wBasis + dBasis),y: yBasis + ytextdis} ,
-           {na: "Weniger Bilder", x: ((xBasis + xtestdis-10) + 2 * (wBasis+ dBasis)) - 10,y: yBasis + ytextdis }];
+
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
+
+var texts =[{na:String.fromCharCode(9655) + "   Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na: String.fromCharCode(43)+ "   Bilder", x: (xBasis + xtestdis +5+  (wBasis + dBasis)-10),y: yBasis + ytextdis} ,
+           {na: String.fromCharCode(45) + "   Bilder", x: ((xBasis + xtestdis +5) + 2 * (wBasis+ dBasis)) - 10,y: yBasis + ytextdis }];
 
 function ladeGame()
 {
@@ -55,7 +57,8 @@ function ladeGame()
     meldung("Merke Dir die Bildpositionen","18", "Arial","#5BA9D9",xBasis, 60);   
     meldung("Anzahl Bilder = " +  anzahlBilder,"16","Arial","#5BA9D9",335,420);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
-    buttonErstellen();  
+    roundedButton();
+    buttonText();  
     plusPunkte=0;
     minusPunkte=0;  
     blocken=false; 
@@ -190,26 +193,28 @@ canv.addEventListener('click', function(e)
     }, false);
 
 
-
-function buttonErstellen()
+    function roundedButton()
 {
-       for (var i = 0, len = rects.length; i < len; i++) {
-        ctx.lineWidth="5";   
-        ctx.strokeStyle="#5BA9D9";   
-        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
-       // ctx.stroke();     
-        ctx.fillStyle=rects[i].col;  
-        ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+       for (var i = 0, len = rects.length; i < len; i++) {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+            
       }
-      ctx.fillStyle = "#5BA9D9";
-      ctx.font = "18px Arial";
-
-            for (var i = 0, len = texts.length; i < len; i++) 
-            {
-            ctx.fillText(texts[i].na,texts[i].x, texts[i].y);     
-            }
-        
 }
+
+function buttonText()
+{ 
+    ctx.fillStyle = "white";
+    ctx.font = "18px Arial";
+    for (var i = 0, len = texts.length; i < len; i++) 
+    {
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
+        
+     }
+     
+}
+
+
 
 function angetippt(rects, x, y) {
     var zw;
@@ -322,6 +327,22 @@ function akustischeMeldung(a)
         audio = new Audio(a);
         audio.play();
     }
+
+    function roundedRect(x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x, y + radius);
+        ctx.lineTo(x, y + height - radius);
+        ctx.arcTo(x, y + height, x + radius, y + height, radius);
+        ctx.lineTo(x + width - radius, y + height);
+        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+        ctx.lineTo(x + width, y + radius);
+        ctx.arcTo(x + width, y, x + width - radius, y, radius);
+        ctx.lineTo(x + radius, y);
+        ctx.arcTo(x, y, x, y + radius, radius);
+        ctx.lineWidth = 1;
+        ctx.stroke(); 
+        ctx.fill();
+}      
 
 </script>
 

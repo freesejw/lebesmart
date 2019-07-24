@@ -27,15 +27,13 @@ var zeiten=[];
 var schnitt;
 var xCoord=[], yCoord=[];
 var operand;
-var bgCol="Lavender";
-var vgCol="#8800ff";
 var rechenSchritte=5, schrittWeite=1,string;
 var durchLaeufe,richtig;
 var ergebnis, ergebnisIndex;
 var summe=0; 
 var xBasis=20, yBasis1=220, wBasis1=40, hBasis=40, dBasis=40, xtextdis=20, ytextdis=25;
 var yBasis2= 500, wBasis2=120, yErhoehung=50; 
-
+var bgCol="5a617b";
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
 
 var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
@@ -59,11 +57,11 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10
 function ladeGame()
     {
         // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
-        
-        meldung("Verbessere deine Rechen - Geschwindigkeit","20px Comfortaa","#5BA9D9",60,65 ); 
-        meldung( "3 + 4 *  ....... = ?","20px Comfortaa","#5BA9D9",65,120);
-        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Comfortaa","#5BA9D9",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
-        roundedButton("Lavender")
+       
+        meldung("Verbessere deine Rechen - Geschwindigkeit","bold","20","Arial","#5a617b",34,40 ); 
+        meldung( "3 + 4 *  ....... = ?","normal","16","Arial","#5a617b",65,120);
+        meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16","Arial","#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
+        roundedButton();
         buttonText();
         //aufbauZeile(rechenSchritte,breite,hoehe);
         ctx.clearRect(xBasis-10, 240-30,500,ytextdis+50);
@@ -75,9 +73,9 @@ function ladeGame()
 function start()
     {   
         
-        meldung("Klick die obige Zahl an, die dem Ergebnis entspricht","16px Comfortaa","#5BA9D9",xBasis,yBasis1+ytextdis+80);
-        meldung("Anzahl Richtige :  " + richtig,"18px Comfortaa","#5BA9D9",xBasis, yBasis1+ytextdis+150);   
-        //meldung("Anzahl Ziffern = " + rechenSchritte,"18px Comfortaa","#5BA9D9",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
+        meldung("Klick die obige Zahl an, die dem Ergebnis entspricht","normal","16","Arial","#5a617b",xBasis,yBasis1+ytextdis+80);
+        meldung("Anzahl Richtige :  " + richtig,"bold","16","Arial","#5a617b",xBasis, yBasis1+ytextdis+150);   
+        //meldung("Anzahl Ziffern = " + rechenSchritte,"18px Comfortaa","#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
 
         ctx.clearRect(xBasis,yBasis1+ytextdis+120, 500, -25);   // Löschen Lösungsanzeige
         ctx.clearRect(xBasis, 120-25,500,25); // löscht 3+ 4 *... Anzeige
@@ -113,8 +111,8 @@ function aufbauZeile(ele,breite,hoehe)
   
     for ( var i = 0 ; i <anzahlZahlen;i++)
     {
-            ctx.fillStyle="#5BA9D9";
-            ctx.font= "20px Comfortaa";            
+            ctx.fillStyle="#5a617b";
+            ctx.font= "16px Arial";            
           
             if (i < anzahlOperanden)
             {
@@ -149,7 +147,7 @@ function aufbauZeile(ele,breite,hoehe)
                     oo= oo=operanden[random(operanden.length-2)].trim(); 
             
                 ctx.fillStyle="red"; 
-               ctx.font= "18px Comfortaa"; 
+               ctx.font= "16px Arial"; 
               
                 ctx.fillText(oo,xCoord[i*2+1]+xAbstand * 2 ,yCoord[i*2+1]+yDist+10);
                 string=string +oo.valueOf();  
@@ -192,7 +190,7 @@ function vergleichsZahlen()
         zz[ergebnisIndex]  = ergebnis; 
 
             ctx.fillStyle="red"; 
-            ctx.font= "20px Comfortaa";      
+            ctx.font= "16px Arial";      
             ctx.fillText(zz[0],xBasis +8 ,yBasis1+ ytextdis); 
             ctx.fillText(zz[1],xBasis + 8 + wBasis1+dBasis,yBasis1+ytextdis); 
             ctx.fillText(zz[2],(xBasis +8 +  2 * (wBasis1+ dBasis)),yBasis1+ytextdis);
@@ -215,7 +213,7 @@ function vergleichsZahlen()
 function loesung()
     {
         ctx.clearRect(xBasis, 380, 500, -24);               
-        meldung("Lösung : " + string + "  = "+ ergebnis,"20px Comfortaa","red",xBasis,yBasis1+ytextdis+110);  
+        meldung("Lösung : " + string + "  = "+ ergebnis,"normal","16","Arial","ea2867",xBasis,yBasis1+ytextdis+110);  
        
     }
 
@@ -235,7 +233,7 @@ function vergleich(a)
     if(a==ergebnisIndex+4)
         {
            richtig++;
-            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","18px Comfortaa","#5BA9D9",xBasis, yBasis1+ytextdis+150);
+            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16","Arial","#5a617b",xBasis, yBasis1+ytextdis+150);
             elapsedTime = Date.now() - startTime;
             elapsedTime = (elapsedTime / 1000).toFixed(2);       
             zeiten.push( Math.round( elapsedTime)); 
@@ -252,12 +250,12 @@ function vergleich(a)
             var schnitt=(  summe/richtig); 
             schnitt=Math.floor(schnitt*10)/10;
             if(ausdruck.length>10){ausdruck.shift();}        
-            meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"18px Comfortaa","#5BA9D9",xBasis, yBasis1+ytextdis+185);
-            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"18px Comfortaa","#5BA9D9",xBasis, yBasis1+ytextdis+215);
+            meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"normal","16","Arial","#5a617b",xBasis, yBasis1+ytextdis+185);
+            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16","Arial","#5a617b",xBasis, yBasis1+ytextdis+215);
         }
     else 
         {
-            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","18px Comfortaa","#5BA9D9",xBasis, yBasis1+ytextdis+150);
+            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16","Arial","#5a617b",xBasis, yBasis1+ytextdis+150);
         }
 
     }
@@ -292,12 +290,12 @@ function auswahlButton()
                         break;
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,1,1,11); 
-                        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Comfortaa","#5BA9D9",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);                          
+                        meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16","Arial","#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);                          
                         start();                          
                         break;
                     case 3:
                         rechenSchritte= plusMinus(rechenSchritte,-1,1,11); 
-                        meldung("Anzahl Ziffern = " + rechenSchritte,"18px Comfortaa","#5BA9D9",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
+                        meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16","Arial","#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
                         start();                          
                         break;
                      case 4:
@@ -330,15 +328,11 @@ function buttonText(a)
    // var a =9635;
     
     ctx.fillStyle = "white";
-    ctx.font = "18px Comfortaa";
+    ctx.font = "18px Arial";
     for (var i = 0, len = texts.length; i < len; i++) 
     {
        
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-       
-//ctx.textBaseline = "hanging";
-//ctx.strokeText("▷" + " du satz", 0, 100); 
-//ctx.strokeText("Hello world   " + String.fromCharCode(a), 10, 100);
+       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);       
 
      }
      
@@ -350,14 +344,6 @@ function random(max)
             return Math.floor((Math.random() *max));
           }
 
-function boxMeldung(melde,x,y,w,h,k1,k2,o)
-    {       
-        ctx.rect(x,y,w,h);
-        ctx.stroke();
-        ctx.fillStyle=bgCol;
-        ctx.fillRect(x,y,w,h);      
-        meldung(melde,"25px Comfortaa","#5BA9D9",x+30,y+45  );
-    }
 
     function plusMinus(ausgang,delta,unten,oben)
 {
@@ -372,13 +358,15 @@ function boxMeldung(melde,x,y,w,h,k1,k2,o)
 }         
 
 
-function meldung(text, schrift,farbe,xm,ym)
+function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
    {
-        var lg = 20 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-25,lg,25);
-        ctx.fillStyle = farbe;
-        ctx.font = 'normal 18px Comfortaa'; 
-        //ctx.font = schrift;
+     
+       var sD=schriftDicke;
+       var sG=schriftGroesse;
+        var lg = 10 + ctx.measureText(text).width 
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
         ctx.fillText(text, xm ,ym); 
     }
 
@@ -424,10 +412,6 @@ function filledCircle(x,y,r,start,end) {
 
 
 </script>
-
-
-       
-
 
 </body>
 </html>

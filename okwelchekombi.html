@@ -50,17 +50,19 @@ var xAbstand=50,yAbstand = 130;     // Verschiebt die Matrix nach rechts und unt
 var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtestdis=10, ytextdis=25;
 var yBasis2= 490, wBasis2=120, yErhoehung=50; 
 
-var rects = [ {x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 +yErhoehung, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col: bgColor},
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col: bgColor}];
+var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
+             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
-// Beschriftung der Buttons
 
-var texts = [{na: "Go on", x: xBasis + xtestdis -10, y: yBasis2 + ytextdis + yErhoehung},
-            {na: "Ergebnis", x: (xBasis + xtestdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
-            {na: "Kombis +", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
-            {na: "Kombis -", x: (xBasis + xtestdis + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+
+var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasis2 + ytextdis+yErhoehung},
+           {na: String.fromCharCode(9673)+"  Lösung", x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
+           {na: String.fromCharCode(43)+"  Kombi", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
+           {na: String.fromCharCode(45)+"  Kombi", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+
+
 
 function ladeGame() 
     {   
@@ -69,7 +71,7 @@ function ladeGame()
         meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
         meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);
 
-        erzeugeButtone(0,3);// Sind die Buttons
+      roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         treffer=0;
@@ -298,19 +300,20 @@ function angetippt(rects, x, y) {
     return isCollision;
 }
 
-function erzeugeButtone(a,b)
-{
-       for (let i = a;i <= b; i++) {
-        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
-        ctx.stroke();          
-        ctx.fillStyle=rects[i].col;         
-       ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
-      }
-}
+function roundedButton(col1,col2)
+   {
+       for (var i = 0, len = rects.length; i < len; i++) 
+       {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+      // ctx.fillStyle=col2;  
+       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+       }
+   }
 
 function buttonText()
 { 
-    ctx.fillStyle = "#5BA9D9";
+    ctx.fillStyle = "white";
     ctx.font = "18px Arial";
     for (let i =0, len = 4; i < len; i++) 
         {      
@@ -411,7 +414,21 @@ function akustischeMeldung(a)
         audio = new Audio(a);
         audio.play();
     }
-
+    function roundedRect(x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x, y + radius);
+        ctx.lineTo(x, y + height - radius);
+        ctx.arcTo(x, y + height, x + radius, y + height, radius);
+        ctx.lineTo(x + width - radius, y + height);
+        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+        ctx.lineTo(x + width, y + radius);
+        ctx.arcTo(x + width, y, x + width - radius, y, radius);
+        ctx.lineTo(x + radius, y);
+        ctx.arcTo(x, y, x, y + radius, radius);
+        ctx.lineWidth = 1;
+        ctx.stroke(); 
+        ctx.fill();
+   }      
 </script>
   
 <p>Enjoy !</p>

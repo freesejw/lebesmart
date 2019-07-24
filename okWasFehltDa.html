@@ -8,9 +8,8 @@
 Canvas {
    position: absolute;
    top: 0px;
-   left: 0px;
-   
-   background-color: #efefef;
+   left: 0px;   
+   background-color: #FeFeFe;
 }
 </style>
 </head>
@@ -61,25 +60,25 @@ var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: h
              {x: (xBasis + 5 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
 
   
-             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis,col: bgColor}];
+             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis,col: "#82CE86"}];
            
- 
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
+var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
 
 function ladeGame() 
     {   
-        meldung("Übe dich in Konzentration","bold 20","Arial","#5BA9D9",120, 50);     
-        meldung("Welches Bild von oben taucht unten nicht auf ?","18","Arial","#5BA9D9",xBasis, 320);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold 24","Arial","#5BA9D9",xBasis,120);     
-        erstelleBasisBild();  // dient nur zur Ansicht        
+        meldung("Übe dich in Konzentration","bold","20","Arial","#5a617b",120, 50);     
+        meldung("Welches Bild von oben taucht unten nicht auf ?","normal","16","Arial","#5a617b",xBasis, 320);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20","Arial","#ea2867",xBasis,490);   
+        erstelleBasisBild();  // dient nur zur Ansicht    
         treffer=0;
         durchLaeufe=0;
    
     }
 
-    function steuerung(){
-        ctx.clearRect(xBasis,120-24,480,40);// löscht " dies ist ein ...."
+    function start(){
+        ctx.clearRect(xBasis,490-24,480,40);// löscht " dies ist ein ...."
         ctx.clearRect(xBasis,190-24,480,40);//
+        ctx.clearRect(xBasis,490-24,480,40);// Ist es nicht
         erstelleBasisBild()
         startTime = Date.now(); 
     }
@@ -103,23 +102,26 @@ canv.addEventListener('click', function(e)
         var rect = angetippt(rects, e.offsetX, e.offsetY);   
        
         if (rect)
-        {          
-            if ( (getipptRechteck==verschwunden)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
-                { treffer++;
-                blocke= true; 
-                meldung("Treffer : " + treffer ,"18","Arial","red",xBasis,490);   
-                elapsedTime = Date.now() - startTime;
-                elapsedTime = Math.round(elapsedTime / 1000);       
-                zeiten.push(elapsedTime)           
-                meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"18","Arial","#5BA9D9",xBasis, yBasis2+ytextdis+155);        
-                }
-                else{
-                   meldung("Ist es nicht","18","Arial","red",xBasis,490)
-                }
+        {   
             if ( (getipptRechteck==zeigen))
                 {
-                steuerung();
+                start();
                 }
+            else 
+            {
+                if ( (getipptRechteck==verschwunden) && ( getipptRechteck<zeigen))
+                    { treffer++;
+                    blocke= true; 
+                    meldung("Treffer : " + treffer ,"bold","16","Arial","red",xBasis,490);   
+                    elapsedTime = Date.now() - startTime;
+                    elapsedTime = Math.round(elapsedTime / 1000);       
+                    zeiten.push(elapsedTime)           
+                    meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"normal","18","Arial","#5a617b",xBasis, yBasis2+ytextdis+155);        
+                    }
+                    else{
+                    meldung("Ist es nicht","normal","16","Arial","red",xBasis,490)
+                    }
+            }
         }
         }, false);
 
@@ -210,20 +212,20 @@ function zeigBild(a,x,y,w,h, gespiegelt)
 
 function rechteckeText()
 { 
-    ctx.fillStyle = "#5BA9D9";
+    ctx.fillStyle = "white";
     ctx.font = "18px Arial";
-    
-       ctx.fillText("Go on",xBasis + xtestdis -10, yBasis3 + ytextdis);
-        
-  
+    ctx.fillText(texts[0].na,xBasis + xtestdis -10, yBasis3 + ytextdis);
 }
 
-function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
+function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
    {
+     
+       var sD=schriftDicke;
+       var sG=schriftGroesse;
         var lg = 10 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
         ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
+        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
         ctx.fillText(text, xm ,ym); 
     }
 

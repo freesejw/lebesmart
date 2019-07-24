@@ -10,7 +10,7 @@ Canvas {
    top: 0px;
    left: 0px;
   
-   background-color: #efefef;
+   background-color: #FeFeFe;
 }
 </style>
 </head>
@@ -38,13 +38,16 @@ var audio;
 var noClickStop;
 
 var xBasis=20, yBasis=340, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: vgCol,col2: bgCol},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: vgCol,col2: bgCol},
-             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: vgCol, col2: bgCol}];
+
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#ea2867",col2: "ea2867"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"}];
+
 var bild = {x:200, y: 60, w: 100,h: 100 };
-var texts =[{na: "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na: "Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
-           {na: "Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+
+var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na:  String.fromCharCode(9633)+ "  Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na:  String.fromCharCode(9660)+ "  Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
     
 var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
@@ -52,7 +55,7 @@ var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
 function ladeGame() 
     {   
-        meldung("Minimiere die Reaktionszeit / übe die Konzentration","20px Arial","#5BA9D9",10, 25);    
+        meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20","Arial","#5a617b",10, 25);    
         einlesenBilder();
        zeigBild("imageverkehr/auge.gif");
        roundedButton();        
@@ -120,7 +123,7 @@ function stop()
         }
         else
             {            
-            meldung("Falsches Zeichen getippt","20px Arial","red",200, 180);
+            meldung("Falsches Zeichen getippt","normal","16","Arial","red",200, 180);
             fehler++;
             }
 
@@ -187,14 +190,13 @@ function roundedButton()
        for (var i = 0, len = rects.length; i < len; i++) {       
        ctx.fillStyle=rects[i].col1;
        roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-       ctx.fillStyle=rects[i].col2 , 
-       roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+            
       }
 }
 
 function buttonText()
 { 
-    ctx.fillStyle = "#5BA9D9";
+    ctx.fillStyle = "white";
     ctx.font = "18px Arial";
     for (var i = 0, len = texts.length; i < len; i++) 
     {
@@ -230,10 +232,15 @@ function abbruch()
         zeigBild("imageverkehr/auge.gif");
     }
 
-function meldung(text, schrift,farbe,xm,ym)
+    function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
    {
-        ctx.fillStyle = farbe;
-        ctx.font = schrift;        
+     
+       var sD=schriftDicke;
+       var sG=schriftGroesse;
+        var lg = 10 + ctx.measureText(text).width 
+       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
+        ctx.fillStyle = farbe;        
+        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
         ctx.fillText(text, xm ,ym); 
     }
 
@@ -241,19 +248,10 @@ function boxMeldung(x,y,w,h,time)
     {
         ctx.rect(x, y, w,h);
         ctx.stroke();
-        meldung(("gebrauchte Zeit (Sek.) : "  + time),"16px Arial","#5BA9D9",x+10,y+h*0.33 );
-        meldung(("Vergleich:  "  + zeiten),"16px Arial","#5BA9D9", x + 10, y+ h*0.66 );
+        meldung(("gebrauchte Zeit (Sek.) : "  + time),"bold","16","Arial","#5a617b",x+10,y+h*0.33 );
+        meldung(("Vergleich:  "  + zeiten),"normal","16","Arial","#5a617b", x + 10, y+ h*0.66 );
     }
 
-    function omeldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-        var lg = 20 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
-        ctx.fillText(text, xm ,ym); 
-    }
-   
 function akustischeMeldung(a)
     {
         audio = new Audio(a);

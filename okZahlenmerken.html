@@ -7,7 +7,7 @@
 <title>Move to Click Position</title>
 <style type="text/css">
 body {
-    background-color: #F3EFF9;
+   
     margin: 30px;
     margin-top: 10px;
 }
@@ -16,12 +16,12 @@ body {
    top: 0px;
    left: 0px;
  
-   background-color : #efefef;
+   background-color : #F2F2F2;
 }
 </style>
 </head>
 <body>
-<canvas id="myCanvas" width="500" height="400" >
+<canvas id="myCanvas" width="400" height="400" >
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
@@ -128,11 +128,7 @@ var links=50;
      }
 
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
-
-
 
   function ErstellAusgabe()
 
@@ -145,9 +141,10 @@ var links=50;
 
         $('canvas').drawText({
                         layer: true,
-                        fillStyle: '#5BA9D9',
-                        x: 15, y: 15,
-                        fontSize: 20,fillStyle: '#5BA9D9',
+                        fillStyle: '#5a617b',
+                        x: 35, y: 15,
+                        fontStyle: 'bold',
+                        fontSize: 20,fillStyle: '#5a617b',
                         fontFamily: 'Verdana, sans-serif',
                         text: 'Übe Konzentration +  Motorik',
                         fromCenter: false
@@ -161,8 +158,8 @@ var links=50;
 
 
 
-        var bgColor = '#B5EC9B', textColor = '#5BA9D9',
-                borderWidth = 2, borderColor = '#5BA9D9';
+        var bgColor = 'white', textColor = '#5a617b',
+                borderWidth = 2, borderColor = '#5a617b';
 
        $('canvas').drawRect({
        layer: true,
@@ -175,10 +172,10 @@ var links=50;
 
        $('canvas').drawText({
                         layer: true,
-                        fillStyle: '#5BA9D9',
+                        fillStyle: '#5a617b',
                         x: 75,
                         y: 70,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: 'Verdana, sans-serif',
                         text: 'Merk dir die Zahl',
                         fromCenter: false
@@ -186,7 +183,7 @@ var links=50;
        $('canvas').drawText({
                         layer: true,
                          name: 'ausgabeZahl',
-                        fillStyle: '#5BA9D9',
+                        fillStyle: '#5a617b',
                         x: 85,
                         y: 112,
                         fontSize: 20,
@@ -201,17 +198,17 @@ var links=50;
 
        $('canvas').drawRect({
        layer: true,
-       fillStyle: 'Lavender',
+       fillStyle: 'white',
        strokeStyle: borderColor, strokeWidth: borderWidth,
        x: 315, y: 100,  width: 60, height: 40,
        fromCenter: false
        });
        $('canvas').drawText({
                         layer: true,
-                        fillStyle: '#5BA9D9',
+                        fillStyle: '#5a617b',
                         x: 315,
                         y: 70,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: 'Verdana, sans-serif',
                         text: 'Punkte',
                         fromCenter: false
@@ -219,7 +216,7 @@ var links=50;
            $('canvas').drawText({
                         layer: true,
                          name: 'ausgabePunkte',
-                        fillStyle: '#5BA9D9',
+                        fillStyle: '#5a617b',
                         x: 315 +15,
                         y: 112,
                         fontSize: 20,
@@ -231,9 +228,9 @@ var links=50;
 
           $('canvas').drawRect({
            layer: true,
-           strokeStyle: '#5BA9D9',
+           strokeStyle: '#5a617b',
            strokeWidth: 1,
-           fillStyle: 'Lavender',
+           fillStyle: '#82CE86',
            x: 50, y: 330, width: 70, height: 30,
            fromCenter: false,
            click: function(layer) {
@@ -243,8 +240,8 @@ var links=50;
            });
             $('canvas').drawText({
                         layer: true,
-                        fillStyle: '#5BA9D9',
-                        x: 50 + 15,
+                        fillStyle: 'white',
+                        x: 50 + 10,
                         y: 330 + 5,
                         fontSize: 18,
                         fontFamily: 'Verdana, sans-serif',
@@ -255,9 +252,9 @@ var links=50;
 
             $('canvas').drawRect({
             layer: true,
-            strokeStyle: '#5BA9D9',
+            strokeStyle: '#5a617b',
             strokeWidth: 1,
-            fillStyle: 'Lavender',
+            fillStyle: '#ea2867',
             x: 150, y: 330, width: 70, height: 30,
             fromCenter: false,
             click: function(layer) {
@@ -268,7 +265,7 @@ var links=50;
 
             $('canvas').drawText({
                         layer: true,
-                        fillStyle: '#5BA9D9',
+                        fillStyle: 'white',
                         x: 150+ 15,
                         y: 330 + 5,
                         fontSize: 18,
@@ -288,7 +285,7 @@ var links=50;
             cv.drawRect({
                 name: 'rect' + nr,
                 layer: true,
-                fillStyle: 'Lavender',
+                fillStyle: 'white',
                  strokeStyle: borderColor, strokeWidth: borderWidth,
                 x: x, y: y, width: wrect, height: hrect,
 
@@ -326,7 +323,7 @@ var links=50;
             }).drawText({
                 name: 'text' + nr,
                 layer: true,
-                fillStyle: '#5BA9D9',
+                fillStyle: '#5a617b',
                 x: x + wrect / 2,
                 y: y + hrect / 2,
                 text: nr
@@ -346,8 +343,8 @@ var links=50;
      {}
    ////////////////////////////////////////////
 
-                var bgColor = 'Lavender', textColor = '#5BA9D9',
-                borderWidth = 2, borderColor = '#5BA9D9';
+                var bgColor = '#5a617b', textColor = 'white',
+                borderWidth = 2, borderColor = '#5a617b';
 
        function drawPlusMinus(cv, x, y, h, content, nr)
 
@@ -415,17 +412,17 @@ var links=50;
                 drawPlusMinus(cv, x + w, y, h / 2, '+', nr);
                 drawPlusMinus(cv, x + w, y + h / 2, h / 2, '-', nr);
             }
-            for (let i = 0; i < 3; i += 1) {
+            for (let i = 0; i < 2; i += 1) {
                 drawGroup($('canvas'), 240 + i * 80, 330, 30, 30, i+1);
             }
 
        ////////////////////////////////////////// Erkl�rungen
             function erklaerung (xwert,i)
             {
-            var tex=["Ziffern","Wie oft","Speed"];
+            var tex=["Ziffern","Wie oft",""];
             $('canvas').drawText({
                         layer: true,
-                        fillStyle: '#5BA9D9',
+                        fillStyle: '#5a617b',
                         x: xwert,
                         y: 365,
                         fontSize: 12,
