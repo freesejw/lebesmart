@@ -3,16 +3,11 @@
 <head>
 <meta charset="utf-8">   
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-  
-   background-color: #efefef;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="600"></canvas>
@@ -61,9 +56,9 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasi
 
 function ladeGame() 
     {   
-        meldung("Übe die Merkspanne","20","Arial","#5a617b",40, 30);  
-        meldung("Merke dir die Blinks : Position und Reihenfolge","18","Arial","#5a617b",40, 60);     
-        meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","#5a617b",xTextRechts ,yTextHoehe);
+        meldung("Übe die Merkspanne","bold","20",schriftArt,"#5a617b",40, 30);  
+        meldung("Merke dir die Blinks : Position und Reihenfolge","normal","16",schriftArt,"#5a617b",40, 60);     
+        meldung("Anzahl Blinks = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,yTextHoehe);
         roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
@@ -132,20 +127,20 @@ canv.addEventListener('click', function(event)
                        
                         }
                         else {
-                                meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"18","Arial","red",30,420);  
+                                meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"normal","16",schriftArt,"red",30,420);  
                                
                                 feldBlocken=true;
                                 buttonBlocken=false;                               
                                 akustischeMeldung("audio/up.mp3");   
-                                meldung("Treffer : " + treffer ,"18","Arial","#5a617b",310,300);
-                                meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","#5a617b",310,340);
+                                meldung("Treffer : " + treffer ,"normal","16",schriftArt,"#5a617b",310,300);
+                                meldung("von :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",310,340);
                              }
             
                     if (zaehlerTreffer == anzahlBlinks)
                     {
                        treffer++
-                       meldung("Treffer : " + treffer ,"18","Arial","#5a617b",310,300);
-                       meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","#5a617b",310,340);
+                       meldung("Treffer : " + treffer ,"bold","16",schriftArt,"#5a617b",310,300);
+                       meldung("von :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",310,340);
                        buttonBlocken=false; 
                        
                     }
@@ -243,33 +238,12 @@ function abbruch()
         
         buttonBlocken=false;
         ctx.clearRect(xBasis,420-30,400,30);   
-        meldung("Treffer : " + treffer ,"18","Arial","#5a617b",310,300);
-        meldung("von :  " +durchLaeufe + "  Durchgängen","18","Arial","#5a617b",310,340);
+        meldung("Treffer : " + treffer ,"bold","16",schriftArt,"#5a617b",310,300);
+        meldung("von :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",310,340);
         clearInterval(myVar);
     }
  
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
 
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-          
-                }
-    }
-    return isCollision;
-}
 
 function roundedButton()
 {
@@ -283,7 +257,7 @@ function roundedButton()
 function buttonText()
 { 
     ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
+    ctx.font = "18px" + " " + schriftArt;
 
     for (var i =0, len = 4; i < len; i++) 
     
@@ -314,7 +288,7 @@ function auswahlButton()
                       {                      
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
-                            meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","#5a617b",xTextRechts ,yTextHoehe);
+                            meldung("Anzahl Blinks = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,yTextHoehe);
                       }
                         break;
                      case 3:
@@ -322,7 +296,7 @@ function auswahlButton()
                         {
                                 anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Blinks  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Blinks = " +  anzahlBlinks,"18","Arial","#5a617b",xTextRechts ,yTextHoehe);   
+                                meldung("Anzahl Blinks = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,yTextHoehe);   
                         }                     
                         break;
                        default:
@@ -330,54 +304,9 @@ function auswahlButton()
                 }             
     }
 
-    function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-        var lg = 20 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
-        ctx.fillText(text, xm ,ym); 
-    }
+    
+    
 
-    function shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function plusMinus(ausgang,delta,unten,oben)
-{
-  let anz=ausgang; 
-  if ((anz + delta)< oben && delta>0)
-  {anz=anz + delta; }
-  if ((anz + delta)> unten && delta<=0)
-  {anz=anz + delta; }
-  
-  return anz;
-}
-function akustischeMeldung(a)
-    {
-        var audio = new Audio(a);
-        audio.play();
-    }
-
-    function roundedRect(x, y, width, height, radius) {
-        ctx.beginPath();
-        ctx.moveTo(x, y + radius);
-        ctx.lineTo(x, y + height - radius);
-        ctx.arcTo(x, y + height, x + radius, y + height, radius);
-        ctx.lineTo(x + width - radius, y + height);
-        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-        ctx.lineTo(x + width, y + radius);
-        ctx.arcTo(x + width, y, x + width - radius, y, radius);
-        ctx.lineTo(x + radius, y);
-        ctx.arcTo(x, y, x, y + radius, radius);
-        ctx.lineWidth = 1;
-        ctx.stroke(); 
-        ctx.fill();
-}      
 
 </script>
   

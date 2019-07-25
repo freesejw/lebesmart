@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">    
+<meta charset="utf-8">    
 <meta name="welche kombi" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-   
-   background-color: #efefef;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="600"></canvas>
@@ -66,10 +61,10 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasi
 
 function ladeGame() 
     {   
-        meldung("Verbessere Konzentration und Kurzzeitgedächnis","20","Arial","#5BA9D9",40, 35); 
-        meldung("Merke dir die Buchstaben/Zahlenkombination","18","Arial","#5BA9D9",40, 65);    
-        meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
-        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);
+        meldung("Verbessere Konzentration und Kurzzeitgedächnis","bold","20",schriftArt,"#5a617b",40, 35); 
+        meldung("Merke dir die Buchstaben/Zahlenkombination","normal","16",schriftArt,"#5a617b",40, 65);    
+        meldung("Anzahl","normal","16",schriftArt,"#5a617b",330 ,yBasis2-60);
+        meldung("Kombinationen = " +  anzahlKombi,"normal","16",schriftArt,"#5a617b",330 ,yBasis2-30);
 
       roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
@@ -86,7 +81,7 @@ function start()
     ctx.clearRect(xBasis,450-25 ,200,30)  // Meldung falsch
     ctx.clearRect(xBasis,470-25,55,25);  // meldung super
 
-    meldung("Merke dir die Buchstaben/Zahlenkombination","18","Arial","#5BA9D9",40, 65);    
+    meldung("Merke dir die Buchstaben/Zahlenkombination","normal","16",schriftArt,"#5a617b",40, 65);    
     iterator=-1; 
     zaehlerClick=-1;
     zaehlerTreffer=0;
@@ -130,7 +125,7 @@ canv.addEventListener('click', function(event)
                             { 
                                
                                 treffer++;
-                                meldung("Treffer =  " + treffer ,"18","Arial","red",xBasis,430);  
+                                meldung("Treffer =  " + treffer ,"bold","16",schriftArt,"red",xBasis,430);  
                           
                             //xxclick=xAbstand+ (Math.floor(xclick/xBreite))*xBreite;
                             //yyclick=(Math.floor(yclick/yHoehe))*yHoehe;  
@@ -142,7 +137,7 @@ canv.addEventListener('click', function(event)
                         else {
                             markiere("red","6");                            
                            
-                            meldung("Falsch. ==> Go on" ,"18","Arial","red",xBasis,450); 
+                            meldung("Falsch. ==> Go on" ,"bold","16",schriftArt,"red",xBasis,450); 
                             akustischeMeldung("audio/eat.mp3");  
                             rundeAus=true ;
                             blocken=true;                          
@@ -152,7 +147,7 @@ canv.addEventListener('click', function(event)
                     if (treffer == anzahlKombi)
                     {
                        
-                        meldung("super  " ,"18","Arial","#5BA9D9",xBasis,470);                                           
+                        meldung("Geschaft !  " ,"bold","16",schriftArt,"#5a617b",xBasis,470);                                           
                     }
             } 
             getroffen=false;   
@@ -233,7 +228,7 @@ iterator++;
     if (iterator<anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen
     {
            ctx.fillStyle = "red";
-            ctx.font = "39px Arial";
+            ctx.font = "39px" + schriftArt;
             ctx.clearRect(200, 200-60,400,80);
             ctx.fillText(gesuchtBasis[iterator], 200,200);           
             console.log(iterator + "  " +gesuchtBasis[iterator]); 
@@ -242,12 +237,12 @@ iterator++;
         if(iterator==anzahlKombi ) // zeigt danach ALLE Kombinationen 
         {
             ctx.clearRect(200, 200-60,400,80);
-            meldung("Klicke die vorher gezeigten Kombinationen an","18","Arial","#5BA9D9",40, 65);  
+            meldung("Klicke die vorher gezeigten Kombinationen an","normal","16",schriftArt,"#5a617b",40, 65);  
            
             for (let i=0;i<16;i++)
             {
                 ctx.fillStyle = "green";
-                ctx.font = "30px Arial";
+                ctx.font = "30px" + schriftArt;
                 ctx.fillText(gesuchtNeu[i], xCoord[i]+xtestdis +15, yCoord[i]+ 10+yHoehe/2);            
             }
         }
@@ -273,67 +268,12 @@ function Ergebnis()
 
     {
         //ctx.clearRect(xBasis,440,400,230,40);   
-        meldung("Treffer insgesamt : " + treffer + "  bei :  " +durchLaeufe + "  Durchgängen","18","Arial","red",xBasis,400);
+        meldung("Treffer insgesamt : " + treffer + "  bei :  " +durchLaeufe + "  Durchgängen","bold","16",schriftArt,"red",xBasis,400);
         clearInterval(myVar);
     }
  
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
 
-function angetippt(rects, x, y) {
-    let zw;
-    let isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        let left = rects[i].x, right = rects[i].x+rects[i].w;
-        let top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-          
-                }
-    }
-    return isCollision;
-}
 
-function roundedButton(col1,col2)
-   {
-       for (var i = 0, len = rects.length; i < len; i++) 
-       {       
-       ctx.fillStyle=rects[i].col1;
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-      // ctx.fillStyle=col2;  
-       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
-       }
-   }
-
-function buttonText()
-{ 
-    ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
-    for (let i =0, len = 4; i < len; i++) 
-        {      
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }
-        
-}
-
-function plusMinus(ausgang,delta,unten,oben)
-{
-        // Mehr oder weniger Zeit zum Suchen
-        let anz=ausgang; 
-        if ((anz + delta)< oben && delta>0)
-        {anz=anz + delta; }
-        if ((anz + delta)> unten && delta<=0)
-        {anz=anz + delta; }
-        
-        return anz;
-}         
 
 function auswahlButton()
     {
@@ -349,28 +289,21 @@ function auswahlButton()
                     case 2:
                         anzahlKombi= plusMinus(anzahlKombi,1,1,15); 
                         ctx.clearRect(xBasis,320 -20, 300, 20); 
-                        meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
-                        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);                                   
+                        meldung("Anzahl","normal","16",schriftArt,"#5a617b",330 ,yBasis2-60);
+                        meldung("Kombinationen = " +  anzahlKombi,"18",schriftArt,"#5a617b",330 ,yBasis2-30);                                   
                         break;
                      case 3:
                         anzahlKombi= plusMinus(anzahlKombi,-1,1,15); 
                         ctx.clearRect(xBasis,320 -20, 300, 20); 
-                        meldung("Anzahl","18","Arial","#5BA9D9",330 ,yBasis2-60);
-                        meldung("Kombinationen = " +  anzahlKombi,"18","Arial","#5BA9D9",330 ,yBasis2-30);               
+                        meldung("Anzahl","normal","16",schriftArt,"#5a617b",330 ,yBasis2-60);
+                        meldung("Kombinationen = " +  anzahlKombi,"normal","18",schriftArt,"#5a617b",330 ,yBasis2-30);               
                         break;
                         default:
                         alert("Sorry");
                 }             
     }
 
-    function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-        var lg = 20 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
-        ctx.fillText(text, xm ,ym); 
-    }
+    
 
 function erstellKombination() {
             
@@ -409,29 +342,10 @@ function erstellKombination() {
      
 
 
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
-    function roundedRect(x, y, width, height, radius) {
-        ctx.beginPath();
-        ctx.moveTo(x, y + radius);
-        ctx.lineTo(x, y + height - radius);
-        ctx.arcTo(x, y + height, x + radius, y + height, radius);
-        ctx.lineTo(x + width - radius, y + height);
-        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-        ctx.lineTo(x + width, y + radius);
-        ctx.arcTo(x + width, y, x + width - radius, y, radius);
-        ctx.lineTo(x + radius, y);
-        ctx.arcTo(x, y, x, y + radius, radius);
-        ctx.lineWidth = 1;
-        ctx.stroke(); 
-        ctx.fill();
-   }      
+
 </script>
   
-<p>Enjoy !</p>
+
 
 </body>
 </html>

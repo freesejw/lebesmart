@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">    
+ <meta charset="utf-8">    
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-   
-   background-color: #efefef;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
  <canvas id="canvas" width="500" height="600"></canvas>
@@ -68,10 +63,10 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasi
 
 function ladeGame() 
     {   
-        meldung("Verbessere Konzentration und visuelle Umsetzung","bold","20","Arial","#5a617b",30, 25);     
+        meldung("Verbessere Konzentration + visuelle Umsetzung","bold","20",schriftArt,"#5a617b",30, 25);     
            
-        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380);        
-        meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold","24","Arial","#5a617b",xBasis,450);  
+        meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16",schriftArt,"#5a617b",xBasis ,380);        
+        meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold","24",schriftArt,"#5a617b",xBasis,450);  
         roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         einlesenFlitzerBilder();
@@ -126,7 +121,7 @@ function zeige()
                 xx=0; // ist die x position vom bild, dass animiert wird
                 durchLaeufe++;  
                 blocke=false;          
-                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380); 
+                meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16",schriftArt,"#5a617b",xBasis ,380); 
                 ctx.clearRect(xBasis,yBasis1,550,80);
                 erstelleBasisBild();                        
                 renner();     
@@ -191,13 +186,13 @@ canv.addEventListener('click', function(e)
                     blocke= true; 
 
                     ctx.clearRect(xBasis,420-30,500,30); // Kein Treffer     
-                    meldung("Treffer . Erreichte Treffer : " + treffer ,"bold","16","Arial","red",xBasis,420);
+                    meldung("Treffer . Erreichte Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,420);
                                  }  
                 else{
                   if (getipptRechteck< 5)  {
                      
                      akustischeMeldung("audio/up.mp3");  
-                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"bold","16","Arial","red",xBasis,420);     
+                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,420);     
                 }} 
         }
         
@@ -235,30 +230,6 @@ function abbruch()
          clearInterval(myVar);
     }
  
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
-
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-          
-                }
-    }
-    return isCollision;
-}
-
-
 
 function zeichneVergleichsBilder(){     
     for (let i=0;i<zeigBilder;i++){ 
@@ -290,7 +261,7 @@ function roundedButton(col1,col2)
 function buttonText()
 { 
     ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
+    ctx.font = "18px schriftArt";
 
     for (var i =0, len = 4; i < len; i++) 
     
@@ -301,23 +272,6 @@ function buttonText()
         
 }
 
-function plusMinus(ausgang,delta,unten,oben)
-{
- // Mehr oder weniger Zeit zum Suchen
-  let anz=ausgang; 
-  if ((anz + delta)< oben && delta>0)
-  {anz=anz + delta; }
-  if ((anz + delta)> unten && delta<=0)
-  {anz=anz + delta; }
-  
-  return anz;
-}
-
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
 
 function auswahlButton()
     {
@@ -340,12 +294,12 @@ function auswahlButton()
                     case 7:
                        if (blocken==false){
                             maxDurchlaeufe=plusMinus(maxDurchlaeufe,1,5,20);
-                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380);  }                                        
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16",schriftArt,"#5a617b",xBasis ,380);  }                                        
                         break;
                      case 8:
                         if (blocken==false){
                             maxDurchlaeufe=plusMinus(maxDurchlaeufe,-1,5,20);
-                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16","Arial","#5a617b",xBasis ,380); 
+                            meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16",schriftArt,"#5a617b",xBasis ,380); 
                        }                                          
                         break;
    
@@ -355,17 +309,6 @@ function auswahlButton()
                 }             
     }
 
-    function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-     
-       var sD=schriftDicke;
-       var sG=schriftGroesse;
-        var lg = 10 + ctx.measureText(text).width 
-       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
-        ctx.fillText(text, xm ,ym); 
-    }   
 
 function einlesenFlitzerBilder()
     {
@@ -375,28 +318,7 @@ function einlesenFlitzerBilder()
         }
       }
 
-    function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
-
-function roundedRect(x, y, width, height, radius) {
-        ctx.beginPath();
-        ctx.moveTo(x, y + radius);
-        ctx.lineTo(x, y + height - radius);
-        ctx.arcTo(x, y + height, x + radius, y + height, radius);
-        ctx.lineTo(x + width - radius, y + height);
-        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-        ctx.lineTo(x + width, y + radius);
-        ctx.arcTo(x + width, y, x + width - radius, y, radius);
-        ctx.lineTo(x + radius, y);
-        ctx.arcTo(x, y, x, y + radius, radius);
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        // ctx.fillStyle="Lavender";
-        ctx.fill();
-}        
+   
 
 </script>
   

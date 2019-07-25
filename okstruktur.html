@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">   
+<meta charset="utf-8">   
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    
-    
-     background-color: #efefef;
-   cursor: url(Images/fadenkreuz.png),  auto; 
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()"></body>
 <body >
@@ -53,9 +48,9 @@ var texts =[{na:String.fromCharCode(9655) + "   Go on", x: xBasis + xtestdis -10
 
 function ladeGame()
 {
-    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","20","Arial","#5BA9D9",xBasis, 30); 
-    meldung("Merke Dir die Bildpositionen","18", "Arial","#5BA9D9",xBasis, 60);   
-    meldung("Anzahl Bilder = " +  anzahlBilder,"16","Arial","#5BA9D9",335,420);
+    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","bold","20",schriftArt,"#5a617b",xBasis, 30); 
+    meldung("Merke Dir die Bildpositionen","16", schriftArt,"#5a617b",xBasis, 60);   
+    meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     roundedButton();
     buttonText();  
@@ -69,15 +64,13 @@ function start()
     blocken=true; // Klicken weährend dedr Merkphase verhindern
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl);//Löscht die Matrix 
     ctx.clearRect(xBasis,220-40,450,40);//löscht text " falsches Feld..."
-
     zaehlerClick=0;
     zaehlerTreffer=0;     
     indexReihe=[]; 
     zeitAusgang=0; //  
-
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);    
     auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt sie an 
-    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","#5BA9D9",xBasis,395); 
+    meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"normal","16",schriftArt,"#5a617b",xBasis,395); 
  
    id=setInterval(zeitAbfrage,1000);
 }
@@ -86,15 +79,13 @@ function zeitAbfrage()
    {
     // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
     
-    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"18","Arial","#5BA9D9",xBasis,395); 
-
-    zeitAusgang=zeitAusgang + 1;
-   
+    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"normal","16",schriftArt,"#5a617b",xBasis,395); 
+    zeitAusgang=zeitAusgang + 1;   
     if(zeitAusgang >= zeitSchranke)  
         { 
             blocken=false;
             ctx.clearRect(xBasis,395 - 25,400,25);   // Merke dir die Position....
-            meldung("Jetzt suche die Bilder" ,"18","Arial","red",xBasis,425); 
+            meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xBasis,425); 
             for (var i =0; i<anzahlBilder;i++)
             {
                 ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
@@ -122,7 +113,6 @@ if (blocken==false)
 
         if (zwert>=0) 
             {            
-                
                 var zw =indexReihe.indexOf(zwert);    
              
                 if (zw>=0)
@@ -139,8 +129,8 @@ if (blocken==false)
                         else {    
                             //falsche Ziffer                      
                             ctx.clearRect(xBasis,420-30,300,30);                            
-                           // meldung("Falsches Feld ==> Go on" ,"18","Arial","red",xBasis,420);
- meldung("Falsches Feld ==> Go on" ,"30","Arial","red",xBasis,220);
+                           // meldung("Falsches Feld ==> Go on" ,"18",schriftArt,"red",xBasis,420);
+                           meldung("Falsches Feld ==> Go on" ,"normal","16",schriftArt,"red",xBasis,220);
                             akustischeMeldung("audio/up.mp3"); 
                             blocken=false;
                             minusPunkte++;                
@@ -150,12 +140,12 @@ if (blocken==false)
             {
                 // Richtige Zahl
                 plusPunkte++;                 
-               //meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","#5BA9D9",335,300);  
-                //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18","Arial","#5BA9D9",335,340);  
+               //meldung("Punkte gesamt = " + plusPunkte ,"18",schriftArt,"#5a617b",335,300);  
+                //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18",schriftArt,"#5a617b",335,340);  
                 blocken=false;
             }
         }    
-}, false); 
+        }, false); 
 
 canv.addEventListener('click', function(e)
      {
@@ -174,65 +164,23 @@ canv.addEventListener('click', function(e)
                         if (blocken==false)
                         {
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","#5BA9D9",335,420); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420); 
                         }
                     break; 
                     case 2:
                     if (blocken==false)
                         {
                         anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"18","Arial","#5BA9D9",335,420);  
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420);  
                         }                                      
                     break;                    
                     default:
                     alert("Sorry");
                 }                        
         } 
-        meldung("Punkte gesamt = " + plusPunkte ,"18","Arial","#5BA9D9",335,300);  
-                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"18","Arial","#5BA9D9",335,340);  
+                meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,300);  
+                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,340);  
     }, false);
-
-
-    function roundedButton()
-{
-       for (var i = 0, len = rects.length; i < len; i++) {       
-       ctx.fillStyle=rects[i].col1;
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-            
-      }
-}
-
-function buttonText()
-{ 
-    ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
-    for (var i = 0, len = texts.length; i < len; i++) 
-    {
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }
-     
-}
-
-
-
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-            
-                }
-    }
-    return isCollision;
-}
 
 function aufbauMatrix(zeilen,spalten,breite,hoehe)
 {
@@ -245,14 +193,13 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
             var x=breite*j;  
             zeigBild("neuesAuge.jpg",x+xAbstand,y+yAbstand,breite-3,hoehe-3);
            
-            
             //linke, obere Koordinaten der Rechtecke
             xCoord.push(x);
             yCoord.push(y);
          }
     }
-    ctx.lineWidth="1";
-            ctx.strokeStyle="#5BA9D9";       
+            ctx.lineWidth="1";
+            ctx.strokeStyle="#5a617b";       
             ctx.strokeRect(xCoord[0]+xAbstand,yCoord[0]+yAbstand,breite*spalten,hoehe*zeilen);    
 }
 
@@ -271,14 +218,17 @@ function auswahlZellen(zeilen,spalten)
 // Wählt und zeigt die Zellen an, die gesucht werden sollen
 for (var i =0; i<anzahlBilder;i++)
  {
-    var zw =(random(zeilen*spalten)) - 1;    
+    var zw =(random(zeilen*spalten)) - 1;
+    console.log(zw);
+
      if (indexReihe.indexOf(zw) <0)
         {               
                     indexReihe.push(zw);}
                     else
                     {i=i-1;}
-            
-                    zeigBild("face/face" + random(4) + ".png",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+            var zu=random(6);
+            console.log(" zu   " + zu); 
+                    zeigBild("face/face" + zu + ".png",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
          }   
 }
 
@@ -296,54 +246,6 @@ function feldNummerSchuss(xc,yc){    // xc und yc sind die Koordinaten des Klick
      
   return zw;  
 }
-
- function random(max)
-          {
-            return Math.floor((Math.random() *max)+1);
-          }
-
-function meldung(text, schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-        var lg = 20 + ctx.measureText(text).width 
-        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = schriftGroesse + "px "+ schriftTyp;
-        ctx.fillText(text, xm ,ym); 
-    }
-
-function plusMinus(ausgang,delta,unten,oben)
-{
-        // Mehr oder weniger Zeit zum Suchen
-        let anz=ausgang; 
-        if ((anz + delta)< oben && delta>0)
-        {anz=anz + delta; }
-        if ((anz + delta)> unten && delta<=0)
-        {anz=anz + delta; }
-        return anz;
-}     
-      
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
-
-    function roundedRect(x, y, width, height, radius) {
-        ctx.beginPath();
-        ctx.moveTo(x, y + radius);
-        ctx.lineTo(x, y + height - radius);
-        ctx.arcTo(x, y + height, x + radius, y + height, radius);
-        ctx.lineTo(x + width - radius, y + height);
-        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-        ctx.lineTo(x + width, y + radius);
-        ctx.arcTo(x + width, y, x + width - radius, y, radius);
-        ctx.lineTo(x + radius, y);
-        ctx.arcTo(x, y, x, y + radius, radius);
-        ctx.lineWidth = 1;
-        ctx.stroke(); 
-        ctx.fill();
-}      
-
 </script>
 
 

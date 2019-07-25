@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">     
+<meta charset="utf-8">     
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;   
-   background-color: #FeFeFe;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="600"></canvas>
@@ -30,8 +26,6 @@ var bgColor="Lavender";
 var anzahlBilder=20, pic =new Array, zeigBilder=12;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var startTime,elapsedTime,zeiten=[];
-
-
 
 var yBasis0=150;
 var yBasis1=230;
@@ -66,9 +60,9 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtestdis -10
 
 function ladeGame() 
     {   
-        meldung("Übe dich in Konzentration","bold","20","Arial","#5a617b",120, 50);     
-        meldung("Welches Bild von oben taucht unten nicht auf ?","normal","16","Arial","#5a617b",xBasis, 320);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20","Arial","#ea2867",xBasis,490);   
+        meldung("Übe dich in Konzentration","bold","20",schriftArt,"#5a617b",120, 50);     
+        meldung("Welches Bild von oben taucht unten nicht auf ?","normal","16",schriftArt,"#5a617b",xBasis, 320);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"#ea2867",xBasis,490);   
         erstelleBasisBild();  // dient nur zur Ansicht    
         treffer=0;
         durchLaeufe=0;
@@ -112,14 +106,14 @@ canv.addEventListener('click', function(e)
                 if ( (getipptRechteck==verschwunden) && ( getipptRechteck<zeigen))
                     { treffer++;
                     blocke= true; 
-                    meldung("Treffer : " + treffer ,"bold","16","Arial","red",xBasis,490);   
+                    meldung("Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,490);   
                     elapsedTime = Date.now() - startTime;
                     elapsedTime = Math.round(elapsedTime / 1000);       
                     zeiten.push(elapsedTime)           
-                    meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"normal","18","Arial","#5a617b",xBasis, yBasis2+ytextdis+155);        
+                    meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"normal","18",schriftArt,"#5a617b",xBasis, yBasis2+ytextdis+155);        
                     }
                     else{
-                    meldung("Ist es nicht","normal","16","Arial","red",xBasis,490)
+                    meldung("Ist es nicht","normal","16",schriftArt,"red",xBasis,490)
                     }
             }
         }
@@ -142,28 +136,7 @@ function indexVergleichsBilder()
     return zww;
     }
 
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
 
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-         
-                }
-    }
-    return isCollision;
-}
 
 function erzeugeDieRechtecke(a,b)
 {
@@ -217,17 +190,7 @@ function rechteckeText()
     ctx.fillText(texts[0].na,xBasis + xtestdis -10, yBasis3 + ytextdis);
 }
 
-function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-     
-       var sD=schriftDicke;
-       var sG=schriftGroesse;
-        var lg = 10 + ctx.measureText(text).width 
-       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
-        ctx.fillText(text, xm ,ym); 
-    }
+
 
 function einlesenBilder()
     {

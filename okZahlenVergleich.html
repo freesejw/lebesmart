@@ -3,15 +3,11 @@
 <head>
 <meta charset="utf-8">        
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-   background-color: #F6F6F6;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="600"></canvas>
@@ -52,11 +48,11 @@ function ladeGame()
     {
        // boxMeldung(("?"),xBasis,120,100,100,25);
        // boxMeldung(("?"),280,120,100,100,25);
-        meldung("Verbessere deine Reaktionszeit und Konzentration","bold","20","Arial","#5a617b",10, 35);  
-        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","normal","16","Arial","#5a617b",xBasis, 100); 
-        meldung("Es gibt 10 Durchgänge","normal","16"," Arial","#5a617b",xBasis ,320); 
-        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","normal","16,"," Arial","#5a617b",xBasis ,360); 
-        meldung(( "Anzahl Treffer :  0"),"bold","16","Arial","#5a617b",xBasis, 400);   
+        meldung("Verbessere deine Reaktionszeit und Konzentration","bold","20",schriftArt,"#5a617b",10, 35);  
+        meldung("Ist die Zahl links oder rechts höher? Klick sie an !","normal","16",schriftArt,"#5a617b",xBasis, 100); 
+        meldung("Es gibt 10 Durchgänge","normal","16"," schriftArt","#5a617b",xBasis ,320); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","normal","16,"," schriftArt","#5a617b",xBasis ,360); 
+        meldung(( "Anzahl Treffer :  0"),"bold","16",schriftArt,"#5a617b",xBasis, 400);   
         roundedButton()
         buttonText();
         ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
@@ -73,7 +69,7 @@ function start()
         ctx.clearRect(xBasis, 440, 300, -20);   // Löschen Trefferquote
         ctx.clearRect(xBasis,400,200,-20);  // Löschen Anzahl Treffer
         treffer=0;
-        meldung(( "Anzahl Treffer :  " + treffer),"bold" ,"16","Arial","#5a617b",xBasis, 400);  
+        meldung(( "Anzahl Treffer :  " + treffer),"bold" ,"16",schriftArt,"#5a617b",xBasis, 400);  
        // ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
        // ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);        
         durchLaeufe=0;
@@ -93,7 +89,7 @@ function iteration()
             z1=getRnd(1,10); 
             var schriftGroesse1=getRnd(15,90);
                 
-            meldung(z1.valueOf() ,"bold",schriftGroesse1,"Arial","#5a617b",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
+            meldung(z1.valueOf() ,"bold",schriftGroesse1,schriftArt,"#5a617b",xBasis + rects[4].w*.3,120+rects[4].h*0.7);
        
             do {
                 
@@ -103,7 +99,7 @@ function iteration()
                 }
                 while ((Math.abs(schriftGroesse1-schriftGroesse2 ) < 25) || (z1 == z2));
 
-            meldung(z2.valueOf() ,"bold",schriftGroesse2,"Arial","#5a617b",280 + rects[5].w*.3,120+rects[5].h*0.7);
+            meldung(z2.valueOf() ,"bold",schriftGroesse2,schriftArt,"#5a617b",280 + rects[5].w*.3,120+rects[5].h*0.7);
             //console.log("Zufallstahl #1: " + z1 + " | Zufallszahl #2: " + z2 + " | Differenz: " + (z1-z2) + " | Schriftgrößenunterschied: " + (Math.abs( schriftGroesse1  - schriftGroesse2)))
          }
 
@@ -123,7 +119,7 @@ function abbruch()
         var quote=(treffer)/(durchLaeufe-1);
         quote=Math.round(quote*100);
         ctx.clearRect(xBasis, 440, 300, -16);               
-        meldung("Deine Trefferquote war " + quote + " Prozent","bold","16","Arial","red",xBasis,440);  
+        meldung("Deine Trefferquote war " + quote + " Prozent","bold","16",schriftArt,"red",xBasis,440);  
         clearInterval(myVar);   
       
         ctx.fillStyle="#F2F2F2";
@@ -142,22 +138,7 @@ function abbruch()
         }}, false);
 
 
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-            var left = rects[i].x, right = rects[i].x+rects[i].w;
-            var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-            if (right >= x
-                && left <= x
-                && bottom >= y
-                && top <= y) {
-                    isCollision = rects[i];   
-                    getipptRechteck=i;          
-                }
-    }
-    return isCollision;
-}
+f
 
 function auswahlButton()
     {
@@ -173,14 +154,14 @@ function auswahlButton()
                     if (offenButton==true)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," Arial","#5a617b",xBasis ,360);                      
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,360);                      
                     }                                       
                     break;
                     case 3:
                     if (offenButton==true)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," Arial","#5a617b",xBasis ,360); 
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,360); 
                     }                     
                         break;
                      case 4:
@@ -204,35 +185,14 @@ function vergleich(a)
             {
                 treffer++;   
                 ctx.clearRect(xBasis,400,200,-20);     
-                meldung(( "Anzahl Treffer :  " + treffer),"bold","16","Arial","#5a617b",xBasis, 400);  
+                meldung(( "Anzahl Treffer :  " + treffer),"bold","16",schriftArt,"#5a617b",xBasis, 400);  
                 
             }    
     else{akustischeMeldung("audio/up.mp3");   }
     
 }
 
-function roundedButton()
-{
-       for (var i = 0, len = rects.length; i < len-2; i++) {       
-       ctx.fillStyle=rects[i].col1;
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-      // ctx.fillStyle=rects[i].col2 , 
-       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
-      }
-}
 
-function buttonText(a)
-{ 
-      
-    ctx.fillStyle = "white";
-    ctx.font = "18px Comfortaa";
-    for (var i = 0;i < 4; i++) 
-    {
-       
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-      
-     }
-}
 
 
 
@@ -243,53 +203,9 @@ function buttonText(a)
   return Math.floor(Math.random() * (max - min)) + min;
  } 
 
- meldung(( "Anzahl Treffer :  0"),"bold","16","Arial","#5a617b",xBasis, 400);  
+ meldung(( "Anzahl Treffer :  0"),"bold","16",schriftArt,"#5a617b",xBasis, 400);  
 
-function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-      
-       var lg = 10 + ctx.measureText(text).width 
-       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font =schriftDicke + ' ' + (schriftGroesse + "px "+ schriftTyp);            
-        ctx.fillText(text, xm ,ym); 
-    }
 
- 
-
-function plusMinus(ausgang,delta,unten,oben)
-{
- // Mehr oder weniger Zeit zum Suchen
-  let anz=ausgang; 
-  if ((anz + delta)< oben && delta>0)
-  {anz=anz + delta; }
-  if ((anz + delta)> unten && delta<=0)
-  {anz=anz + delta; }
-  
-  return anz;
-}
-
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
-
-    function roundedRect(x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x, y + radius);
-  ctx.lineTo(x, y + height - radius);
-  ctx.arcTo(x, y + height, x + radius, y + height, radius);
-  ctx.lineTo(x + width - radius, y + height);
-  ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-  ctx.lineTo(x + width, y + radius);
-  ctx.arcTo(x + width, y, x + width - radius, y, radius);
-  ctx.lineTo(x + radius, y);
-  ctx.arcTo(x, y, x, y + radius, radius);
-  ctx.lineWidth = 1;
-  ctx.stroke(); 
-  ctx.fill();
-}    
 </script>
 
 

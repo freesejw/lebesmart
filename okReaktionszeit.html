@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">     
+<meta charset="utf-8">     
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-  
-   background-color: #FeFeFe;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="400"></canvas>
@@ -55,10 +50,10 @@ var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
 function ladeGame() 
     {   
-        meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20","Arial","#5a617b",10, 25);    
+        meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20",schriftArt,"#5a617b",10, 25);    
         einlesenBilder();
-       zeigBild("imageverkehr/auge.gif");
-       roundedButton();        
+        zeigBild("imageverkehr/auge.gif");
+        roundedButton();        
         buttonText();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
     }
@@ -123,7 +118,7 @@ function stop()
         }
         else
             {            
-            meldung("Falsches Zeichen getippt","normal","16","Arial","red",200, 180);
+            meldung("Falsches Zeichen getippt","normal","16",schriftArt,"red",200, 180);
             fehler++;
             }
 
@@ -146,8 +141,7 @@ function zeigBild(a)
     var img = new Image();
     img.onload = function ()
      {        
-        
-        ctx.drawImage(img, bild.x ,bild.y,bild.w,bild.h);
+          ctx.drawImage(img, bild.x ,bild.y,bild.w,bild.h);
      }
     img.src = a;
 }
@@ -162,49 +156,6 @@ function setzeAmpel(a)
     img.src = ("imageverkehr/ampel" + a + ".jpg");
 }
 
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
-
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-            
-                }
-    }
-    return isCollision;
-}
-
-function roundedButton()
-{
-       for (var i = 0, len = rects.length; i < len; i++) {       
-       ctx.fillStyle=rects[i].col1;
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-            
-      }
-}
-
-function buttonText()
-{ 
-    ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
-    for (var i = 0, len = texts.length; i < len; i++) 
-    {
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }
-     
-}
 
 function auswahlButton()
     {
@@ -232,24 +183,14 @@ function abbruch()
         zeigBild("imageverkehr/auge.gif");
     }
 
-    function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-     
-       var sD=schriftDicke;
-       var sG=schriftGroesse;
-        var lg = 10 + ctx.measureText(text).width 
-       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
-        ctx.fillText(text, xm ,ym); 
-    }
+   
 
 function boxMeldung(x,y,w,h,time)
     {
         ctx.rect(x, y, w,h);
         ctx.stroke();
-        meldung(("gebrauchte Zeit (Sek.) : "  + time),"bold","16","Arial","#5a617b",x+10,y+h*0.33 );
-        meldung(("Vergleich:  "  + zeiten),"normal","16","Arial","#5a617b", x + 10, y+ h*0.66 );
+        meldung(("gebrauchte Zeit (Sek.) : "  + time),"bold","16",schriftArt,"#5a617b",x+10,y+h*0.33 );
+        meldung(("Vergleich:  "  + zeiten),"normal","16",schriftArt,"#5a617b", x + 10, y+ h*0.66 );
     }
 
 function akustischeMeldung(a)
@@ -257,21 +198,7 @@ function akustischeMeldung(a)
         audio = new Audio(a);
         audio.play();
     } 
- function roundedRect(x, y, width, height, radius) {
-        ctx.beginPath();
-        ctx.moveTo(x, y + radius);
-        ctx.lineTo(x, y + height - radius);
-        ctx.arcTo(x, y + height, x + radius, y + height, radius);
-        ctx.lineTo(x + width - radius, y + height);
-        ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-        ctx.lineTo(x + width, y + radius);
-        ctx.arcTo(x + width, y, x + width - radius, y, radius);
-        ctx.lineTo(x + radius, y);
-        ctx.arcTo(x, y, x, y + radius, radius);
-        ctx.lineWidth = 1;
-        ctx.stroke(); 
-        ctx.fill();
-}  
+ 
 
 </script>
   

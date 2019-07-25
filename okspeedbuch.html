@@ -3,15 +3,12 @@
 <head>
  <meta charset="utf-8">      
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    
-     background-color: #FeFeFe;
-   cursor: url(Images/fadenkreuz.png),  auto; 
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
 
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()"></body>
 <body >
@@ -64,9 +61,9 @@ var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtextdis -10
 
 
 function ladeGame(){
-    meldung("Steigere deine Denk - Geschwindigkeit","bold","20" ,"Arial","#5a617b",xBasis, 30); 
-    meldung("Finde die Buchstabenkombination, die bei Spielbeginn erscheint","normal","16" ,"Arial","#5a617b",xBasis, 60); 
-    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16","Arial","#5a617b",5 + xAbstand + breite* spaltenZahl, 470);
+    meldung("Steigere deine Denk - Geschwindigkeit","bold","20" ,schriftArt,"#5a617b",xBasis, 30); 
+    meldung("Finde die Buchstabenkombination, die bei Spielbeginn erscheint","normal","16" ,schriftArt,"#5a617b",xBasis, 60); 
+    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",5 + xAbstand + breite* spaltenZahl, 470);
     ermittleBasisBuch(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,buchstabenSpeicher); 
     roundedButton();
@@ -111,9 +108,9 @@ function zeitPruef()
     if(zeitAusgang >= zeitSchranke)  
         { 
             ctx.clearRect(xBasis,460,230,-20);      
-            meldung("Zeitlimit überschritten" ,"normal","16","Arial","#ea2867",xBasis,460);  
+            meldung("Zeitlimit überschritten" ,"normal","16",schriftArt,"#ea2867",xBasis,460);  
             var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                meldung(" Bisher : " + aa ,"bold","16","Arial","#5a617b",xBasis,420); 
+                meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,420); 
             akustischeMeldung("audio/up.mp3");           
             clearInterval(id);
             blocken=false;
@@ -155,7 +152,7 @@ canv.addEventListener('click', function(event) {
                             xxclick=(Math.floor(xclick/breite))*breite;
                             yyclick=(Math.floor(yclick/hoehe))*hoehe;   
                             ctx.fillStyle="green";
-                            ctx.font= "bolder 22px Arial";
+                            ctx.font= "bolder 22px schriftArt";
                             ctx.fillText(buchstabenSpeicher[indexReihe[zw]],xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);
                             ctx.lineWidth="5";
                             ctx.strokeStyle="green";       
@@ -164,9 +161,9 @@ canv.addEventListener('click', function(event) {
                                                  }
                         else {
                             ctx.clearRect(xBasis,460,200,-20);
-                            meldung("Falsches Feld ==> go on" ,"mormal","16","Arial","red",xBasis,460);  
+                            meldung("Falsches Feld ==> go on","normal","16",schriftArt,"red",xBasis,460);  
                             var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                meldung(" Bisher : " + aa ,"bold","16","Arial","#5a617b",xBasis,420); 
+                            meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,420); 
                             akustischeMeldung("audio/up.mp3"); 
                             clickenAus=true ;
                             blocken=false;
@@ -176,7 +173,7 @@ canv.addEventListener('click', function(event) {
             if (zaehlerTreffer == indexReihe.length){             
                 anzahlTreffer++;               
                 var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                meldung(" Bisher : " + aa ,"bold","16","Arial","#5a617b",xBasis,420); 
+                meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,420); 
                 clickenAus=true;
                 blocken=false;
             }
@@ -193,46 +190,7 @@ canv.addEventListener('click', function(e)
 
     }, false);
 
-    function roundedButton(col1,col2)
-   {
-       for (var i = 0, len = rects.length; i < len; i++) 
-       {       
-       ctx.fillStyle=rects[i].col1;
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-      // ctx.fillStyle=col2;  
-       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
-       }
-   }
-
-function buttonText()
-{ 
-    ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
-    for (var i = 0, len = texts.length; i < len; i++) 
-    {
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }      
-}
-
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-            
-                }
-    }
-    return isCollision;
-}
-
+   
 function auswahlButton()
     {
         switch (getipptRechteck) 
@@ -242,11 +200,11 @@ function auswahlButton()
             break;
             case 1:
                 zeitSchranke=plusMinus(zeitSchranke,1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16","Arial","blue",5 +xAbstand + breite* spaltenZahl, 470);                         
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",5 +xAbstand + breite* spaltenZahl, 470);                         
                 break;
             case 2:
                 zeitSchranke=plusMinus(zeitSchranke,-1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16","Arial","blue",5 + xAbstand + breite* spaltenZahl, 470);                            
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",5 + xAbstand + breite* spaltenZahl, 470);                            
                 break;
             default:
                 alert("Sorry");
@@ -258,7 +216,7 @@ function getroffen(){
         xxclick=(Math.floor(xclick/breite))*breite;
         yyclick=(Math.floor(yclick/hoehe))*hoehe;   
         
-        meldung(buchstabenSpeicher[indexReihe[1]] ,"normal","16","Arial","#5a617b",xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);    
+        meldung(buchstabenSpeicher[indexReihe[1]] ,"normal","16",schriftArt,"#5a617b",xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);    
         treffer=false;
                 }
 
@@ -280,7 +238,7 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe,zahlen)
             ctx.stroke();
 
             ctx.fillStyle="#5a617b";
-            ctx.font= "bolder 22px Arial";
+            ctx.font= "bolder 22px schriftArt";
             ii=i*spalten +j
             let xx = buchstabenSpeicher[ii];            
             ctx.fillText(xx,x+xAbstand + xDist,y+yAbstand+yDist);
@@ -347,33 +305,35 @@ while (patt1.test(buchstabenSpeicher)==true)
        }
  
 
-  function aendereSpeicherZahlen(doppelt,basis,zahlen){
+  function aendereSpeicherZahlen(doppelt,basis,zahlen)
+  {
           // doppelt enthält ersen index der gleichen Zahlen wie die ausgewählte Zahl
           //basis enthälte die indizes der ausgeählten Zahl ( der Ziffern)
           // zahlen enthälte die Ziffern der Martix als Vektor
   
-  
-  // Der zu suchende Buchstabe wird aus den gefundenen Zahlen entfernt
-  for( var i = 0; i < doppelt.length; i++)
-      { 
-          if ( doppelt[i] == basis[0]) 
-            {
-                    doppelt.splice(i, 1); 
-            }
         
-      }
-  // die doppelten Zahlen werden durch neue Zufallszahlen ersetzt
-  for ( var i=0;i<doppelt.length;i++)
-      {
-       for (var j=0;j<basis.length;j++){      
-       zahlen[doppelt[i]+j]=buchStaben[ random(buchStaben.length-1)];  
-       }
+        // Der zu suchende Buchstabe wird aus den gefundenen Zahlen entfernt
+        for( var i = 0; i < doppelt.length; i++)
+            { 
+                if ( doppelt[i] == basis[0]) 
+                    {
+                            doppelt.splice(i, 1); 
+                    }
+                
+            }
+            // die doppelten Zahlen werden durch neue Zufallszahlen ersetzt
+            for ( var i=0;i<doppelt.length;i++)
+                {
+                for (var j=0;j<basis.length;j++){      
+                zahlen[doppelt[i]+j]=buchStaben[ random(buchStaben.length-1)];  
+                }
 
-  }
-return zahlen;
-}
-    meldung(text1,"normal","16","Arial","#5a617b",xAbstand+30 + breite* spaltenZahl, 2*yAbstand);  
-    meldung(text2,"bold","30","Arial","red",400, 230);  
+           }
+        return zahlen;
+    }
+
+    meldung(text1,"normal","16",schriftArt,"#5a617b",xAbstand+30 + breite* spaltenZahl, 2*yAbstand);  
+    meldung(text2,"bold","30",schriftArt,"red",400, 230);  
 } 
 
 function feldNummerSchuss(xc,yc)
@@ -391,57 +351,10 @@ function feldNummerSchuss(xc,yc)
     return zw;  
 }
 
- function random(max)
-          {
-            return Math.floor((Math.random() *max)+1);
-          }
+ 
 
 
-function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-       var sD=schriftDicke;
-       var sG=schriftGroesse;
-        var lg = 10 + ctx.measureText(text).width 
-       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
-        ctx.fillText(text, xm ,ym); 
-    }
-
-function plusMinus(ausgang,delta,unten,oben)
-{
- // Mehr oder weniger Zeit zum Suchen
-  let anz=ausgang; 
-  if ((anz + delta)< oben && delta>0)
-  {anz=anz + delta; }
-  if ((anz + delta)> unten && delta<=0)
-  {anz=anz + delta; }
-  
-  return anz;
-}
-
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
-    function roundedRect(x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x, y + radius);
-  ctx.lineTo(x, y + height - radius);
-  ctx.arcTo(x, y + height, x + radius, y + height, radius);
-  ctx.lineTo(x + width - radius, y + height);
-  ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-  ctx.lineTo(x + width, y + radius);
-  ctx.arcTo(x + width, y, x + width - radius, y, radius);
-  ctx.lineTo(x + radius, y);
-  ctx.arcTo(x, y, x, y + radius, radius);
-  ctx.lineWidth = 1;
-  ctx.stroke();
- // ctx.fillStyle="Lavender";
-  ctx.fill();
-}    
-
+   
 </script>
 
 

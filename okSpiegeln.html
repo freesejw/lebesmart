@@ -3,16 +3,11 @@
 <head>
         <meta charset="utf-8">     
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
 
-Canvas {
-   position: absolute;
-   top: 0px;
-   left: 0px;
-   
-   background-color: #FeFeFe;
-}
-</style>
+<style></style>
 </head>
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="600"></canvas>
@@ -61,9 +56,9 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtestdis -10
 
 function ladeGame() 
     {   
-        meldung("Übe dich in Konzentration","bold","20","Arial","#5a617b",120, 50);     
-        meldung("Welches Bild ist gespiegelt ? KLICK es an","normal","18","Arial","#5a617b",xBasis, 360);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","24","Arial","red",xBasis,120);     
+        meldung("Übe dich in Konzentration","bold","20",schriftArt,"#5a617b",120, 50);     
+        meldung("Welches Bild ist gespiegelt ? KLICK es an","normal","18",schriftArt,"#5a617b",xBasis, 360);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","24",schriftArt,"red",xBasis,120);     
         erstelleBasisBild();  // dient nur zur Ansicht        
         treffer=0;
         durchLaeufe=0;
@@ -104,15 +99,15 @@ clEvent=false;
             if ( (getipptRechteck==spiegel)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
                 { treffer++;
                 blocke= true; 
-                meldung("Treffer : " + treffer + "  Durchläufe " + durchLaeufe,"bold","16","Arial","red",xBasis,490);   
+                meldung("Treffer : " + treffer + "  Durchläufe " + durchLaeufe,"bold","16",schriftArt,"red",xBasis,490);   
                 elapsedTime = Date.now() - startTime;
                 elapsedTime = Math.round(elapsedTime / 100);       
                 zeiten.push(elapsedTime)           
-                meldung(( "Gebrauchte Zeiten(in ds) :  " + zeiten),"normal","16","Arial","#5a617b",xBasis, yBasis2+ytextdis+155);        
+                meldung(( "Gebrauchte Zeiten(in ds) :  " + zeiten),"normal","16",schriftArt,"#5a617b",xBasis, yBasis2+ytextdis+155);        
                 }
                 else{
                    ctx.clearRect(xBasis,490-24,490,30);// 
-                   meldung("Falsch   ==> Go on","normal","18","Arial","red",xBasis,490)
+                   meldung("Falsch   ==> Go on","normal","18",schriftArt,"red",xBasis,490)
                    akustischeMeldung("audio/up.mp3");  
                 }
            }
@@ -125,28 +120,7 @@ clEvent=false;
 
 
 
-function random(max)
-          {
-            return Math.floor((Math.random() *max));
-          }
 
-function angetippt(rects, x, y) {
-    var zw;
-    var isCollision = false;
-    for (let i = 0, len = rects.length; i < len; i++) {
-        var left = rects[i].x, right = rects[i].x+rects[i].w;
-        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
-        if (right >= x
-            && left <= x
-            && bottom >= y
-            && top <= y) {
-                isCollision = rects[i];   
-                getipptRechteck=i;
-         
-                }
-    }
-    return isCollision;
-}
 
 function erzeugeDieRechtecke(a,b)
 {
@@ -198,17 +172,7 @@ function rechteckeText()
         
   
 }
-function meldung(text,schriftDicke,schriftGroesse,schriftTyp,farbe,xm,ym)
-   {
-     
-       var sD=schriftDicke;
-       var sG=schriftGroesse;
-        var lg = 10 + ctx.measureText(text).width 
-       ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
-        ctx.fillStyle = farbe;        
-        ctx.font = sD + ' ' + (sG + "px "+ schriftTyp);              
-        ctx.fillText(text, xm ,ym); 
-    }
+
 
 function einlesenBilder()
     {
@@ -226,11 +190,6 @@ function shuffle(a) {
     }
     return a;
 }
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
 
 </script>
   
