@@ -228,7 +228,7 @@ iterator++;
     if (iterator<anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen
     {
            ctx.fillStyle = "red";
-            ctx.font = "39px" + schriftArt;
+            ctx.font = "30px" + " " + schriftArt;
             ctx.clearRect(200, 200-60,400,80);
             ctx.fillText(gesuchtBasis[iterator], 200,200);           
             console.log(iterator + "  " +gesuchtBasis[iterator]); 
@@ -242,7 +242,7 @@ iterator++;
             for (let i=0;i<16;i++)
             {
                 ctx.fillStyle = "green";
-                ctx.font = "30px" + schriftArt;
+                ctx.font = "30px" + " " + schriftArt;
                 ctx.fillText(gesuchtNeu[i], xCoord[i]+xtestdis +15, yCoord[i]+ 10+yHoehe/2);            
             }
         }
