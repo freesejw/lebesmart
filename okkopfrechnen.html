@@ -4,7 +4,6 @@
  <meta charset="utf-8">    
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
-
 <link href="css/standard.css" rel="stylesheet">
 <script src="js/standard.js"></script>
 
@@ -54,7 +53,8 @@ function ladeGame()
        
         meldung("Verbessere deine Rechen - Geschwindigkeit","bold","20",schriftArt,"#5a617b",34,40 ); 
         meldung( "3 + 4 *  ....... = ?","normal","16",schriftArt,"#5a617b",65,120);
-        meldung("Anzahl Ziffern = " + rechenSchritte,"normal","36",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
+        //meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
+        meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
         roundedButton();
         buttonText();
         //aufbauZeile(rechenSchritte,breite,hoehe);
@@ -106,7 +106,7 @@ function aufbauZeile(ele,breite,hoehe)
     for ( var i = 0 ; i <anzahlZahlen;i++)
     {
             ctx.fillStyle="#5a617b";
-            ctx.font= "16px Arial";            
+            ctx.font= "16px" + " " + schriftArt;            
           
             if (i < anzahlOperanden)
             {
@@ -184,7 +184,7 @@ function vergleichsZahlen()
         zz[ergebnisIndex]  = ergebnis; 
 
             ctx.fillStyle="red"; 
-            ctx.font= "16px Arial";      
+            ctx.font= "16px" + " " + schriftArt;      
             ctx.fillText(zz[0],xBasis +8 ,yBasis1+ ytextdis); 
             ctx.fillText(zz[1],xBasis + 8 + wBasis1+dBasis,yBasis1+ytextdis); 
             ctx.fillText(zz[2],(xBasis +8 +  2 * (wBasis1+ dBasis)),yBasis1+ytextdis);
