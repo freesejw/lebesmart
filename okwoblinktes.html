@@ -244,34 +244,6 @@ function abbruch()
     }
  
 
-
-function roundedButton()
-{
-       for (var i = 0, len = rects.length; i < len; i++) {       
-       ctx.fillStyle=rects[i].col1;
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-            
-      }
-}
-
-function buttonText()
-{ 
-    ctx.fillStyle = "white";
-    ctx.font = "18px" + " " + schriftArt;
-
-    for (var i =0, len = 4; i < len; i++) 
-    
-    {      
-       ctx.fillText(texts[i].na,texts[i].x, texts[i].y);
-        
-     }
-        
-}
-
-
-
-
-
 function auswahlButton()
     {
                switch (getipptRechteck) 
@@ -304,8 +276,7 @@ function auswahlButton()
                 }             
     }
 
-    
-    
+   
 
 
 </script>
