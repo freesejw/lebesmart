@@ -64,6 +64,7 @@ function ladeGame(){
     meldung("Steigere deine Denk - Geschwindigkeit","bold","20" ,schriftArt,"#5a617b",xBasis, 30); 
     meldung("Finde die Buchstabenkombination, die bei Spielbeginn erscheint","normal","16" ,schriftArt,"#5a617b",xBasis, 60); 
     meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",5 + xAbstand + breite* spaltenZahl, 470);
+    meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"#ea2867",xBasis,440); 
     ermittleBasisBuch(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,buchstabenSpeicher); 
     roundedButton();
@@ -71,13 +72,15 @@ function ladeGame(){
    anzahlTreffer=0;
    durchLauf=0;
    blocken=false;
+   auswahlZahlen(zeilenZahl,spaltenZahl);  // ermittelt die Zahl,die gesucht werden soll 
+   
 }
 
 
 function start() { 
    
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
-    
+    ctx.clearRect(xBasis,440-20,400,20);// Löscht Dies ist ....
     zaehlerTreffer=0;
     durchLauf++; 
     zeitAusgang = 0;
@@ -108,7 +111,8 @@ function zeitPruef()
     if(zeitAusgang >= zeitSchranke)  
         { 
             ctx.clearRect(xBasis,460,230,-20);      
-            meldung("Zeitlimit überschritten" ,"normal","16",schriftArt,"#ea2867",xBasis,460);  
+            meldung("Zeitlimit überschritten" ,"normal","16",schriftArt,"#ea2867",xBasis,460); 
+            zeigBild("stopuhr.png",100,150,150,150); 
             var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
                 meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,420); 
             akustischeMeldung("audio/up.mp3");           
@@ -167,6 +171,12 @@ canv.addEventListener('click', function(event) {
                             akustischeMeldung("audio/up.mp3"); 
                             clickenAus=true ;
                             blocken=false;
+                            xxclick=(Math.floor(xclick/breite))*breite;
+                            yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
+                            
+                            ctx.lineWidth="5";
+                            ctx.strokeStyle="red";       
+                            ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe); 
                                             
                             }
             }
@@ -329,9 +339,9 @@ while (patt1.test(buchstabenSpeicher)==true)
                 }
 
            }
+          
         return zahlen;
     }
-
     meldung(text1,"normal","16",schriftArt,"#5a617b",xAbstand+30 + breite* spaltenZahl, 2*yAbstand);  
     meldung(text2,"bold","30",schriftArt,"red",400, 230);  
 } 

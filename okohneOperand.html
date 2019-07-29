@@ -17,15 +17,15 @@ var ctx = canv.getContext("2d");
 var xCoord=[], yCoord=[];
 var operand;
 
-var rechenSchritte=3, schrittWeite=1,string;
+var rechenSchritte=2, schrittWeite=1,string;
 var durchLaeufe, treffer;
 var z1, z2;
 var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 440, wBasis2=120, yErhoehung=50; 
 var durchgang;
 var xtextdis=20;
-var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
-
+var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=130;
+var schieb=40;
 var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
              {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
@@ -42,23 +42,26 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10
 function ladeGame()
     {
         
-        meldung("Logik // Erhöhe die geistige Ausdauer","bold","20",schriftArt,"#5a617b",65, 35);  
-        meldung("Welche Rechenzeichen ( +  -  *  ) werden gesucht?","normal","16",schriftArt,"#5a617b",xBasis, 100);        
-        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +240 ,yBasis2 -35);        
+        meldung("Logik // Erhöhe die geistige Ausdauer","bold","20",schriftArt,"#5a617b",15, 35+ 40);  
+        meldung("Welche Rechenzeichen (  +   -   *  ) müssen eingesetzt werden?","normal","16",schriftArt,"#5a617b",15, 220);        
+        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +300 ,yBasis2 -35);        
         roundedButton("#8800ff","Lavender");
         buttonText();          
         aufbauZeile(rechenSchritte,breite,hoehe);
         durchgang=0;
-    };
+        loesung0();
+        zeigBild("Images/berg.jpg",400,0,100,180);
+    }
 
 
 function start()
     {
-        ctx.clearRect(0,y,500,35); // Löschen Anzahl operanden
-        ctx.clearRect(0,280-30,500,30);
-        ctx.clearRect(xBasis, 380 - 30, 500, 35);   // Löschen Lösung Anzeige
+        ctx.clearRect(0,y,400,35); // Löschen Anzahl operanden
+        ctx.clearRect(0,280-30,550,30); //
+        ctx.clearRect(xBasis, 380 - 30, 400, 40);   // Löschen Lösung Anzeige
+        ctx.clearRect(xBasis, 320-24, 400, 34);   // Beispiel Lösung   
         treffer=0;
-        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",xBasis, 280);  
+        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",xBasis, 445);  
         durchLaeufe=0;
         aufbauZeile(rechenSchritte,breite,hoehe);
        
@@ -77,27 +80,25 @@ function aufbauZeile(ele,breite,hoehe)
 
         for (let i = 0; i<anzahlFelder; i++)
         {
-            
                 var x=breite*i;              
                 //inke, obere Koordinaten der Rechtecke
                 //koordinaten der unsichtbaren Zellen
                 xCoord.push(x);
                 yCoord.push(y);
-
         }
    
     for (let i = 0 ; i <anzahlZahlen;i++)
     {
             ctx.fillStyle="#5a617b";
-            ctx.font= "22px"+ schriftArt;
-            var rr=random(9); 
+            ctx.font= "18px" + " " + schriftArt;
+            var rr=random(9)+1; 
             string=string + rr;  
             ctx.fillText(rr,xCoord[i*2]+xAbstand + xDist,yCoord[i*2]+yDist);
 
             if (i < anzahlOperanden){
             var oo=operanden[random(3)];
             ctx.fillStyle="red"; 
-            ctx.font= "18px" + schriftArt;  
+            ctx.font= "18px" + " " + schriftArt;  
             ctx.fillText("?",xCoord[i*2+1]+xAbstand + xDist,yCoord[i*2+1]+yDist);
             string=string +oo.valueOf();  
             }
@@ -121,11 +122,18 @@ function aufbauZeile(ele,breite,hoehe)
         return zw;
    }  
 
-function loesung()
+function loesung0()
+    {
+        ctx.clearRect(xBasis, 320 - 20, 500, 34);               
+        meldung("Eine Lösung in diesem Beispiel ist: " + string,"normal","16",schriftArt,"#5a617",xBasis,320);  
+       
+    }
+
+    function loesung()
     {
        
-        ctx.clearRect(xBasis, 360, 500, -24);               
-        meldung("Eine Lösung : " + string,"normal","16",schriftArt,"red",xBasis,360);  
+        ctx.clearRect(xBasis, 320-20, 500, 30);               
+        meldung("Eine Lösung : " + string,"normal","18",schriftArt,"red",xBasis,320);  
        
     }
 
@@ -157,13 +165,13 @@ function auswahlButton()
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,1,0,11); 
                         ctx.clearRect(xBasis+240,yBasis2 -35 -20, 200, 20); 
-                        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +240 ,yBasis2 -35); 
+                        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +300 ,yBasis2 -35); 
                         start();                         
                         break;
                     case 3:
                         rechenSchritte= plusMinus(rechenSchritte,-1,0,11); 
                         ctx.clearRect(xBasis+240,yBasis2 -35 -20, 200, 20); 
-                        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +240 ,yBasis2 -35);                                                         
+                        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +300 ,yBasis2 -35);                                                         
                         start();
                         break;
                      case 4:
@@ -219,7 +227,7 @@ function boxMeldung(melde,x,y,w,h,k1,k2,o)
         meldung(melde,"normal","35",schriftArt,"#5a617b",x+30,y+45  );
     }
 
-
+    zeigBild("Images/berg.jpg",400,0,100,150);
 </script>
 
 

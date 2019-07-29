@@ -26,7 +26,7 @@ var bgColor="Lavender";
 var anzahlBilder=20, pic =new Array, zeigBilder=12;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var startTime,elapsedTime,zeiten=[];
-
+var stoppuhr = stopUhrErstellen ();
 var yBasis0=150;
 var yBasis1=230;
 var yBasis2=350;
@@ -74,7 +74,8 @@ function ladeGame()
         ctx.clearRect(xBasis,190-24,480,40);//
         ctx.clearRect(xBasis,490-24,480,40);// Ist es nicht
         erstelleBasisBild()
-        startTime = Date.now(); 
+        startTime = Date.now();
+        starteStoppuhr();
     }
 
     function erstelleBasisBild()
@@ -117,6 +118,7 @@ canv.addEventListener('click', function(e)
                     }
             }
         }
+        clearInterval(tick);
         }, false);
 
 function indexVergleichsBilder()
@@ -154,8 +156,8 @@ function zeichneVergleichsBilder(){
         xx=xx-6*(wBasis1+dBasis)*(i>5);
         var yy = yBasis2 + 50*(i>5);
 
-        var spiegeln = i === 3
-        zeigBild(pic[indexBilder[i]],xx,yy,wBasis1,hBasis, spiegeln);   
+        //var spiegeln = i === 3
+        zeigBild(pic[indexBilder[i]],xx,yy,wBasis1,hBasis);   
     }
  
 }
@@ -190,8 +192,6 @@ function rechteckeText()
     ctx.fillText(texts[0].na,xBasis + xtestdis -10, yBasis3 + ytextdis);
 }
 
-
-
 function einlesenBilder()
     {
         for (i=0;i<= anzahlBilder;i++)
@@ -209,10 +209,13 @@ function shuffle(a) {
     return a;
 }
 
-
+function starteStoppuhr() {
+  var tick = function () { stopUhrTick(stoppuhr) }
+  stopUhrStarten(tick, 10);
+  console.log( "Tage    " + stoppuhr.days + "   hrs  " + stoppuhr.hrs + "   minut   " + stoppuhr.mins + "  Sek   " + stoppuhr.secs);
+}
+   
 </script>
-  
-
 
 </body>
 </html>

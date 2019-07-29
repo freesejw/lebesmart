@@ -117,4 +117,43 @@ function akustischeMeldung(a)
       }
       return a;
   }
+  function zeigBild(bild,x,y,w,h)
+  {
+      var img = new Image();
+      img.onload = function ()
+       {
+          ctx.drawImage(img, x, y, w,h);
+       }
+      img.src = bild;
+  }
+  
+function stopUhrErstellen () {
+    return  { days: 0, hrs: 0, mins: 0, secs: 0, msecs: 0 };
+}
+  
+function stopUhrTick (stoppuhr) 
+{
+    stoppuhr.msecs++;
+    if (stoppuhr.msecs === 100) {
+        stoppuhr.secs ++;
+        stoppuhr.msecs = 0;
+    }
+    if (stoppuhr.secs === 60) {
+        stoppuhr.mins++;
+        stoppuhr.secs = 0;
+    }
+    if (stoppuhr.mins === 60) {
+        stoppuhr.hrs++;
+        stoppuhr.mins = 0;
+    }
+    if (stoppuhr.hrs === 24) {
+        stoppuhr.days++;
+        stoppuhr.hrs = 0;
+    }
+    console.log( "days " + stoppuhr.days + " hrs  " + stoppuhr.hrs + "minut  " + stoppuhr.mins + "sec   " + stoppuhr.secs + "</td><td>" + stoppuhr.msecs);
+}
+
+function stopUhrStarten (tick, interval) {
+  setInterval(tick, interval);
+}
      

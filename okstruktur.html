@@ -49,7 +49,7 @@ var texts =[{na:String.fromCharCode(9655) + "   Go on", x: xBasis + xtestdis -10
 function ladeGame()
 {
     meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","bold","20",schriftArt,"#5a617b",xBasis, 30); 
-    meldung("Merke Dir die Bildpositionen","16", schriftArt,"#5a617b",xBasis, 60);   
+    meldung("Merke Dir die Bildpositionen","normal","16", schriftArt,"#5a617b",xBasis, 60);   
     meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     roundedButton();
@@ -113,7 +113,7 @@ if (blocken==false)
 
         if (zwert>=0) 
             {            
-                var zw =indexReihe.indexOf(zwert);    
+                var zw =indexReihe.indexOf(zwert);  //Prüfung auf Treffer bedeutend mit zw > 0  
              
                 if (zw>=0)
                         {
@@ -127,10 +127,13 @@ if (blocken==false)
                          
                          }
                         else {    
-                            //falsche Ziffer                      
-                            ctx.clearRect(xBasis,420-30,300,30);                            
-                           // meldung("Falsches Feld ==> Go on" ,"18",schriftArt,"red",xBasis,420);
-                           meldung("Falsches Feld ==> Go on" ,"normal","16",schriftArt,"red",xBasis,220);
+                            //falsche Feld
+                            xxclick=(Math.floor(xclick/breite))*breite;
+                            yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+                            ctx.clearRect(xBasis,420-30,300,30); 
+                            zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);   
+                            
+                            meldung("Falsches Feld ==> Go on" ,"bold","20",schriftArt,"red",xBasis + 44,220);
                             akustischeMeldung("audio/up.mp3"); 
                             blocken=false;
                             minusPunkte++;                
@@ -191,15 +194,17 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
         for(let j=0;j < spalten;j++)
         {            
             var x=breite*j;  
-            zeigBild("neuesAuge.jpg",x+xAbstand,y+yAbstand,breite-3,hoehe-3);
-           
+            zeigBild("neuesAuge.jpg",x+xAbstand,y+yAbstand,breite-4,hoehe-4);
+            ctx.lineWidth="2";
+            ctx.strokeStyle="blue";       
+            ctx.strokeRect(x + xAbstand,y + yAbstand,breite,hoehe);   
             //linke, obere Koordinaten der Rechtecke
             xCoord.push(x);
             yCoord.push(y);
          }
     }
-            ctx.lineWidth="1";
-            ctx.strokeStyle="#5a617b";       
+            ctx.lineWidth="2";
+            ctx.strokeStyle="blue";       
             ctx.strokeRect(xCoord[0]+xAbstand,yCoord[0]+yAbstand,breite*spalten,hoehe*zeilen);    
 }
 
@@ -218,7 +223,7 @@ function auswahlZellen(zeilen,spalten)
 // Wählt und zeigt die Zellen an, die gesucht werden sollen
 for (var i =0; i<anzahlBilder;i++)
  {
-    var zw =(random(zeilen*spalten)) - 1;
+    var zw =Math.max(0,((random(zeilen*spalten) - 1)));
     console.log(zw);
 
      if (indexReihe.indexOf(zw) <0)

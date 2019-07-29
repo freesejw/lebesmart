@@ -61,6 +61,7 @@ function ladeGame(){
     meldung("Steigere deine Denk - Geschwindigkeit","bold","20" ,schriftArt,"black",xAbstand, 30); 
     meldung("Finde die Zahl, die bei Spielbeginn ( Go on) erscheint","normal","16" ,schriftArt,"black",xAbstand, 60); 
     meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"black",5 + xAbstand + breite* spaltenZahl, 470);
+    meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"#ea2867",xBasis,440); 
     ermittleBasisZahlen(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
     roundedButton();
@@ -74,7 +75,7 @@ function ladeGame(){
 function start() { 
    
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
-    
+    ctx.clearRect(xBasis,440-20,400,20);
     zaehlerTreffer=0;
     durchLauf++;     
     zahlenSpeicher=[];
@@ -100,6 +101,7 @@ function zeitPruef()
         { 
             ctx.clearRect(xBasis,460,230,-20);      
             meldung("Zeitlimit überschritten" ,"normal","16",schriftArt,"red",xBasis,460); 
+            zeigBild("stopuhr.png",100,150,150,150);
             var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
             meldung(" Bisher : " + aa ,"bold","16",schriftArt,"black",xBasis,420);  
             akustischeMeldung("audio/up.mp3");           
@@ -157,6 +159,13 @@ canv.addEventListener('click', function(event) {
                             akustischeMeldung("audio/up.mp3"); 
                             clickenAus=true ;
                             blocken=false;
+                            xxclick=(Math.floor(xclick/breite))*breite;
+                            yyclick=(Math.floor(yclick/hoehe))*hoehe; 
+                            
+                            
+                            ctx.lineWidth="5";
+                            ctx.strokeStyle="red";       
+                            ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe);         
                                             
                             }
             }
