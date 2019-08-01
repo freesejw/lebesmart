@@ -110,7 +110,7 @@ function akustischeMeldung(a)
         audio.play();
     }
     
-    function shuffle(a) {
+function shuffle(a) {
       for (let i = a.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [a[i], a[j]] = [a[j], a[i]];
@@ -127,33 +127,59 @@ function akustischeMeldung(a)
       img.src = bild;
   }
   
-function stopUhrErstellen () {
-    return  { days: 0, hrs: 0, mins: 0, secs: 0, msecs: 0 };
-}
-  
-function stopUhrTick (stoppuhr) 
-{
-    stoppuhr.msecs++;
-    if (stoppuhr.msecs === 100) {
-        stoppuhr.secs ++;
-        stoppuhr.msecs = 0;
-    }
-    if (stoppuhr.secs === 60) {
-        stoppuhr.mins++;
-        stoppuhr.secs = 0;
-    }
-    if (stoppuhr.mins === 60) {
-        stoppuhr.hrs++;
-        stoppuhr.mins = 0;
-    }
-    if (stoppuhr.hrs === 24) {
-        stoppuhr.days++;
-        stoppuhr.hrs = 0;
-    }
-    console.log( "days " + stoppuhr.days + " hrs  " + stoppuhr.hrs + "minut  " + stoppuhr.mins + "sec   " + stoppuhr.secs + "</td><td>" + stoppuhr.msecs);
-}
+  function stoppenZeit(callback) {
 
-function stopUhrStarten (tick, interval) {
-  setInterval(tick, interval);
+    // definiere im eigentlichen Programm:
+
+    //var timer = new stoppenZeit(drawTime);
+    // zum anzeigen der laudenden Zeit
+    //  function drawTime(zsecs, secs, minu) {
+    //    console.log(" zsecs " + zsecs + "  secs " + secs + "  min  " + minu);}
+    var timer;
+    var zsecs = 0, secs = 0, minu = 0, hrs = 0;
+    function myTimer() {
+        zsecs++;
+        if (zsecs === 10) {
+            zsecs = 0;
+            secs++;
+        }
+        if (secs === 60) {
+            minu++;
+            secs = 0;
+        }
+        callback(zsecs, secs, minu);
+    }
+    this.start = function () {
+        zsecs = 0, secs = 0, minu = 0, hrs = 0;
+        timer = setInterval(myTimer, 100);
+    }
+    this.stop = function () {
+        clearInterval(timer);
+    }
 }
-     
+function uhrAnzeige(x,y,z1,z2,z3){
+    let xUhr=x;
+    let yUhr=y; 
+    if (z1<10){z1="0" + z1};
+    if (z2<10){z2="0" + z2};
+        ctx.fillStyle = "black";
+        ctx.fillRect(xUhr,yUhr + 0,110,40);
+        ctx.clearRect(xUhr+5,yUhr + 5,30,30);
+        ctx.clearRect(xUhr+40,yUhr + 5,30,30);
+        ctx.clearRect(xUhr+75,yUhr + 5,30,30);
+        
+        //ctx.font= "16px" + " " + schriftArt; 
+        ctx.font= "bolder 20px Arial"; 
+        ctx.fillStyle="red"; 
+        ctx.fillText(z1,xUhr+8,yUhr + 27);
+        ctx.fillText(z2,xUhr+43,yUhr + 27);
+        ctx.fillText(z3,xUhr+78,yUhr + 27);
+
+        ctx.fillStyle="#5a617b";
+        ctx.font= " 16px Arial";
+        ctx.fillText("Min",xUhr+5,yUhr - 7);
+        ctx.fillText("Sek",xUhr+40,yUhr - 7);
+        ctx.fillText("Dez",xUhr+75,yUhr - 7);
+
+        ctx.strokeRect(xUhr-10,yUhr-30,130,80)
+}  

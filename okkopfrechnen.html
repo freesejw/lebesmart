@@ -13,6 +13,7 @@
 <canvas id="canvas" width="500" height="600"></canvas>
 
 <script>
+var myVar;     
 var startTime,elapsedTime,zeiten="";
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
@@ -28,6 +29,12 @@ var xBasis=20, yBasis1=220, wBasis1=40, hBasis=40, dBasis=40, xtextdis=20, ytext
 var yBasis2= 500, wBasis2=120, yErhoehung=50; 
 var bgCol="5a617b";
 var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=25;
+var stopploesung;
+var stoppstarten;
+var sekunden;
+var timer = new stoppenZeit(drawTime);
+var xUhrPosition=180;
+var yUhrPosition=90;
 
 var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
              {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
@@ -52,15 +59,15 @@ function ladeGame()
         // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
        
         meldung("Verbessere deine Rechen - Geschwindigkeit","bold","20",schriftArt,"#5a617b",34,40 ); 
-        meldung( "3 + 4 *  ....... = ?","normal","16",schriftArt,"#5a617b",65,120);
+        meldung( "3 + 4 *  .......  =   ?","bold","18",schriftArt,"#5a617b",165,220);
         //meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
         meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
-        roundedButton();
-        buttonText();
-        //aufbauZeile(rechenSchritte,breite,hoehe);
-        ctx.clearRect(xBasis-10, 240-30,500,ytextdis+50);
+        roundedButton(4);
+        buttonText();        
         richtig=0;
         durchLaeufe=0;
+        stopploesung = true;
+        stoppstarten = false;
     }
 
 
@@ -68,17 +75,18 @@ function start()
     {   
         
         meldung("Klick die obige Zahl an, die dem Ergebnis entspricht","normal","16",schriftArt,"#5a617b",xBasis,yBasis1+ytextdis+80);
-        meldung("Anzahl Richtige :  " + richtig,"bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);   
-        //meldung("Anzahl Ziffern = " + rechenSchritte,"18px Comfortaa","#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);  
-
-        ctx.clearRect(xBasis,yBasis1+ytextdis+120, 500, -25);   // Löschen Lösungsanzeige
-        ctx.clearRect(xBasis, 120-25,500,25); // löscht 3+ 4 *... Anzeige
+        meldung("Anzahl Richtige :  " + richtig,"bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);  
+        ctx.clearRect(xBasis,yBasis1+ytextdis+250, 320, -25);   // Löschen Lösungsanzeige
+        ctx.clearRect(xBasis, 220-25,500,25); // löscht 3+ 4 *... Anzeige
         ctx.clearRect(xBasis-10, yBasis1-30,500,ytextdis+50); // löscht die möglichen Lösungen
         ctx.clearRect(xCoord[1],yCoord[1]-30,500,130);        
         aufbauZeile(rechenSchritte,breite,hoehe);
         vergleichsZahlen();
         startTime = Date.now();
-        
+        //zsecs = 0, secs = 0, minu = 0, hrs = 0;
+        timer.start();
+        stopploesung = false;        
+        stoppstarten=true;
     }
 
 
@@ -106,11 +114,11 @@ function aufbauZeile(ele,breite,hoehe)
     for ( var i = 0 ; i <anzahlZahlen;i++)
     {
             ctx.fillStyle="#5a617b";
-            ctx.font= "16px" + " " + schriftArt;            
+            ctx.font= "bolder 18px Arial" + " " + schriftArt;            
           
             if (i < anzahlOperanden)
             {
-                rr = 1 + random(9); 
+                rr = 1 + random(15); 
                 let isDivision = (oo==="/")
                 let isLargerOne = i>0
                 
@@ -141,7 +149,7 @@ function aufbauZeile(ele,breite,hoehe)
                     oo= oo=operanden[random(operanden.length-2)].trim(); 
             
                 ctx.fillStyle="red"; 
-               ctx.font= "16px Arial"; 
+               ctx.font= "bolder 18px Arial"; 
               
                 ctx.fillText(oo,xCoord[i*2+1]+xAbstand * 2 ,yCoord[i*2+1]+yDist+10);
                 string=string +oo.valueOf();  
@@ -207,8 +215,8 @@ function vergleichsZahlen()
 function loesung()
     {
         ctx.clearRect(xBasis, 380, 500, -24);                       
-        meldung("Lösung : " + string + "  = "+ ergebnis,"normal","16",schriftArt,"#ea2867",xBasis,yBasis1+ytextdis+110);  
-       
+        meldung("Lösung : " + string + "  = "+ ergebnis,"normal","16",schriftArt,"#ea2867",xBasis,yBasis1+ytextdis+250);  
+       timer.stop();
     }
 
 
@@ -228,30 +236,31 @@ function vergleich(a)
         {
            richtig++;
             meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);
-            elapsedTime = Date.now() - startTime;
-            elapsedTime = (elapsedTime / 1000).toFixed(2);       
-            zeiten.push( Math.round( elapsedTime)); 
+                 
+            zeiten.push( sekunden); 
 
-            var ausdruck=zeiten;
+            var ausdruck=zeiten ;
            
             for (var i= 0;i<zeiten.length-1;i++);
                {
                console.log("  1  " + summe );   
-                summe+=zeiten[i];
-                console.log("summe " +summe + "  " + zeiten);
+                summe+=zeiten[i];               
             }
-           
             var schnitt=(  summe/richtig); 
             schnitt=Math.floor(schnitt*10)/10;
             if(ausdruck.length>10){ausdruck.shift();}        
             meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+185);
-            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+215);
+            if (richtig>0){
+            //meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+215);
+            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+215);           
+            }
         }
     else 
         {
             meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);
         }
-
+        
+           
     }
 
 
@@ -261,20 +270,30 @@ function auswahlButton()
         switch (getipptRechteck) 
                 {
                     case 0:                                         
-                        start();
+                    if(!stoppstarten)
+                            {    
+                                start();
+                                stoppstarten=true;
+                            }    
                         break;
                     case 1:
-                        loesung();                        
+                        if(!stopploesung)
+                            {
+                                ctx.clearRect(xUhrPosition-20+-5,yUhrPosition-30+-5,210,100);//löscht Uhr
+                                loesung();
+                                stoppstarten=false;
+                                timer.stop();    
+                            }                                        
                         break;
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,1,1,11); 
                         meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);                          
-                        start();                          
+                        //start();                          
                         break;
                     case 3:
                         rechenSchritte= plusMinus(rechenSchritte,-1,1,11); 
                         meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + 2 * (wBasis2+ dBasis)) ,yBasis1+ytextdis+230);   
-                        start();                          
+                        //start();                          
                         break;
                      case 4:
                      case 5:
@@ -282,8 +301,11 @@ function auswahlButton()
                      case 7:
                      case 8:   
                      case 9:
-                        durchLaeufe++;                  
-                        vergleich(vergleich(getipptRechteck));                        
+                        stoppstarten=false;
+                        ctx.clearRect(xUhrPosition-20+-5,yUhrPosition-30+-5,210,100);// Löscht Uhr
+                        durchLaeufe++;                       
+                        vergleich(getipptRechteck);  
+                        timer.stop();
                         break;  
                                      
                     default:
@@ -295,6 +317,22 @@ function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
+function drawTime(zsecs, secs, minu) {
+    uhrAnzeige(xUhrPosition,yUhrPosition,minu,secs,zsecs) ;  
+    sekunden=secs;
+    
+}
+function roundedButton(a)
+{
+       for (var i = 0; i < a; i++) {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+      // ctx.fillStyle=rects[i].col2 , 
+       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+      }
+}
+      
+        
 </script>
 
 </body>
