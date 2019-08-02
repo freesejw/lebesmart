@@ -53,7 +53,7 @@ var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#
 
 
 var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasis2 + ytextdis+yErhoehung},
-           {na: String.fromCharCode(9673)+"  Lösung", x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
+           {na: String.fromCharCode(9673)+"  Ergebnis", x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
            {na: String.fromCharCode(43)+"  Kombi", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
            {na: String.fromCharCode(45)+"  Kombi", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
 
@@ -79,7 +79,7 @@ function start()
     ctx.clearRect(xBasis,400-25 ,400,30)
     ctx.clearRect(xBasis,430-25 ,200,30) // Treffer
     ctx.clearRect(xBasis,450-25 ,200,30)  // Meldung falsch
-    ctx.clearRect(xBasis,470-25,55,25);  // meldung super
+    ctx.clearRect(xBasis,470-25,155,25);  // meldung super
 
     meldung("Merke dir die Buchstaben/Zahlenkombination","normal","16",schriftArt,"#5a617b",40, 65);    
     iterator=-1; 
@@ -285,7 +285,7 @@ function auswahlButton()
                     case 1:
                         Ergebnis();                        
                         break;
-                        anzahlKombi= plusMinus(anzahlKombi,-1,0,11);                                      
+                        //anzahlKombi= plusMinus(anzahlKombi,-1,0,11);                                      
                     case 2:
                         anzahlKombi= plusMinus(anzahlKombi,1,1,15); 
                         ctx.clearRect(xBasis,320 -20, 300, 20); 
