@@ -173,10 +173,8 @@ canv.addEventListener('click', function(event) {
                             blocken=false;
                             xxclick=(Math.floor(xclick/breite))*breite;
                             yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
-                            
-                            ctx.lineWidth="5";
-                            ctx.strokeStyle="red";       
-                            ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe); 
+                            zeigBild("fehler.png",100,150,100,80);  
+                           
                                             
                             }
             }
