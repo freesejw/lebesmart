@@ -15,7 +15,7 @@
 <script>
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
-
+var speicherQuote=[];
 var audi0;
 var myVar;
 var reaktionsZeit=1.0,maxDurchlaeufe=10;
@@ -95,13 +95,15 @@ function iteration()
                 
                 z2=getRnd(1,10);
                 schriftGroesse2=getRnd(15,90);
-                //console.log(" nr 1 " + schriftGroesse1 + " nr 2   " + schriftGroesse2 + " hallo  " + (Math.abs( schriftGroesse1  - schriftGroesse2))) ;
+                
                 }
                 while ((Math.abs(schriftGroesse1-schriftGroesse2 ) < 25) || (z1 == z2));
 
             meldung(z2.valueOf() ,"bold",schriftGroesse2,schriftArt,"#5a617b",280 + rects[5].w*.3,120+rects[5].h*0.7);
-            //console.log("Zufallstahl #1: " + z1 + " | Zufallszahl #2: " + z2 + " | Differenz: " + (z1-z2) + " | Schriftgrößenunterschied: " + (Math.abs( schriftGroesse1  - schriftGroesse2)))
-         }
+            
+        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h); 
+        ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h); 
+        }
 
         else
             {                    
@@ -115,11 +117,13 @@ function iteration()
 function abbruch()
 
     {
+        ctx.clearRect(xBasis,400-20,200,20);  // Löschen Anzahl Treffer
         offenButton=true;
         var quote=(treffer)/(durchLaeufe-1);
         quote=Math.round(quote*100);
+        speicherQuote.push(quote);
         ctx.clearRect(xBasis, 440, 300, -16);               
-        meldung("Deine Trefferquote war " + quote + " Prozent","bold","16",schriftArt,"red",xBasis,440);  
+        meldung("Trefferquote in % : " + speicherQuote ,"bold","16",schriftArt,"red",xBasis,440);         
         clearInterval(myVar);   
       
         ctx.fillStyle="#F2F2F2";
@@ -138,7 +142,7 @@ function abbruch()
         }}, false);
 
 
-f
+
 
 function auswahlButton()
     {
