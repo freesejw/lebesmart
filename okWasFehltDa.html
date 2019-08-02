@@ -22,21 +22,20 @@ var indexBilder=[], verschwunden;
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var zeigen=12;
 var durchLaeufe, treffer;
-var bgColor="Lavender";
 var anzahlBilder=20, pic =new Array, zeigBilder=12;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
-var startTime,elapsedTime,zeiten=[];
-var stoppuhr = stopUhrErstellen ();
-var yBasis0=150;
-var yBasis1=230;
+var zeiten=[];
 var yBasis2=350;
 var yBasis3=550;
-
 var xBasis=20, wBasis1=60, hBasis=40, dBasis=20, xtestdis=20, ytextdis=25;
-
 var wBasis2=120, yErhoehung=50; 
+var yBasis0=130;
+var yBasis1=200;
 
-
+var sekunden;
+var timer = new stoppenZeit(drawTime);
+var xUhrPosition=375;
+var yUhrPosition=545;
 
 //Rechtecke für die Bilder
 var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
@@ -61,7 +60,7 @@ var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtestdis -10
 function ladeGame() 
     {   
         meldung("Übe dich in Konzentration","bold","20",schriftArt,"#5a617b",120, 50);     
-        meldung("Welches Bild von oben taucht unten nicht auf ?","normal","16",schriftArt,"#5a617b",xBasis, 320);  
+        meldung("Welches Bild von oben taucht unten nicht auf ?","normal","16",schriftArt,"#5a617b",xBasis, 300);  
         meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"#ea2867",xBasis,490);   
         erstelleBasisBild();  // dient nur zur Ansicht    
         treffer=0;
@@ -74,8 +73,13 @@ function ladeGame()
         ctx.clearRect(xBasis,190-24,480,40);//
         ctx.clearRect(xBasis,490-24,480,40);// Ist es nicht
         erstelleBasisBild()
-        startTime = Date.now();
-        starteStoppuhr();
+        durchLaeufe++;
+        timer.start();
+
+        //nach 60 Sekunden Abbruch
+        setTimeout(function () {
+        timer.stop();
+        }, 60000);
     }
 
     function erstelleBasisBild()
@@ -107,19 +111,23 @@ canv.addEventListener('click', function(e)
                 if ( (getipptRechteck==verschwunden) && ( getipptRechteck<zeigen))
                     { treffer++;
                     blocke= true; 
-                    meldung("Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,490);   
-                    elapsedTime = Date.now() - startTime;
-                    elapsedTime = Math.round(elapsedTime / 1000);       
-                    zeiten.push(elapsedTime)           
-                    meldung(( "Gebrauchte Zeiten(Sek.) :  " + zeiten),"normal","18",schriftArt,"#5a617b",xBasis, yBasis2+ytextdis+155);        
+                    meldung("Treffer : " + treffer + " bei " + durchLaeufe + " Durchläufen","bold","16",schriftArt,"red",xBasis,490);   
+                        
+                    zeiten.push(sekunden);           
+                    meldung(( "Reaktionszeiten(Sek.) :  " + zeiten),"normal","18",schriftArt,"#5a617b",xBasis, yBasis2+ytextdis+155);        
                     }
                     else{
                     meldung("Ist es nicht","normal","16",schriftArt,"red",xBasis,490)
                     }
+                    timer.stop(); 
             }
+              
         }
-        clearInterval(tick);
+
+       
+
         }, false);
+      
 
 function indexVergleichsBilder()
     {
@@ -208,11 +216,9 @@ function shuffle(a) {
     }
     return a;
 }
-
-function starteStoppuhr() {
-  var tick = function () { stopUhrTick(stoppuhr) }
-  stopUhrStarten(tick, 10);
-  console.log( "Tage    " + stoppuhr.days + "   hrs  " + stoppuhr.hrs + "   minut   " + stoppuhr.mins + "  Sek   " + stoppuhr.secs);
+function drawTime(zsecs, secs, minu) {
+    uhrAnzeige(xUhrPosition,yUhrPosition,minu,secs,zsecs) ;  
+    sekunden=secs;
 }
    
 </script>
