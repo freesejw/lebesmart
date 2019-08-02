@@ -66,7 +66,7 @@ function ladeGame()
         meldung("Anzahl","normal","16",schriftArt,"#5a617b",330 ,yBasis2-60);
         meldung("Kombinationen = " +  anzahlKombi,"normal","16",schriftArt,"#5a617b",330 ,yBasis2-30);
 
-      roundedButton();
+       roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         treffer=0;
@@ -110,7 +110,7 @@ canv.addEventListener('click', function(event)
             zaehlerClick++;  
             let zw =gesuchtNeu[geglicktesFeld(xclick,yclick)];
          
-           // alert(" zw "+ zw + "zaehlerclick"  + zaehlerClick + " neu  " +gesuchtNeu +" basis  " +gesuchtBasis );
+            alert(" zw "+ zw + "zaehlerclick"  + zaehlerClick + " neu  " +gesuchtNeu +" basis  " +gesuchtBasis );
 
            for ( let i = 0 ;i<=anzahlKombi;i++)
            {    
@@ -336,7 +336,7 @@ function erstellKombination() {
             }
             gesuchtNeu = cloneArray(gesuchtBasis);
             shuffleArray(gesuchtNeu);          
-           // console.log("gesuchtBasis  in erstellkombination " + gesuchtBasis);
+            console.log("gesuchtBasis  in erstellkombination " + gesuchtBasis);
             //console.log("gesucht neu " + gesuchtNeu);
         }
      
