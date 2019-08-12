@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="600"></canvas>
+    <canvas id="canvas" width="500" height="560"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -25,49 +25,66 @@ var bgColor="Lavender";
 var blinkReihe=[];
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var feldBlocken;
-var buttonBlocken;
+var plusminusBlocker;
 
 var xCoord=[], yCoord=[];
 var zeilen = 5, spalten=5;
 
 
-var xAbstand=30,yAbstand = 120;     // Verschiebt die Matrix nach rechts und unten
+var xAbstand=80,yAbstand = 100;     // Verschiebt die Matrix nach rechts und unten
 var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtextdis=10, ytextdis=25;
-var yBasis2= 490, wBasis2=120, yErhoehung=50; 
+var yBasis2= 440, wBasis2=120, yErhoehung=50; 
 var xTextRechts=xBasis + 2 * (wBasis2+ dBasis);
-var yTextHoehe=yBasis2 -30;
+
 var zaehlerClick,zaehlerTreffer,iterator,anzahlBlinks=4;
 var audio;
 
 //Rechtecke für die Bilder
 var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#ea2867",col2: "#ea2867"},
-             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},                        
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 
 
 var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasis2 + ytextdis+yErhoehung},
-           {na: String.fromCharCode(9633)+"  Ende", x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
-           {na: String.fromCharCode(43)+"  Bälle", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
-           {na: String.fromCharCode(45)+"  Bälle", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
-
-
+           {na: String.fromCharCode(43)+"  Bälle", x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung},
+           {na: String.fromCharCode(45)+"  Bälle", x: (xBasis + 20 + 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis + yErhoehung}];
+          
 
 function ladeGame() 
     {   
         meldung("Übe die Merkspanne","bold","20",schriftArt,"#5a617b",40, 30);  
-        meldung("Merke dir die auftauchenden Bälle : Position und Reihenfolge","normal","16",schriftArt,"#5a617b",40, 60);     
-        meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,yTextHoehe);
+        meldung("Merke dir die auftauchenden Bälle : Position + Reihenfolge","normal","16",schriftArt,"#5a617b",40, 60);     
+        meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,460);
         roundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         treffer=0;
         durchLaeufe=0;
-        buttonBlocken=false;
+        plusminusBlocker=false;
+        startBlocker=false;
        
      
     }
+
+function start()
+    {
+        ctx.clearRect(30,380-20,450,20);
+       // ctx.clearRect(xBasis ,370,400,30);
+        iterator=0; 
+        zaehlerClick=0;
+        zaehlerTreffer=0;
+        durchLaeufe++;
+        loescheMatrix();
+        aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
+        blinkReihe=auswahlBlinkZellen(zeilen,spalten);
+        myVar=setInterval(zeige,1000);
+        feldBlocken=true; 
+        plusminusBlocker=true;
+        startBlocker=true;
+    }
+
+
    
 function aufbauMatrix(zeilen,spalten,breite,hoehe)
 {
@@ -129,22 +146,39 @@ canv.addEventListener('click', function(event)
                        
                         }
                         else {
-                                meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"normal","16",schriftArt,"red",30,420);  
+                                meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"normal","16",schriftArt,"red",30,380);  
                                 zeigBild("daumenRunter.png",xCoord[zwert] +6 ,yCoord[zwert]+6,40,40);
                                 feldBlocken=true;
-                                buttonBlocken=false;                               
-                                akustischeMeldung("audio/up.mp3");   
-                                meldung("Geschafft : " + treffer + "  mal" ,"normal","16",schriftArt,"#5a617b",310,300);
-                                meldung("bei :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",310,340);
+                                plusminusBlocker=false; 
+                                startBlocker=false;                              
+                                //akustischeMeldung("audio/up.mp3");   
+                                meldung("Alle geschafft : " + treffer + " mal  " ,"normal","16",schriftArt,"#5a617b",30,420);
+                                meldung("bei :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",30,440);
                              }
             
                     if (zaehlerTreffer == anzahlBlinks)
                     {
-                       treffer++
-                       meldung("Geschafft : " + treffer + " mal","bold","16",schriftArt,"#5a617b",310,300);
-                       meldung("bei :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",310,340);
-                       buttonBlocken=false; 
-                       
+                            treffer++
+                            meldung("Alle geschafft : " + treffer + " mal","bold","16",schriftArt,"#5a617b",30,420);
+                            meldung("bei :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",30,440);
+                            if(treffer==5)
+                                {
+                                    zeigBild("rakete1.jpg",80,100,250,250);
+                                }
+                            if(treffer==10)
+                                {
+                                    zeigBild("rakete2.jpg",80,100,250,250);
+                                }
+                                if(treffer==20)
+                                {
+                                    zeigBild("rakete3.jpg",80,100,250,250);
+                                }
+                            plusminusBlocker=false; 
+                            setTimeout(function () 
+                                {
+                                loescheMatrix();
+                                    start();
+                                }, 1000);                     
                     }
             }  
     }  
@@ -171,29 +205,13 @@ function geglicktesFeld(xc,yc){    // xc und yc sind die Koordinaten des Klicks
 }
 
 
-function start()
-{
-    ctx.clearRect(30,425,450,-35);
-    ctx.clearRect(xBasis ,370,400,30);
-    iterator=0; 
-    zaehlerClick=0;
-    zaehlerTreffer=0;
-    durchLaeufe++;
-    loescheMatrix();
-    aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
-    blinkReihe=auswahlBlinkZellen(zeilen,spalten);
-    myVar=setInterval(zeige,1000);
-    feldBlocken=true; 
-    buttonBlocken=true;
-}
-
-
 function loescheMatrix()
 {
 
-    for (i = 0;i<spalten*zeilen;i++){
-        ctx.clearRect(xCoord[i],yCoord[i],xBreite,yHoehe);
-    }
+   for (i = 0;i<spalten*zeilen;i++){
+       ctx.clearRect(xCoord[i],yCoord[i],xBreite,yHoehe);
+       }
+ 
 }
 
 function zeige()
@@ -235,17 +253,6 @@ canv.addEventListener('click', function(e)
                }
                 }, false);
 
-function abbruch()
-
-    {
-        
-        buttonBlocken=false;
-        ctx.clearRect(xBasis,420-30,400,30);   
-        meldung("Geschafft : " + treffer + "mal" ,"bold","16",schriftArt,"#5a617b",310,300);
-        meldung("bei :  " +durchLaeufe + "  Durchgängen","normal","16",schriftArt,"#5a617b",310,340);
-        clearInterval(myVar);
-    }
- 
 
 function auswahlButton()
     {
@@ -253,25 +260,26 @@ function auswahlButton()
               {
                    
                     case 0:
-                        start();                       
+                        if(!startBlocker)
+                        {
+                        start(); 
+                        }                      
                         break;                            
-                    case 1:
-                        abbruch();                        
-                        break;
-                    case 2:                   
-                    if (buttonBlocken==false)
+                   
+                    case 1:                   
+                    if (plusminusBlocker==false)
                       {                      
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Balle  = " +  anzahlBlinks).width 
-                            meldung("Anzahl Balle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,yTextHoehe);
+                            meldung("Anzahl Balle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,460);
                       }
                         break;
-                     case 3:
-                     if (buttonBlocken==false)
+                     case 2:
+                     if (plusminusBlocker==false)
                         {
                                 anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Bälle  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,yTextHoehe);   
+                                meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,460);   
                         }                     
                         break;
                        default:

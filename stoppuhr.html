@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>A script on this page starts this clock:</p>
+
+<p id="demo"></p>
+
+<button onclick="clearInterval(myVar)">Stop time</button>
+
+<script>
+
+
+var stopmich=false;
+
+stoppenZeit(stopmich);
+
+function stoppenZeit(stopmich)
+{
+var myVar;
+    if (stopmich===false)
+    {
+        var zsecs=0,secs=0,minu=0,hrs=0;
+        myVar = setInterval(myTimer,60);
+
+        function myTimer() 
+        {
+            zsecs++;     
+            if (zsecs === 10) 
+                {
+                    zsecs = 0;
+                    secs++;
+                }
+            if (secs === 60)
+                {
+                minu++;
+                secs = 0;
+                }
+            console.log(" zsecs " + zsecs + "  secs " +  secs + "  min  " + minu );   
+        }
+    }
+
+    else
+        {
+        clearInterval(myVar); 
+        }
+}
+
+</script>
+
+</body>
+</html>

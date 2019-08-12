@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+</style>
+</head>
+<body>
+        <canvas id="canvas" width="500" height="600"></canvas>   
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");  
+
+var xUhrPosition=100;
+var yUhrPosition=100;
+var z1=1;
+var z2=3;
+var z3=1;
+
+function uhrAnzeige(x,y,z1,z2,z3){
+    let xUhr=x;
+    let yUhr=y; 
+    if (z1<10){z1="0" + z1};
+    if (z2<10){z2="0" + z2};
+        ctx.fillStyle = "black";
+        ctx.fillRect(xUhr,yUhr + 0,110,40);
+        ctx.clearRect(xUhr+5,yUhr + 5,30,30);
+        ctx.clearRect(xUhr+40,yUhr + 5,30,30);
+        ctx.clearRect(xUhr+75,yUhr + 5,30,30);
+        
+        //ctx.font= "16px" + " " + schriftArt; 
+        ctx.font= "bolder 20px Arial"; 
+        ctx.fillStyle="red"; 
+        ctx.fillText(z1,xUhr+8,yUhr + 27);
+        ctx.fillText(z2,xUhr+43,yUhr + 27);
+        ctx.fillText(z3,xUhr+78,yUhr + 27);
+
+        ctx.fillStyle="#5a617b";
+        ctx.font= " 16px Arial";
+        ctx.fillText("Min",xUhr+5,yUhr - 7);
+        ctx.fillText("Sek",xUhr+40,yUhr - 7);
+        ctx.fillText("Dez",xUhr+75,yUhr - 7);
+
+        ctx.strokeRect(xUhr-10,yUhr-30,130,80)
+}  
+
+uhrAnzeige(xUhrPosition,yUhrPosition,z1,z2,z3) ;  
+            </script>
+
+
+
+</body>  
+</html>

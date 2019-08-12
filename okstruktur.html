@@ -77,23 +77,25 @@ function start()
 
 function zeitAbfrage()
    {
-    // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
-    
-    meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"normal","16",schriftArt,"#5a617b",xBasis,395); 
-    zeitAusgang=zeitAusgang + 1;   
-    if(zeitAusgang >= zeitSchranke)  
-        { 
-            blocken=false;
-            ctx.clearRect(xBasis,395 - 25,400,25);   // Merke dir die Position....
-            meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xBasis,425); 
-            for (var i =0; i<anzahlBilder;i++)
-            {
-                ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
-                    zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-2,hoehe-2);
-                  //  Hier werden die zu suchenden Zellen anonymisiert
-            }            
-            clearInterval(id);          
-        }    
+        // Misst die Zeit.     
+        meldung("Zeit zum Merken :   " + (zeitSchranke - zeitAusgang) + " Sek Zeit" ,"normal","16",schriftArt,"#5a617b",xBasis,395); 
+        zeitAusgang=zeitAusgang + 1;   
+        if(zeitAusgang >= zeitSchranke)  
+            { 
+                blocken=false;
+                ctx.clearRect(xBasis,395 - 25,400,25);   // Merke dir die Position....
+                meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xBasis,425); 
+                for (var i =0; i<anzahlBilder;i++)
+                {
+                    ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+                        zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
+                        ctx.lineWidth="3";
+                    ctx.strokeStyle="blue";       
+                    ctx.strokeRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-1,hoehe-1);      
+                    //  Hier werden die zu suchenden Zellen anonymisiert
+                }            
+                clearInterval(id);          
+            }    
     }
 
 canv.addEventListener('click', function(event) 
@@ -122,8 +124,8 @@ if (blocken==false)
                             xxclick=(Math.floor(xclick/breite))*breite;
                             yyclick=(Math.floor(yclick/hoehe))*hoehe;   
                         
-                            ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);
-                            zeigBild("lichtaufgehen.jpg",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
+                            ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite-20,hoehe-20);
+                            zeigBild("daumenHoch.png",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
                          
                          }
                         else {    
@@ -134,7 +136,7 @@ if (blocken==false)
                             zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);   
                             
                             meldung("Falsches Feld ==> Go on" ,"bold","20",schriftArt,"red",xBasis + 44,220);
-                            akustischeMeldung("audio/up.mp3"); 
+                           // akustischeMeldung("audio/up.mp3"); 
                             blocken=false;
                             minusPunkte++;                
                             }
@@ -146,6 +148,16 @@ if (blocken==false)
                //meldung("Punkte gesamt = " + plusPunkte ,"18",schriftArt,"#5a617b",335,300);  
                 //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18",schriftArt,"#5a617b",335,340);  
                 blocken=false;
+                
+               if (plusPunkte==5 || plusPunkte==10)
+                    {                      
+                    zeigBild("merkelkuss.png",60,110,259,250); 
+                    }
+                setTimeout(function () 
+                        {
+                           start();
+                        }, 1000);
+             
             }
         }    
         }, false); 
@@ -195,7 +207,7 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
         {            
             var x=breite*j;  
             zeigBild("neuesAuge.jpg",x+xAbstand,y+yAbstand,breite-4,hoehe-4);
-            ctx.lineWidth="2";
+            ctx.lineWidth="3";
             ctx.strokeStyle="blue";       
             ctx.strokeRect(x + xAbstand,y + yAbstand,breite,hoehe);   
             //linke, obere Koordinaten der Rechtecke
@@ -220,21 +232,21 @@ function zeigBild(a,x,y,w,h)
 
 function auswahlZellen(zeilen,spalten)
 {
-// Wählt und zeigt die Zellen an, die gesucht werden sollen
-for (var i =0; i<anzahlBilder;i++)
- {
-    var zw =Math.max(0,((random(zeilen*spalten) - 1)));
-    console.log(zw);
+    // Wählt und zeigt die Zellen an, die gesucht werden sollen
+    for (var i =0; i<anzahlBilder;i++)
+    {
+        var zw =Math.max(0,((random(zeilen*spalten) - 1)));
+        console.log(zw);
 
-     if (indexReihe.indexOf(zw) <0)
-        {               
-                    indexReihe.push(zw);}
-                    else
-                    {i=i-1;}
-            var zu=random(6);
-            console.log(" zu   " + zu); 
-                    zeigBild("face/face" + zu + ".png",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
-         }   
+        if (indexReihe.indexOf(zw) <0)
+            {               
+                        indexReihe.push(zw);}
+                        else
+                        {i=i-1;}
+                var zu=random(7);
+            
+                        zeigBild("face/face" + zu + ".png",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
+            }   
 }
 
 function feldNummerSchuss(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
