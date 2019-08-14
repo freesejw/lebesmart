@@ -4,6 +4,7 @@ Canvas {
     top: 0px;
     left: 0px;
     background-color: #efefef;
+    cursor: url(fadenkreuz.png),  auto; 
 }
 body {
     font-family: 'Comfortaa';

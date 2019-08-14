@@ -81,9 +81,7 @@ function start()
         ctx.clearRect(xBasis-10, yBasis1-30,500,ytextdis+50); // löscht die möglichen Lösungen
         ctx.clearRect(xCoord[1],yCoord[1]-30,500,130);        
         aufbauZeile(rechenSchritte,breite,hoehe);
-        vergleichsZahlen();
-        startTime = Date.now();
-        //zsecs = 0, secs = 0, minu = 0, hrs = 0;
+        vergleichsZahlen();        
         timer.start();
         stopploesung = false;        
         stoppstarten=true;
@@ -319,9 +317,9 @@ function getRndInteger(min, max) {
 
 function drawTime(zsecs, secs, minu) {
     uhrAnzeige(xUhrPosition,yUhrPosition,minu,secs,zsecs) ;  
-    sekunden=secs;
-    
+    sekunden=secs;   
 }
+
 function roundedButton(a)
 {
        for (var i = 0; i < a; i++) {       
