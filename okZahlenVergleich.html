@@ -59,9 +59,12 @@ function ladeGame()
         buttonText();
         ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
         ctx.strokeRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);  
-        ctx.fillStyle="#F2F2F2";
-        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
-        ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
+        zeigBild("hoeher1.jpg",rects[4].x, rects[4].y,rects[4].w-30, rects[4].h-30);
+        zeigBild("hoeher2.jpg",rects[5].x+20, rects[5].y,rects[5].w-20, rects[5].h-10);
+
+       // ctx.fillStyle="#F2F2F2";
+       // ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+      //  ctx.fillRect(rects[5].x, rects[5].y, rects[5].w, rects[5].h);
         offenButton=true;
     };
 
