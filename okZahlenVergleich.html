@@ -26,6 +26,8 @@ var xBasis=20, yBasis1=280, wBasis1=60, hBasis=40, dBasis=40, xtextdis=20, ytext
 var yBasis2= 460, wBasis2=120, yErhoehung=50;
 
 
+
+
 var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
              {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#ea2867",col2: "#ea2867"},
              {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
@@ -75,7 +77,7 @@ function start()
         durchLaeufe=0;
         myVar = setInterval(iteration, reaktionsZeit*1000); 
         offenButton=false;
-        
+      
     }
 
 function iteration()
@@ -200,7 +202,7 @@ function vergleich(a)
  } 
 
  meldung(( "Anzahl Treffer :  0"),"bold","16",schriftArt,"#5a617b",xBasis, 400);  
-
+ 
 
 </script>
 
