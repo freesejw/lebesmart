@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button id="myBtn">Try it</button>
+
+<script>
+  
+    var zaehler = 0, timer;
+    //timer = setTimeout(function () {
+    //    console.log("Zeitablauf für Klick " + (zaehler + 1));
+    // }, 5000);
+
+    document.getElementById("myBtn").addEventListener("click", function () {
+        zaehler++;
+        console.log(" Zähler " + zaehler);
+        clearTimeout(timer);
+        if (zaehler < 4) {
+            timer = setTimeout(function () {
+                console.log("Zeitablauf für Klick " + (zaehler + 1));
+            }, 5000);
+        }
+        if (zaehler == 4) { console.log("Ende erreicht") };
+    });
+</script>
+
+</body>
+</html>

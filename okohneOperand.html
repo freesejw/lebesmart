@@ -9,7 +9,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="550"></canvas>
+<canvas id="canvas" width="500" height="550"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -18,7 +18,6 @@ var xCoord=[], yCoord=[];
 var operand;
 
 var rechenSchritte=2, schrittWeite=1,string;
-var durchLaeufe, treffer;
 var z1, z2;
 var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 var yBasis2= 440, wBasis2=120, yErhoehung=50; 
@@ -59,10 +58,8 @@ function start()
         ctx.clearRect(0,y,400,35); // Löschen Anzahl operanden
         ctx.clearRect(0,280-30,550,30); //
         ctx.clearRect(xBasis, 380 - 30, 400, 40);   // Löschen Lösung Anzeige
-        ctx.clearRect(xBasis, 320-24, 400, 34);   // Beispiel Lösung   
-        treffer=0;
-        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",xBasis, 445);  
-        durchLaeufe=0;
+        ctx.clearRect(xBasis, 320-24, 400, 34);   // Beispiel Lösung          
+        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",xBasis, 445);          
         aufbauZeile(rechenSchritte,breite,hoehe);
        
     }

@@ -93,9 +93,8 @@ function aufbauZeile(ele,breite,hoehe)
    // legt eine Zeile an . In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
             var rr, xx,oo;            
             var anzahlZahlen=ele;
-            var anzahlOperanden=ele-1;
             var anzahlFelder=ele*2 + 1 + 2; // + 2 sind für = ergebnis
-            var operanden=["+" , "+", "-", "-" ,"+" , "+", "-", "-" ,"*", "/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
+            var operanden=["+" , "-","*", "/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
             string="";
             xCoord=[];
             yCoord=[];
@@ -114,9 +113,9 @@ function aufbauZeile(ele,breite,hoehe)
             ctx.fillStyle="#5a617b";
             ctx.font= "bolder 18px Arial" + " " + schriftArt;            
           
-            if (i < anzahlOperanden)
+            if (i < operanden.length)
             {
-                rr = 1 + random(15); 
+                rr = 1 + random(15); // Es werden zahlen zwischen 1 und 15 zugelassen
                 let isDivision = (oo==="/")
                 let isLargerOne = i>0
                 
@@ -127,7 +126,10 @@ function aufbauZeile(ele,breite,hoehe)
                     // Aus der Liste dieser Zahlen wird dann zufällig eine ausgewählt.
 
                     var moeglichkeiten = []
-                    for(var j = Math.max(1, xx - 1); j >= 1; j--) { // das Math.max ist wichtig für den Fall, dass xx eins ist.+
+                    for(var j = Math.max(1, xx - 1); j >= 1; j--)
+                    
+                    { 
+                        // das Math.max ist wichtig für den Fall, dass xx eins ist.+
 
                         if(xx%j == 0) 
                         {
@@ -137,26 +139,34 @@ function aufbauZeile(ele,breite,hoehe)
 
                         let wahl = random(moeglichkeiten.length)
                         rr = moeglichkeiten[wahl]
-                     }
+                }
+
                 string=string + rr;
                 ctx.fillText(rr,xCoord[i*2] +xAbstand *2,yCoord[i*2]+yDist+10);  
-                xx =ergebnisKette(string);                
+                xx =ergebnisKette(string);
+
                 oo=operanden[random(operanden.length)].trim(); 
-                if(i==anzahlOperanden-1) 
+                console.log(operanden.length);
+                if(i==operanden.length-1) 
+                oo= oo=operanden[random(operanden.length-2)].trim(); 
                // Als letzter Operand wird das * und / ausgeschlossen
-                    oo= oo=operanden[random(operanden.length-2)].trim(); 
-            
-                ctx.fillStyle="red"; 
-               ctx.font= "bolder 18px Arial"; 
+                var ox;
+                  
+                if (oo ==="+") {ox=String.fromCharCode(43);}
+                if (oo ==="-") {ox=String.fromCharCode(45);}
+                if (oo ==="/") {ox=String.fromCharCode(47);}
+                if (oo ==="*") {ox=String.fromCharCode(120);}
+                ctx.fillStyle="blue"; 
+                ctx.font= "20px Arial"; 
               
-                ctx.fillText(oo,xCoord[i*2+1]+xAbstand * 2 ,yCoord[i*2+1]+yDist+10);
+                ctx.fillText(ox,xCoord[i*2+1]+xAbstand * 2 ,yCoord[i*2+1]+yDist+10);
                 string=string +oo.valueOf();  
               
             }
             
             else
             {             
-            rr =1+random(9); 
+            rr =1+random(9); //Letzte Zahl im String
             string=string + rr;  
             ctx.fillText(rr,xCoord[i*2] +xAbstand *2,yCoord[i*2]+yDist+10); // zeigt die letzte Zahl an
 
@@ -232,31 +242,34 @@ function vergleich(a)
 {
     if(a==ergebnisIndex+4)
         {
-           richtig++;
+           
+            richtig++;
             meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);
-                 
+            zeigBild("daumenHoch.png", xBasis -5 + (getipptRechteck- 4) * (wBasis1+ dBasis),yBasis1-5,50,50);       
             zeiten.push( sekunden); 
 
             var ausdruck=zeiten ;
            
             for (var i= 0;i<zeiten.length-1;i++);
-               {
-               console.log("  1  " + summe );   
+              {
+                console.log("  1  " + summe );   
                 summe+=zeiten[i];               
-            }
+              }
             var schnitt=(  summe/richtig); 
             schnitt=Math.floor(schnitt*10)/10;
             if(ausdruck.length>10){ausdruck.shift();}        
             meldung(( "Zeiten / Durchlauf ( Sek. ) :  " + ausdruck ),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+185);
-            if (richtig>0){
-            //meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+215);
-            meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+215);           
-            }
+
+            if (richtig>0)
+                {          
+                meldung(( "Durchschnitt ( Sek. ) :  "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+215);           
+                }
         }
-    else 
-        {
-            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);
-        }
+                else 
+                    {
+                        zeigBild("daumenRunter.png", xBasis -5 + (getipptRechteck- 4) * (wBasis1+ dBasis),yBasis1-5,50,50);  
+                        meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Durchläufe","bold","16",schriftArt,"#5a617b",xBasis, yBasis1+ytextdis+150);
+                    }
         
            
     }
@@ -299,13 +312,16 @@ function auswahlButton()
                      case 7:
                      case 8:   
                      case 9:
+                        
+                       // ctx.fillText(zz[3],(xBasis + 8 + 3 * (wBasis1+ dBasis)),yBasis1+ ytextdis); 
                         stoppstarten=false;
-                        ctx.clearRect(xUhrPosition-20+-5,yUhrPosition-30+-5,210,100);// Löscht Uhr
+                        ctx.clearRect(xUhrPosition-20+-5,yUhrPosition-30+-5,210,100);// Löscht Uhr                      
                         durchLaeufe++;                       
                         vergleich(getipptRechteck);  
                         timer.stop();
                         break;  
-                                     
+                        
+                        
                     default:
                        alert("ups");
                 }             

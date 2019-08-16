@@ -25,7 +25,7 @@ var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var xCoord = []; yCoord = [];   // x y Koordinate links oben im Feld
 var audio;
 var indexReihe = [];// hier werden die indizes der Felder gespeichert die angezeigt werden sollen
-var plusPunkte,minusPunkte;
+var plusPunkte = 0,minusPunkte=0;
 var zeilenZahl = 5, spaltenZahl = 5; // Felder pro Spalte und Zeile
 var breite = 50, hoehe=50;
 
@@ -50,12 +50,12 @@ function ladeGame()
 {
     meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","bold","20",schriftArt,"#5a617b",xBasis, 30); 
     meldung("Merke Dir die Bildpositionen","normal","16", schriftArt,"#5a617b",xBasis, 60);   
-    meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420);
+    meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);
+    meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,300);  
+    meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,340);  
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     roundedButton();
-    buttonText();  
-    plusPunkte=0;
-    minusPunkte=0;  
+    buttonText();     
     blocken=false; 
 }
 
@@ -63,7 +63,7 @@ function start()
 { 
     blocken=true; // Klicken weährend dedr Merkphase verhindern
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl);//Löscht die Matrix 
-    ctx.clearRect(xBasis,220-40,450,40);//löscht text " falsches Feld..."
+    //ctx.clearRect(xBasis,220-40,350,40);//löscht text " falsches Feld..."
     zaehlerClick=0;
     zaehlerTreffer=0;     
     indexReihe=[]; 
@@ -83,13 +83,13 @@ function zeitAbfrage()
         if(zeitAusgang >= zeitSchranke)  
             { 
                 blocken=false;
-                ctx.clearRect(xBasis,395 - 25,400,25);   // Merke dir die Position....
-                meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xBasis,425); 
+                ctx.clearRect(xBasis,395 - 25,300,25);   // Merke dir die Position....
+                meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xBasis,395); 
                 for (var i =0; i<anzahlBilder;i++)
                 {
                     ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
-                        zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
-                        ctx.lineWidth="3";
+                    zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
+                    ctx.lineWidth="3";
                     ctx.strokeStyle="blue";       
                     ctx.strokeRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-1,hoehe-1);      
                     //  Hier werden die zu suchenden Zellen anonymisiert
@@ -102,7 +102,7 @@ canv.addEventListener('click', function(event)
 {   
 if (blocken==false)
  { 
-    ctx.clearRect(xBasis,425-20,300,25);// löscht "falsches Feld....
+    ctx.clearRect(xBasis,395-25,300,25);// löscht "falsches Feld....
 
         xclick = event.clientX;
         yclick = event.clientY; 
@@ -122,8 +122,7 @@ if (blocken==false)
                             // Richtige Ziffer == Treffer 
                             zaehlerTreffer++;
                             xxclick=(Math.floor(xclick/breite))*breite;
-                            yyclick=(Math.floor(yclick/hoehe))*hoehe;   
-                        
+                            yyclick=(Math.floor(yclick/hoehe))*hoehe; 
                             ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite-20,hoehe-20);
                             zeigBild("daumenHoch.png",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
                          
@@ -132,9 +131,9 @@ if (blocken==false)
                             //falsche Feld
                             xxclick=(Math.floor(xclick/breite))*breite;
                             yyclick=(Math.floor(yclick/hoehe))*hoehe;   
-                            ctx.clearRect(xBasis,420-30,300,30); 
-                            zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);   
-                            
+                            ctx.clearRect(xBasis,395-30,300,30); 
+                            //zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);   
+                            ctx.clearRect(xBasis ,220-40,600,70); // Schafft Platz für die Meldung Falsches.....
                             meldung("Falsches Feld ==> Go on" ,"bold","20",schriftArt,"red",xBasis + 44,220);
                            // akustischeMeldung("audio/up.mp3"); 
                             blocken=false;
@@ -179,14 +178,14 @@ canv.addEventListener('click', function(e)
                         if (blocken==false)
                         {
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420); 
                         }
                     break; 
                     case 2:
                     if (blocken==false)
                         {
                         anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",335,420);  
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);  
                         }                                      
                     break;                    
                     default:

@@ -37,7 +37,10 @@ var startDate,endDate,diffSeconds;
 
 var buch1 =[ "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 var buch2 =[ "H","I","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G"];
-var zahl = [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5];
+var zahl = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,1,2,3,4,5];
+var total=[ "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+            "H","I","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G",
+            1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,1,2,3,4,5];
 
 //Rechtecke für die Buttons 
 
@@ -86,7 +89,7 @@ function start()
     erstellKombination();
     getroffen=false;
     blockenMatrix=false;
-    blockenStart=true;
+    blockenStart=true;    
   //  startDate = new date();
   //zeigeKombinationen();
     setTimeout(zeigeKombinationen, 500); 
@@ -132,7 +135,7 @@ canv.addEventListener('click', function(event)
                             blockenMatrix=true;  
                             markiere("red","6");                            
                             meldung("Falsch. ==> Go on" ,"bold","16",schriftArt,"red",xBasis,450); 
-                            akustischeMeldung("audio/eat.mp3");  
+                           // akustischeMeldung("audio/eat.mp3");  
                             rundeAus=true ;
                             blockenMatrix=true;  
                             blockenStart=false; 
@@ -140,7 +143,7 @@ canv.addEventListener('click', function(event)
                             setTimeout(function () 
                             {
                            
-                            }, 5000);                        
+                            }, 2000);                        
                                             
                             }
             
@@ -252,8 +255,8 @@ iterator++;
        
         
         } 
-        console.log(iterator + "  " + anzahlKombi); 
-        myVar=setInterval(zeigeKombinationen,25000);   
+       
+       
 }
 
 canv.addEventListener('click', function(e)
@@ -314,15 +317,22 @@ function erstellKombination() {
             shuffleArray(zw2);
             var zw3 = cloneArray(zahl);
             shuffleArray(zw3);
-          
+
+            var zwww = cloneArray(total);
+            shuffleArray(zwww);
+           
             
-            for (let i = 0; i < zeilen*spalten; i++) {
-                gesuchtBasis[i] = zw1[i] + zw2[i] + zw3[i];
+            for (var i = 0; i < zeilen*spalten; i++)
+             {
+                //  gesuchtBasis[i] = zw1[i] + zw2[i] + zw3[i];
+                gesuchtBasis[i]=zwww[i] + zwww[i + zeilen*spalten]+ zwww[i + 2*zeilen*spalten]
+                console.log(zwww[i] + zwww[(i + zeilen*spalten)] +  zwww[(i + 2*zeilen*spalten)]);
+                console.log("  i    " + i + "    " + zwww[i] + " " +zwww[(i + zeilen*spalten)] + " " + zwww[(i + 2*zeilen*spalten)]);              
             }
+            console.log(" basis   " + gesuchtBasis); 
             gesuchtNeu = cloneArray(gesuchtBasis);
-            shuffleArray(gesuchtNeu);          
-           // console.log("gesuchtBasis  in erstellkombination " + gesuchtBasis);
-            //console.log("gesucht neu " + gesuchtNeu);
+            shuffleArray(gesuchtNeu);
+
         }
 
 </script>
