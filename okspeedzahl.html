@@ -24,7 +24,7 @@ var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var breite = 43, hoehe=43; // Abmessungen der Zellen
 var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
 var anzahlFelder = zeilenZahl*spaltenZahl;
-
+var maxDurchlaeufe=3; 
 var xCoord = [];  // x Koordinate links oben im Feld
 var yCoord = [];  // y Koordinate links oben im Feld
 var zahlenSpeicher= [];  // zahlenspeicher enthält die ziffer der Matrix als Vektor
@@ -38,7 +38,6 @@ var xPos, yPos,xclick, yclick;;
 var zaehlerTreffer,anzahlTreffer,durchLauf;
 var clickenAus;
 var blocken;
-var bgColor="lightblue";
 
 var zeitSchranke = 7; // max. Zeit zum finden der Zahl in Sekunden
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
@@ -66,7 +65,7 @@ function ladeGame()
 
     ermittleBasisZahlen(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
-    roundedButton();
+    roundedButton(3);
     buttonText();
     anzahlTreffer=0;
     durchLauf=0;
@@ -83,7 +82,8 @@ function start()
         ctx.clearRect(390, 280-60,200,80) // löscht text2 ( gesuchte Zahl);
         zaehlerTreffer=0;
         zeitAusgang=0;
-        durchLauf++;     
+        durchLauf++; 
+           
         zahlenSpeicher=[];
         indexReihe=[];
         
@@ -181,7 +181,7 @@ canv.addEventListener('click', function(event)
                         anzahlTreffer++;               
                         var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
                         meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,470); 
-                        if(anzahlTreffer==10)
+                        if(anzahlTreffer % maxDurchlaeufe ==0 )
                         {zeigBild("schiess.png",50,150,200,200);}
                         clickenAus=true;
                         blocken=false;

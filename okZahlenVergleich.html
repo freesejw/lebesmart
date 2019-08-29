@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="530"></canvas>
+    <canvas id="canvas" width="500" height="480"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -18,12 +18,14 @@ var ctx = canv.getContext("2d");
 var speicherQuote=[];
 var audi0;
 var myVar;
-var reaktionsZeit=1.0,maxDurchlaeufe=10;
+var reaktionsZeit=1.5,maxDurchlaeufe=10;
 var durchLaeufe, treffer;
+
 var z1, z2;
 var offenButton; 
+var offenVergleich;
 var xBasis=20, yBasis1=280, wBasis1=60, hBasis=40, dBasis=40, xtextdis=20, ytextdis=25;
-var yBasis2= 460, wBasis2=120, yErhoehung=0;
+var yBasis2= 400, wBasis2=120, yErhoehung=0;
 
 
 
@@ -46,46 +48,45 @@ var texts =[{na:"   "+  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextd
 
 function ladeGame()
     {
-       // boxMeldung(("?"),xBasis,120,100,100,25);
-       // boxMeldung(("?"),280,120,100,100,25);
+       
         meldung("Verbessere Reaktionszeit und Konzentration","bold","20",schriftArt,"#5a617b",30, 35);  
         meldung("Ist die Zahl links oder rechts höher? Klick sie an !","normal","16",schriftArt,"#5a617b",xBasis + 25, 90); 
-        meldung("Es gibt 10 Durchgänge","normal","16"," schriftArt","#5a617b",xBasis ,320); 
-        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","normal","16,"," schriftArt","#5a617b",xBasis ,360); 
-       // meldung(( "Anzahl Treffer :  0"),"bold","16",schriftArt,"#5a617b",xBasis, 400);   
-        roundedButton()
+        meldung("Es gibt " + maxDurchlaeufe + " Durchgänge","normal","16"," schriftArt","#5a617b",xBasis ,280); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","normal","16,"," schriftArt","#5a617b",240 ,380); 
+       
+        roundedButton(3)
         buttonText();
-        ctx.strokeRect(rects[3].x ,rects[3].y, rects[3].w, rects[3].h);
-        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);  
-        zeigBild("hoeher1.jpg",rects[3].x+30, rects[3].y,rects[3].w-30, rects[3].h-30);
-        zeigBild("hoeher2.jpg",rects[4].x+20, rects[4].y,rects[4].w-20, rects[4].h-10);
-        ctx.fillStyle="#5a617b";
-        ctx.fillRect(rects[3].x, rects[3].y, rects[3].w, rects[3].h);
-        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
+        ausgangsBilder();
+        
         offenButton=true;
+        offenVergleich=false;
     };
 
 
 function start()
     {
-        ctx.clearRect(xBasis, 400, 300, -20);   // Löschen Trefferquote
-        ctx.clearRect(xBasis,400,200,-20);  // Löschen Anzahl Treffer
+        ctx.clearRect(xBasis, 329, 500, -20);   // Löschen Trefferquote
+        //ctx.clearRect(xBasis,400,500,-20);  // Löschen Anzahl Treffer
         treffer=0;
         //meldung(( "Anzahl Treffer :  " + treffer),"bold" ,"16",schriftArt,"#5a617b",xBasis, 400);  
        // ctx.strokeRect(rects[3].x, rects[3].y, rects[3].w, rects[3].h);
        // ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);        
         durchLaeufe=0;
-        myVar = setInterval(iteration, reaktionsZeit*1000); 
+        myVar = setInterval(iteration, 500); 
         offenButton=false;
+        offenVergleich=true;
       
     }
 
 function iteration()
 {
+       clearInterval(myVar);
+       
         durchLaeufe++;  
         ctx.fillStyle="#F2F2F2";
         ctx.fillRect(rects[3].x, rects[3].y, rects[3].w, rects[3].h);
-        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);    
+        ctx.fillRect(rects[4].x+40, rects[4].y, rects[4].w, rects[4].h);  
+         
         if (durchLaeufe <= maxDurchlaeufe)
         {           
             z1=getRnd(1,10); 
@@ -99,38 +100,37 @@ function iteration()
                                 }
                 while ((Math.abs(schriftGroesse1-schriftGroesse2 ) < 25) || (z1 == z2));
 
-            meldung(z2.valueOf() ,"bold",schriftGroesse2,schriftArt,"#5a617b",280 + rects[4].w*.3,120+rects[4].h*0.7);
+            meldung(z2.valueOf() ,"bold",schriftGroesse2,schriftArt,"#5a617b",280 + (rects[4].w*.3) + 40,120+rects[4].h*0.7);
             
         ctx.strokeRect(rects[3].x , rects[3].y, rects[3].w, rects[3].h); 
-        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h); 
+        ctx.strokeRect(rects[4].x +40, rects[4].y, rects[4].w, rects[4].h); 
+        //alert("hi");
+        myVar = setInterval(iteration, reaktionsZeit*1000); 
         }
 
         else
             {                    
             clearInterval(myVar);
+            offenVergleich=false;
+            offenButton=true;
             abbruch();
-
-
             }
 }
 
 function abbruch()
 
     {
-       // ctx.clearRect(xBasis,400-20,200,20);  // Löschen Anzahl Treffer
-        offenButton=true;
         var quote=(treffer)/(durchLaeufe-1);
         quote=Math.round(quote*100);
         speicherQuote.push(quote);
-        ctx.clearRect(xBasis, 400, 300, -16);               
-        meldung("Trefferquote in % : " + speicherQuote ,"bold","16",schriftArt,"red",xBasis,400);         
+        if (speicherQuote.length>10){speicherQuote.shift();}
+        ctx.clearRect(xBasis, 320+20, 500, 20);  
+        var ausQuote = "";   
+        for (var ii=0;ii<speicherQuote.length;ii++){ausQuote=ausQuote + "  " +speicherQuote[ii] }          
+        meldung("Trefferquote in % : " + ausQuote ,"bold","16",schriftArt,"red",xBasis,320);         
         clearInterval(myVar);   
-      
-        ctx.fillStyle="#5a617b";
-        ctx.fillRect(rects[3].x , rects[3].y, rects[3].w, rects[3].h);
-        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);
-        zeigBild("hoeher1.jpg",rects[3].x + 30, rects[3].y,rects[3].w-30, rects[3].h-30);
-        zeigBild("hoeher2.jpg",rects[4].x+20, rects[4].y,rects[4].w-20, rects[4].h-10);
+        ausgangsBilder();
+        
     }
 
 
@@ -149,30 +149,30 @@ function auswahlButton()
         switch (getipptRechteck) 
                 {
                     case 0:                                         
-                        start();
+                    if (offenButton){start();}
                         break;
                     
                     case 1:
-                    if (offenButton==true)
+                    if (offenButton)
                     {
-                    reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,360);                      
+                    reaktionsZeit=plusMinus(reaktionsZeit,0.1,0.8,5);
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",240 ,380);                      
                     }                                       
                     break;
                     case 2:
-                    if (offenButton==true)
+                    if (offenButton)
                     {
-                    reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
-                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,360); 
+                    reaktionsZeit=plusMinus(reaktionsZeit,-0.1,0.8,5);
+                    meldung("Zeit zum Reagieren = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",240,380); 
                     }                     
                         break;
                      case 3:
                      //links getippt
-                        vergleich(3);                        
+                        if(offenVergleich){ vergleich(3); }                       
                         break;  
                      case 4:
                      //rechts getippt
-                        vergleich(4);                        
+                        if(offenVergleich){vergleich(4);}                        
                         break;                 
                     default:
                        alert("ups");
@@ -180,31 +180,40 @@ function auswahlButton()
     }
 
 function vergleich(a)
-{
+    {
     
-     
        if(a==3 && z1>z2){ zeigBild("daumenHoch.png",rects[3].x, rects[3].y,rects[3].w, rects[3].h);}
        if(a==3 && z1<z2){ zeigBild("daumenRunter.png",rects[3].x, rects[3].y,rects[3].w, rects[3].h);}
-       if(a==4 && z1<z2){ zeigBild("daumenHoch.png",rects[4].x, rects[4].y,rects[4].w, rects[4].h);}
-       if(a==4 && z1>z2){ zeigBild("daumenRunter.png",rects[4].x, rects[4].y,rects[4].w, rects[4].h);}
+       if(a==4 && z1<z2){ zeigBild("daumenHoch.png",rects[4].x + 40, rects[4].y,rects[4].w, rects[4].h);}
+       if(a==4 && z1>z2){ zeigBild("daumenRunter.png",rects[4].x + 40, rects[4].y,rects[4].w, rects[4].h);}
 
      
             if((a==3 && z1>z2) ||(a==4 && z1<z2))
             {
                 treffer++;   
                 ctx.clearRect(xBasis,400,200,-20);     
-              //  meldung(( "Anzahl Treffer :  " + treffer),"bold","16",schriftArt,"#5a617b",xBasis, 400); 
-              //
+              
             }    
-  // else{akustischeMeldung("audio/up.mp3");   }
-
     }
+    function ausgangsBilder()
+    {
+        //Erstellt den Rahmen
+        ctx.strokeRect(rects[3].x ,rects[3].y, rects[3].w, rects[3].h);
+        ctx.strokeRect(rects[4].x+40, rects[4].y, rects[4].w, rects[4].h);  
+        // Füllt den Rahmen
+        ctx.fillStyle="#5a617b";
+        ctx.fillRect(rects[3].x, rects[3].y, rects[3].w, rects[3].h);
+        ctx.fillRect(rects[4].x+40, rects[4].y, rects[4].w, rects[4].h);
+        //Fügt Bilder ein
+        zeigBild("hoeher1.jpg",rects[3].x+30, rects[3].y,rects[3].w-30, rects[3].h-30);
+        zeigBild("hoeher2.jpg",rects[4].x+60, rects[4].y,rects[4].w-20, rects[4].h-10);
+        }
 
  function getRnd(min, max) 
   {
   return Math.floor(Math.random() * (max - min)) + min;
  } 
- //meldung(( "Anzahl Treffer :  0"),"bold","16",schriftArt,"#5a617b",xBasis, 400);  
+ 
  </script>
 
 

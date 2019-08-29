@@ -23,7 +23,7 @@ var anzahlKombi=3;
 var xBreite=100 , yHoehe=60;
 var myVar,myVar1; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
-var durchLaeufe, insgesamtTreffer,rundenTreffer;
+var durchLaeufe, maxDurchLaeufe =3,zeitMerk=4,insgesamtTreffer,rundenTreffer;
 var blockenMatrix;
 var blockenStart;
 var xCoord=[], yCoord=[];
@@ -34,6 +34,7 @@ var iterator=0;
 var audio;
 var gesuchtBasis = [], gesuchtNeu=[];
 var startDate,endDate,diffSeconds;
+var zeigKombi;
 
 var buch1 =[ "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 var buch2 =[ "H","I","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G"];
@@ -61,8 +62,9 @@ function ladeGame()
         meldung("Verbessere Konzentration und Kurzzeitgedächnis","bold","20",schriftArt,"#5a617b",20, 35); 
         meldung("Merke dir die Buchstaben/Zahlenkombination","normal","16",schriftArt,"#5a617b",40, 65);  
         meldung("Anzahl Kombinationen = " +  anzahlKombi,"normal","16",schriftArt,"#5a617b",215 ,485);
+        meldung("Es gibt nach jedem Start " + maxDurchLaeufe + " Durchläufe. Merkzeit beträgt " + zeitMerk+ "(S)","normal","16",schriftArt,"#5a617b",40,95); 
         insgesamtTreffer=0;
-        roundedButton();
+        roundedButton(3);        
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         insgesamtTreffer=0;
@@ -70,6 +72,7 @@ function ladeGame()
         iterator=0;
         blockenMatrix=true;
         blockenStart=false;
+
     }
    
 function start()
@@ -90,9 +93,9 @@ function start()
     getroffen=false;
     blockenMatrix=false;
     blockenStart=true;    
-  //  startDate = new date();
-  //zeigeKombinationen();
-    setTimeout(zeigeKombinationen, 500); 
+  
+  
+    setTimeout(zeigeKombinationen, 500);
     
 }    
 
@@ -103,10 +106,10 @@ canv.addEventListener('click', function(event)
     if (blockenMatrix==false) {      
             xclick = event.clientX; 
             yclick = event.clientY;  
-        
-    if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
-                         &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe) 
-                         && zaehlerClick<anzahlKombi)
+    var imFeld=   (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
+                         &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe) );
+
+    if (imFeld  && (zaehlerClick<anzahlKombi) && zeigKombi==false)
        {
             zaehlerClick++;  
             let zw =gesuchtNeu[geglicktesFeld(xclick,yclick)];
@@ -132,7 +135,8 @@ canv.addEventListener('click', function(event)
                         
                         else {
                             blockenMatrix=true;  
-                            markiere("red","6");                            
+                            markiere("red","6");   
+                            ctx.clearRect(xBasis,400-25,500,30)                         
                             meldung("Falsch. ==> Go on" ,"bold","16",schriftArt,"red",xBasis,450); 
                            // akustischeMeldung("audio/eat.mp3");  
                             rundeAus=true ;
@@ -152,10 +156,12 @@ canv.addEventListener('click', function(event)
                         blockenStart=false;  
                         loescheMatrix();    
                         zeigBild("schiess.png",50,100,250,250);
+                        if(durchLaeufe < maxDurchLaeufe){
                         setTimeout(function () 
                         {
                            start();
-                        }, 2000);                                           
+                        }, 1000); 
+                    }                                          
                     }
             } 
             getroffen=false;   
@@ -223,16 +229,15 @@ function zeigeKombinationen()
   
 iterator++;
 
-
-    endDate= new Date();
-    
+zeigKombi=true;    
     if (iterator<anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen
     {
-        setTimeout(zeigeKombinationen, 3500);   
+        setTimeout(zeigeKombinationen, zeitMerk*1000);   
         ctx.fillStyle = "red";
             ctx.font = "30px" + " " + schriftArt;
             ctx.clearRect(200, 200-60,400,80);
-            ctx.fillText(gesuchtBasis[iterator], 200,200);           
+            ctx.fillText(gesuchtBasis[iterator], 200,200);   
+            startTimer(50, 400, 400, 20, zeitMerk*1000);            
            
     }   
 
@@ -247,12 +252,13 @@ iterator++;
                 ctx.font = "30px" + " " + schriftArt;
                 ctx.fillText(gesuchtNeu[i], xCoord[i]+xtestdis +15, yCoord[i]+ 10+yHoehe/2);            
             }
+            zeigKombi=false ;
         }
 
     if (iterator>anzahlKombi ) // Beenndet das Anzeige und das Ptogramm wartet jetzt auf dien EventListeber Click
         {  
        
-        
+     
         } 
        
        
@@ -325,14 +331,15 @@ function erstellKombination() {
              {
                 //  gesuchtBasis[i] = zw1[i] + zw2[i] + zw3[i];
                 gesuchtBasis[i]=zwww[i] + zwww[i + zeilen*spalten]+ zwww[i + 2*zeilen*spalten]
-                console.log(zwww[i] + zwww[(i + zeilen*spalten)] +  zwww[(i + 2*zeilen*spalten)]);
-                console.log("  i    " + i + "    " + zwww[i] + " " +zwww[(i + zeilen*spalten)] + " " + zwww[(i + 2*zeilen*spalten)]);              
+               // console.log(zwww[i] + zwww[(i + zeilen*spalten)] +  zwww[(i + 2*zeilen*spalten)]);
+               // console.log("  i    " + i + "    " + zwww[i] + " " +zwww[(i + zeilen*spalten)] + " " + zwww[(i + 2*zeilen*spalten)]);              
             }
-            console.log(" basis   " + gesuchtBasis); 
+           // console.log(" basis   " + gesuchtBasis); 
             gesuchtNeu = cloneArray(gesuchtBasis);
             shuffleArray(gesuchtNeu);
 
         }
+
 
 </script>
 

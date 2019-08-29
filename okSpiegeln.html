@@ -3,44 +3,36 @@
 <head>
         <meta charset="utf-8">     
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+
 <link href="css/standard.css" rel="stylesheet">
 <script src="js/standard.js"></script>
 
 <style></style>
 </head>
-<body onload="ladeGame()">
+<body onload="ladeGame()"></body>
     <canvas id="canvas" width="500" height="600"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
 var cW = ctx.canvas.width, cH = ctx.canvas.height;  
-
-var xx=0,yy=100;
-var indexBilder=[]; 
+var myVar;
+var indexBilder=[],smilepic=[]; 
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
-var zeigen=4;
-var durchLaeufe, treffer;
-var bgCol="Lavender";
-var vgCol="#8800ff";
-var anzahlBilder=25, pic =new Array, zeigBilder=4;
-var startTime,elapsedTime,zeiten=[];
+var durchLaeufe, maxDurchlaeufe=10, treffer;
+var reaktionsZeit =3;
+var anzahlBilder=25, pic =new Array, smile=new Array,zeigBilder=4;
 var spiegel;
 var clEvent=false;
-var audio;
-
-
+var Vergleich;
+var offenButtonZeit;
 var yBasis0=150;
 var yBasis1=230;
 var yBasis2=350;
-var yBasis3=550;
+var yBasis3=500;
 
-var xBasis=20, wBasis1=100, hBasis=140, dBasis=20, xtestdis=20, ytextdis=25;
-
+var xBasis=20, wBasis1=100, hBasis=140, dBasis=20, xtextdis=0, ytextdis=24;
 var wBasis2=120, yErhoehung=50; 
-
-
 
 //Rechtecke für die Bilder
 var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
@@ -48,44 +40,136 @@ var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: h
              {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
              {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
           
- 
-             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis-100,col1: "82CE86",col2: "#82CE86"}];
-           
-          
-var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtestdis -10, y: yBasis3 + ytextdis}];
+             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis3, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},                      
+             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis3, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];             
 
+
+var texts =[{na:"   "+  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10, y: yBasis3 + ytextdis,},
+           {na: "  " + String.fromCharCode(43)+"  Zeit", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis3 + ytextdis} ,         
+           {na: "    " + String.fromCharCode(45)+"  Zeit", x: (xBasis + 0 + 2 * (wBasis2+ dBasis)),y: yBasis3 + ytextdis}];
+          
 function ladeGame() 
     {   
         meldung("Übe dich in Konzentration","bold","20",schriftArt,"#5a617b",120, 50);     
-        meldung("Welches Bild ist gespiegelt ? KLICK es an","normal","18",schriftArt,"#5a617b",xBasis, 360);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","24",schriftArt,"red",xBasis,120);     
+        meldung("Ein Bild ist gespiegelt! KLICK es an","normal","18",schriftArt,"#5a617b",xBasis, 120);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"red",xBasis,420)
+        meldung("Es gibt " + maxDurchlaeufe + " Durchgänge","normal","16"," schriftArt","#5a617b",xBasis ,340); 
+        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","normal","16,"," schriftArt","#5a617b",xBasis ,380);    
+        pic=einlesenBilder("Spiegeln/sp",anzahlBilder,".jpg");
+        smile=einlesenBilder("lach",2,".png")
+
+        //buttonText();
+        offenButtonZeit=true;
+        mroundedButton();
+        buttonText();
+       
         erstelleBasisBild();  // dient nur zur Ansicht        
-        treffer=0;
-        durchLaeufe=0;
         
-   
     }
 
-    function Goon(){
-        ctx.clearRect(xBasis,120-24,480,30);// löscht " dies ist ein ...."
+    function start(){
+       
+        ctx.clearRect(xBasis,420-30,400,30);// löscht " dies ist ein ...."
         ctx.clearRect(xBasis,490-24,490,30);//
-        //ctx.clearRect(xBasis,490-24,480,30);//
-        erstelleBasisBild()
-        startTime = Date.now(); 
+        erstelleBasisBild();
         clEvent=true;
-        durchLaeufe++;
+        durchLaeufe=0;
+        treffer=0;       
+        offenButtonZeit=false;
+        erstelleBasisBild();
+        
+        myVar = setInterval(function () {
+        iteration()
+        }, 3000);
+
+    }
+
+    function iteration()
+    {
+        
+        durchLaeufe++;  
+        if(durchLaeufe<maxDurchlaeufe)
+            {
+                erstelleBasisBild();
+            }      
+           
+        else 
+            {
+                clEvent=false; 
+                offenButtonZeit=true;
+                clearInterval(myVar);
+            }
+    }
+
+
+    function auswahlButton()
+    {
+       // console.log(getipptRechteck);
+        switch (getipptRechteck) 
+                {
+                  
+                    case 0:
+                           
+                    case 1:
+                           
+                    case 2:
+                           
+                    case 3:
+                           vergleich=getipptRechteck;
+                           break;                     
+                    case 4:
+                           if (offenButtonZeit==true)
+                           start();
+                           break;       
+                    case 5:
+                            if (offenButtonZeit==true)
+                            {
+                            reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
+                            meldung("Zeit zum Reagieren prp Bild = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,380);                      
+                            }                                       
+                            break;
+                    case 6:
+                            if (offenButtonZeit==true)
+                            {
+                            reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
+                            meldung("Zeit zum Reagieren pro Bild= " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,380); 
+                            }                     
+                            break;                                 
+                    default:
+                            alert("ups");
+                }             
     }
 
     function erstelleBasisBild()
     {
-        erzeugeDieRechtecke(0,4); // Rexhteck(4) ist der Go on Button
-        rechteckeText();  // und hier wird der Go on Button mit Text versehen  
-        einlesenBilder();
+       
         indexBilder=(random(pic.length));              
         zeichneVorgabeBilder();
-         
-         
+       
     }
+    
+    function mroundedButton()
+        {
+      
+        for (var i = 4;i < 7; i++) 
+            {              
+                ctx.fillStyle=rects[i].col1;
+                           
+                roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h -100,10); 
+                ctx.fill();          
+            }
+        } 
+
+    canv.addEventListener('click', function(e)
+     {
+       // verwaltet die Buttons 
+        let rect = angetippt(rects, e.offsetX, e.offsetY);        
+        if (rect)
+        {          
+            auswahlButton();         
+               }
+                }, false);   
     
   
 canv.addEventListener('click', function(e)
@@ -94,92 +178,79 @@ canv.addEventListener('click', function(e)
        
         if (rect)
         {          
-           if (clEvent==true){
-clEvent=false;
-            if ( (getipptRechteck==spiegel)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
-                { treffer++;
-                blocke= true; 
-                meldung("Treffer : " + treffer + "  Durchläufe " + durchLaeufe,"bold","16",schriftArt,"red",xBasis,490);   
-                elapsedTime = Date.now() - startTime;
-                elapsedTime = Math.round(elapsedTime / 100);       
-                zeiten.push(elapsedTime)           
-                meldung(( "Gebrauchte Zeiten(in ds) :  " + zeiten),"normal","16",schriftArt,"#5a617b",xBasis, yBasis2+ytextdis+155);        
-                }
-                else{
-                   ctx.clearRect(xBasis,490-24,490,30);// 
-                   meldung("Falsch   ==> Go on","normal","18",schriftArt,"red",xBasis,490)
-                   akustischeMeldung("audio/up.mp3");  
-                }
-           }
-            if ( (getipptRechteck==zeigen)) // Zeigen istr die Nummer des Buttons Go on
+            if( getipptRechteck<4) 
+             {  
+                console.log(clEvent);
+                if (clEvent==true)
                 {
-                Goon();
-                }
+                   
+                    if ( (vergleich==spiegel)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
+                        {  
+                            treffer++;                              
+                            blocke= true; 
+                            meldung("Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,450); 
+                           // zeigBild(smile[1], rects[vergleich].x,rects[vergleich].y,50,50);  
+                           zeigBild(smile[1],  rects[spiegel].x,rects[spiegel].y-10,50,50);  
+                        }
+                            else
+                            {
+                                ctx.clearRect(xBasis,490-24,490,30);// 
+                                meldung("Falsch   ==> Go on","normal","18",schriftArt,"red",xBasis,450)
+                                akustischeMeldung("audio/up.mp3"); 
+                               // zeigBild("daumenRunter.png", rects[getipptRechteck].x,rects[getipptRechteck].y,50,50); 
+                               //zeigBild("smile2.jpg", rects[vergleich].x,rects[vergleich].y,50,50);   
+                                
+                            }
+                          //  clearInterval(myVar);      
+                } 
+             
+            //start();
+            }
+        
         }
-        }, false);
 
+    }, false);
 
+function zeichneVorgabeBilder()
+    {
+            spiegel=random(4);
+        for (var i=0;i<zeigBilder;i++)
+        { 
+            zeigBild(pic[indexBilder], rects[i].x, rects[i].y, rects[i].w, rects[i].h,spiegel,i);     
+        }     
+    }
 
-
-
-function erzeugeDieRechtecke(a,b)
-{
-       for (var i = a;i <= b; i++) {
-        ctx.rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
-        ctx.stroke();          
-        ctx.fillStyle=rects[i].col2;         
-       ctx.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
-      }
-}
-
-
-
-function zeichneVorgabeBilder(){
-    spiegel=random(4);
-    for (var i=0;i<zeigBilder;i++)
-    { 
-        zeigBild(pic[indexBilder], rects[i].x, rects[i].y, rects[i].w, rects[i].h,spiegel,i);     
-    } 
-}
 
 function zeigBild(a,x,y,w,h,sp,i)
-{
-    console.log("index  " + indexBilder + "  i  " + i);
-    var img = new Image();
-    img.onload = function ()
-     {
-        
-        if(i===sp) {
-            console.log("sp " +sp);
-            ctx.scale(-1,1)
-            //ctx.drawImage(img,x,-1*(y+h),w,h);
-            ctx.drawImage(img,-1*(x+w),y,w,h);
-            ctx.restore();
-            ctx.scale(-1,1);
-        }
-        else
-            ctx.drawImage(img, x,y,w,h);
-     }
-    img.src = a;
-}
-
-function rechteckeText()
-{ 
-    ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
-    
-       ctx.fillText(texts[0].na,xBasis + xtestdis -10, yBasis3 + ytextdis);
-        
-  
-}
-
-
-function einlesenBilder()
     {
-        for (i=0;i< anzahlBilder;i++)
+        //console.log("index  " + indexBilder + "  i  " + i);
+        var img = new Image();
+        img.onload = function ()
         {
-            pic[i]=  "Spiegeln/sp" + i + ".jpg" 
-        } 
+            
+            if(i===sp) {
+                
+                ctx.scale(-1,1)
+                //ctx.drawImage(img,x,-1*(y+h),w,h);
+                ctx.drawImage(img,-1*(x+w),y,w,h);
+                ctx.restore();
+                ctx.scale(-1,1);
+            }
+            else
+                ctx.drawImage(img, x,y,w,h);
+        }
+        img.src = a;
+    }
+
+
+function einlesenBilder(a,b,c)
+    {
+       var zpic=[];
+        for (i=0;i< b;i++)
+        {
+            zpic[i]=  a + i + c; 
+        }
+        return zpic; 
     };
 
 function shuffle(a) {
@@ -190,6 +261,7 @@ function shuffle(a) {
     }
     return a;
 }
+
 
 </script>
   

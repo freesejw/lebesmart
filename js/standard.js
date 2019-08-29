@@ -23,21 +23,9 @@ function angetippt(rects, x, y) {
     }
     return isCollision;
  }  
- function roundedRect(x, y, width, height, radius) {
-    ctx.beginPath();
-    ctx.moveTo(x, y + radius);
-    ctx.lineTo(x, y + height - radius);
-    ctx.arcTo(x, y + height, x + radius, y + height, radius);
-    ctx.lineTo(x + width - radius, y + height);
-    ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
-    ctx.lineTo(x + width, y + radius);
-    ctx.arcTo(x + width, y, x + width - radius, y, radius);
-    ctx.lineTo(x + radius, y);
-    ctx.arcTo(x, y, x, y + radius, radius);
-    ctx.lineWidth = 1;
-    ctx.stroke(); 
-    ctx.fill();
-  }  
+ 
+ 
+
   
   function isPrime(nr) {
     var factors = findFactors(nr); // Liste aller Teiler
@@ -80,20 +68,36 @@ function angetippt(rects, x, y) {
         
         return anz;
 }         
-function roundedButton()
+function roundedButton(a)
 {
-       for (var i = 0, len = rects.length; i < len; i++) {       
+       for (var i = 0; i< a; i++) {       
        ctx.fillStyle=rects[i].col1;
+       console.log(ctx.fillStyle + "  i  " + i );
+      
        roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-      // ctx.fillStyle=rects[i].col2 , 
-       //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+      // ctx.fill();
+       ctx.fillStyle=rects[i].col2; 
+       roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);
+       ctx.fill();       
       }
 }
+function roundedRect(x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + radius);
+    ctx.lineTo(x, y + height - radius);
+    ctx.arcTo(x, y + height, x + radius, y + height, radius);
+    ctx.lineTo(x + width - radius, y + height);
+    ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+    ctx.lineTo(x + width, y + radius);
+    ctx.arcTo(x + width, y, x + width - radius, y, radius);
+    ctx.lineTo(x + radius, y);
+    ctx.arcTo(x, y, x, y + radius, radius);
+    ctx.stroke();
+  }
 
 function buttonText(a)
 { 
-   // var a =9635;
-    
+   
     ctx.fillStyle = "white";
     ctx.font = "18px Arial";
     for (var i = 0, len = texts.length; i < len; i++) 
@@ -158,6 +162,11 @@ function shuffle(a) {
     }
 }
 function uhrAnzeige(x,y,z1,z2,z3){
+
+    // ist das Layout für die Uhr. u
+    // x: x Position
+    // y: y Position
+    //z1,z2,z3 : Sek , Minuten, Stunden
     let xUhr=x;
     let yUhr=y; 
     if (z1<10){z1="0" + z1};
@@ -183,3 +192,32 @@ function uhrAnzeige(x,y,z1,z2,z3){
 
         ctx.strokeRect(xUhr-10,yUhr-30,130,80)
 }  
+
+function startTimer(x, y, w, h, zeit) {
+    var vstart = Date.now();
+    var ctx = document.getElementById("canvas").getContext("2d");
+    function doIt() {
+        // die vergangene Zeit;
+        var gone = Date.now() - vstart;
+      
+        // die verbleibende Zeit
+        var remaining = zeit - gone;
+        // die Breite des Balkens
+        var ist = remaining / zeit * w;
+        // Progressbar zeichnen
+        ctx.fillStyle = "#7f7fff";
+        ctx.strokeStyle = "black";
+        ctx.strokeWidth = 1;
+        ctx.clearRect(x-3, y-3, w+6, h + 6);
+        ctx.fillRect(x, y, ist, h);
+        ctx.font= "normal 18px Arial"; 
+        ctx.fillStyle="#7f7fff"; 
+        ctx.fillText("   Merken   Merken   Merken   Merken   Merken",x,y+15);
+        ctx.strokeRect(x, y, w, h);
+        // wenn die verbleibende Zeit groesser als 0 ist:
+        // erneuten Aufruf der Funktion doIt veranlassen
+        if (remaining > 0) requestAnimationFrame(doIt);
+        else {ctx.clearRect(x-3, y-3, w+6, h+6);}
+    }
+    doIt();
+}

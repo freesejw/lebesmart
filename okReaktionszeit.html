@@ -16,7 +16,7 @@
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
 var startTime, elapsedTime ;
-var uebungStart=false;
+
 var myVar, ident, aktIndex;
 var anzahlBilder=12;
 var pic =new Array;
@@ -25,10 +25,9 @@ var startIndex;
 var geschwindigkeit=1000;
 var zeiten=new Array;
 var fehler=0;
-var bgCol="Lavender";
-var vgCol="#8800ff";
+
 var elapsedTime;
-var warten;
+var warten, merkZeit=3;
 var audio;
 var noClickStop;
 
@@ -41,8 +40,8 @@ var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#
 var bild = {x:200, y: 60, w: 100,h: 100 };
 
 var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na:  String.fromCharCode(9633)+ "  Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
-           {na:  String.fromCharCode(9660)+ "  Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+           {na:  String.fromCharCode(9633)+ "   Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na:  String.fromCharCode(9660)+ "Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
     
 var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
@@ -52,26 +51,27 @@ function ladeGame()
     {   
         meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20",schriftArt,"#5a617b",10, 25);    
         einlesenBilder();
-        zeigBild("imageverkehr/auge.gif");
-        roundedButton();        
+        zeigBild("Imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h);
+        roundedButton(3);        
         buttonText();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
+        noClickStart=false;
     }
 
 function start()
     {   
-        ctx.clearRect(200, 190, 250, -60);
+        ctx.clearRect(20, 190, 450, 150);
         ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
-        setzeAmpel("rot");          
+        setzeAmpel("rot");
+        noClickStart=true; 
+        noClickStop=true; // wird auf false gesetzt sobald die Vergleichsbilder gezeigt wurden         
         startIndex=random(anzahlBilder);    
-        zeigBild(pic[startIndex]); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
-
+        zeigBild(pic[startIndex],bild.x ,bild.y,bild.w,bild.h); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
+        startTimer(50, 200, 400, 20, merkZeit*1000);  
         warten=0;
-        myVar = setInterval(folgeBilder, 1000); 
-           
+        myVar = setInterval(folgeBilder, geschwindigkeit); 
+             
     }
-
-
 
     canv.addEventListener('click', function(e)
      {
@@ -91,14 +91,14 @@ function folgeBilder()
        warten++;
        if (warten > 2)
        {
-            if (warten==3)
+            if (warten==merkZeit)
             {   
                 setzeAmpel("gruen"); 
                 akustischeMeldung("audio/schuss.mp3"); 
                 noClickStop=false;
             }
         aktIndex=random(anzahlBilder); // 
-        zeigBild(pic[aktIndex])  ; // aktuelle Bilder. Sie werden mit Basisbild verglichen
+        zeigBild(pic[aktIndex],bild.x ,bild.y,bild.w,bild.h)  ; // aktuelle Bilder. Sie werden mit Basisbild verglichen
         startTime = Date.now(); 
        }   
     }
@@ -107,24 +107,32 @@ function stop()
     // Wenn Basisbild mit dem geklickten Bild indentisch ist Treffermeldung und Abbruch
     {
     
-     uebungStart=true;
+     
      setzeAmpel("rot");
     if (aktIndex==startIndex)
         {
             elapsedTime = Date.now() - startTime;
-            elapsedTime = (elapsedTime / 1000).toFixed(2);       
+            //elapsedTime = (elapsedTime ).toFixed(2);   
+            elapsedTime = (elapsedTime );       
             zeiten.push(elapsedTime)
             boxMeldung(box.x,box.y,box.w,box.h,elapsedTime);     
         }
         else
             {            
-            meldung("Falsches Zeichen getippt","normal","16",schriftArt,"red",200, 180);
-            fehler++;
+            meldung("Falsch. Auf ein Neues!","normal","16",schriftArt,"red",20, 300);           
+            zeigBild("bergsteiger.png",250,200,100,100);
+            zeigBild("bergsteigersp.png",350,200,100,100);           
             }
 
-        zeigBild("imageverkehr/auge.gif");
+        
+        zeigBild("imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h) ;
         noClickStop=true;
-        clearInterval(myVar);   
+        clearInterval(myVar); 
+        setTimeout(function () 
+                        {
+                           start();
+                        }, 3000); 
+          
     }
  
 function einlesenBilder()
@@ -136,15 +144,6 @@ function einlesenBilder()
         } 
     }
 
-function zeigBild(a)
-{
-    var img = new Image();
-    img.onload = function ()
-     {        
-          ctx.drawImage(img, bild.x ,bild.y,bild.w,bild.h);
-     }
-    img.src = a;
-}
 
 function setzeAmpel(a)
 {
@@ -161,12 +160,16 @@ function auswahlButton()
     {
         switch (getipptRechteck) 
                 {
-                    case 0:                    
-                        start();             6         
+                    case 0: if(noClickStart===false)
+                      {                 
+                        start();
+                      }        
                         break;
                     case 1:
-                    if(noClickStop==false){
-                        stop(); }                       
+                    if(noClickStop==false)
+                      {
+                        stop(); 
+                      }                       
                         break;
                     case 2:
                         abbruch();                        
@@ -180,17 +183,18 @@ function abbruch()
     {
         setzeAmpel("rot");    
         clearInterval(myVar);
-        zeigBild("imageverkehr/auge.gif");
+        zeigBild("imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h);   
+        noClickStart=false;
+        noClickStop=true;
+        meldung(("Gebrauchte Zeiten:  "  + zeiten),"normal","16",schriftArt,"#5a617b",29,300);
     }
-
-   
 
 function boxMeldung(x,y,w,h,time)
     {
         ctx.rect(x, y, w,h);
         ctx.stroke();
-        meldung(("gebrauchte Zeit (Sek.) : "  + time),"bold","16",schriftArt,"#5a617b",x+10,y+h*0.33 );
-        meldung(("Vergleich:  "  + zeiten),"normal","16",schriftArt,"#5a617b", x + 10, y+ h*0.66 );
+        meldung(("gebrauchte Zeit (ms) : "  + time),"bold","16",schriftArt,"#5a617b",x+10,y+h*0.33 );
+       // meldung(("Vergleich:  "  + zeiten),"normal","16",schriftArt,"#5a617b", x + 10, y+ h*0.66 );
     }
 
 function akustischeMeldung(a)

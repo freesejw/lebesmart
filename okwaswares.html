@@ -64,7 +64,7 @@ function ladeGame()
            
         meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16",schriftArt,"#5a617b",xBasis ,380);        
         meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold","24",schriftArt,"#5a617b",xBasis,450);  
-        roundedButton();
+        mroundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         einlesenFlitzerBilder(gesamteAnzahlBilder);
         erstelleBasisBild();  // dient hier nur zur Ansicht        
@@ -115,7 +115,7 @@ function zeige()
         {
             if(anzahlSek==zeitSchiene[i])
               {
-                speed=15 + Math.pow(2, 0.6*i); 
+                speed=15 + Math.pow(2, 0.5*i); 
 
                 xx=0; // ist die x position vom bild, dass animiert wird
                 durchLaeufe++;  
@@ -193,13 +193,13 @@ canv.addEventListener('click', function(e)
                     blocke= true; 
 
                     ctx.clearRect(xBasis,420-30,500,30); // Kein Treffer     
-                    meldung("Treffer . Erreichte Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,420);
+                    meldung("Erreichte Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,420);
                                  }  
                 else{
                   if (getipptRechteck< 5)  {
                      
                      akustischeMeldung("audio/up.mp3");  
-                     meldung("Kein Treffer. Erreichte Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,420);     
+                     meldung("Erreichte Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,420);     
                 }} 
         }
         
@@ -254,12 +254,13 @@ function zeigBild(a,ii)
     img.src = a;
 }
 
-function roundedButton(col1,col2)
+function mroundedButton(col1,col2)
    {
        for (var i = 5; i <= 7; i++) 
        {       
        ctx.fillStyle=rects[i].col1;
        roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+       ctx.fill();
       // ctx.fillStyle=col2;  
        //roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
        }

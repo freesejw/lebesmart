@@ -54,7 +54,7 @@ function ladeGame()
     meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,300);  
     meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,340);  
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
-    roundedButton();
+    roundedButton(3);
     buttonText();     
     blocken=false; 
 }
@@ -155,7 +155,7 @@ if (blocken==false)
                 setTimeout(function () 
                         {
                            start();
-                        }, 1000);
+                        }, 1500);
              
             }
         }    
