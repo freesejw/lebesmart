@@ -195,11 +195,11 @@ function uhrAnzeige(x,y,z1,z2,z3){
 
 function startTimer(x, y, w, h, zeit) {
     var vstart = Date.now();
-    var ctx = document.getElementById("canvas").getContext("2d");
+   
+   // var ctx = document.getElementById("canvas").getContext("2d");
     function doIt() {
         // die vergangene Zeit;
-        var gone = Date.now() - vstart;
-      
+        var gone = Date.now() - vstart;        
         // die verbleibende Zeit
         var remaining = zeit - gone;
         // die Breite des Balkens
@@ -221,3 +221,21 @@ function startTimer(x, y, w, h, zeit) {
     }
     doIt();
 }
+
+function progMinus(x,y,w,h,zeit,iz){
+    //x, y , w, h Eingangsgrößen für das Rechteck Progressbar
+    // zeit gibt an wieviel Sekunden die Progressbar aktiv ist
+    // iz nach wieviel millisekunden der nächste aufruf startet
+    vstart = Date.now();
+    var ist =w; 
+    zeit=zeit*1000; 
+    var progInterval = setInterval (function() {
+    ist=ist-(w/zeit)*iz;    
+    ctx.fillStyle = "black";
+    ctx.clearRect(x,y,w,h);    
+    ctx.strokeRect(x,y,w,h);    
+    ctx.fillRect(x,y,ist,h);
+    var gone = Date.now() - vstart;  
+    if( ist<=0 ) clearInterval(progInterval);
+    }, iz);    
+  }

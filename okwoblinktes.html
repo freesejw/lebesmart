@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="520"></canvas>
+    <canvas id="canvas" width="500" height="510"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -33,7 +33,7 @@ var zeilen = 5, spalten=5;
 
 var xAbstand=80,yAbstand = 100;     // Verschiebt die Matrix nach rechts und unten
 var xBasis=20, yBasis1=250, wBasis1=60, hBasis=40, dBasis=40, xtextdis=10, ytextdis=25;
-var yBasis2= 390, wBasis2=120, yErhoehung=50; 
+var yBasis2= 380, wBasis2=120, yErhoehung=50; 
 var xTextRechts=xBasis + 2 * (wBasis2+ dBasis);
 
 var zaehlerClick,zaehlerTreffer,iterator,anzahlBlinks=4;
@@ -55,7 +55,7 @@ function ladeGame()
     {   
         meldung("Übe die Merkspanne","bold","20",schriftArt,"#5a617b",40, 30);  
         meldung("Merke dir die auftauchenden Bälle : Position + Reihenfolge","normal","16",schriftArt,"#5a617b",40, 60);     
-        meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,420);
+        meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,410);
         roundedButton(3);
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
@@ -68,7 +68,7 @@ function ladeGame()
 
 function start()
     {
-        ctx.clearRect(30,360-20,450,20);
+        ctx.clearRect(30,350-20,450,20);// Falsches Feld....
        // ctx.clearRect(xBasis ,370,400,30);
         iterator=0; 
         zaehlerClick=0;
@@ -165,7 +165,7 @@ canv.addEventListener('click', function(event)
                                 zeigBild("daumenHoch.png",xCoord[blinkReihe[zaehlerClick]] +6 ,yCoord[blinkReihe[zaehlerClick]]+6,35,35);                                                      
                             }
                             else {
-                                    meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"normal","16",schriftArt,"red",30,360);  
+                                    meldung("Falsches Feld oder falsche Reihenfolge ==> Go on" ,"normal","16",schriftArt,"red",30,350);  
                                     zeigBild("daumenRunter.png",xCoord[zwert] +6 ,yCoord[zwert]+6,35,35);
                                     feldBlocken=true;
                                     plusminusBlocker=false; 
@@ -182,17 +182,22 @@ canv.addEventListener('click', function(event)
                                 if(treffer==5)
                                     {
                                         loescheMatrix();
-                                        zeigBild("rakete1.jpg",80,100,225,225);
+                                        zeigBild("rakete0.jpg",80,100,225,225);
                                         aufschlag=1500;
                                     }
                                 if(treffer==10)
                                     {
-                                        zeigBild("bone.png",80,100,225,225);
+                                        zeigBild("rakete1.jpg",80,100,225,225);
                                         aufschlag=1500;
                                     }
                                     if(treffer==15)
                                     {
                                         zeigBild("rakete2.jpg",80,100,225,225);
+                                        aufschlag=1500;
+                                    }
+                                    if(treffer==20)
+                                    {
+                                        zeigBild("rakete3.jpg",80,100,225,225);
                                         aufschlag=1500;
                                     }
                                 plusminusBlocker=false; 
@@ -265,7 +270,7 @@ function auswahlButton()
                       {                      
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Balle  = " +  anzahlBlinks).width 
-                            meldung("Anzahl Balle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,420);
+                            meldung("Anzahl Balle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,410);
                       }
                         break;
                      case 2:
@@ -273,7 +278,7 @@ function auswahlButton()
                         {
                                 anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Bälle  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,420);   
+                                meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,410);   
                         }                     
                         break;
                        default:
