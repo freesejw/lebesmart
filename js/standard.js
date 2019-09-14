@@ -193,32 +193,58 @@ function uhrAnzeige(x,y,z1,z2,z3){
         ctx.strokeRect(xUhr-10,yUhr-30,130,80)
 }  
 
-function startTimer(x, y, w, h, zeit) {
+
+
+function startTimer(x, y, w, h, zeitGesamt,text,textFont)
+ {
     var vstart = Date.now();
-   
-   // var ctx = document.getElementById("canvas").getContext("2d");
+    var ztext="";
+    var leer="";
+    ctx.font= textFont; 
+
+    var lg1 = ctx.measureText("  " + text + "  ").width ;
+    var lg2 = ctx.measureText(" ").width ;
+
+    var rrw=(w-(w%lg1))/lg1; // gibt an wie oft der Text gebracht wird
+    var rest=w-rrw*lg1;// ermittelt Anzahl der Leerzeichen die linkks gesetzt werden 
+    //console.log(lg1 + "  rrw  " + rrw + " rest    " + rest + "   " +ctx.measureText(" ").width);
+
+    for(var i=0;i<rrw;i++)
+        {
+        ztext=ztext+"  " + text + "  "; // Erzeugt den Text im Laufband
+        }
+    for(var ii= 0;ii<rest/lg2;ii++) // erzeugt den leer- String der links eingbracht wird
+        {
+        leer=leer+" ";
+        } 
+    ztext=leer+ztext;
+    ctx.strokeStyle = "blue";
+    ctx.strokeWidth = 20;
+    ctx.strokeRect(x-3,y-3,w+6,h+6);
+    ctx.strokeStyle="#FF0000";
+  
+
     function doIt() {
         // die vergangene Zeit;
-        var gone = Date.now() - vstart;        
+        var vorbei = Date.now() - vstart;        
         // die verbleibende Zeit
-        var remaining = zeit - gone;
+        var verbleibend = zeitGesamt - vorbei;
         // die Breite des Balkens
-        var ist = remaining / zeit * w;
-        // Progressbar zeichnen
-        ctx.fillStyle = "#7f7fff";
-        ctx.strokeStyle = "black";
-        ctx.strokeWidth = 1;
-        ctx.clearRect(x-3, y-3, w+6, h + 6);
+        var ist = verbleibend / zeitGesamt * w;
+        // Progressbar zeichnen7
+        ctx.clearRect(x-3, y-3, w+6, h+6);
+        ctx.fillStyle = "#7f7fff";      
+        //ctx.clearRect(x, y, w, h);
+        //ctx.strokeRect(x, y, w, h);
         ctx.fillRect(x, y, ist, h);
-        ctx.font= "normal 18px Arial"; 
-        ctx.fillStyle="#7f7fff"; 
-        ctx.fillText("   Merken   Merken   Merken   Merken   Merken",x,y+15);
-        ctx.strokeRect(x, y, w, h);
+        ctx.fillStyle="#5a617b";
+        ctx.fillText(ztext,x,y+2*h/3);
         // wenn die verbleibende Zeit groesser als 0 ist:
         // erneuten Aufruf der Funktion doIt veranlassen
-        if (remaining > 0) requestAnimationFrame(doIt);
-        else {ctx.clearRect(x-3, y-3, w+6, h+6);}
+        if (verbleibend > 0) requestAnimationFrame(doIt);
+        else {ctx.clearRect(x-4, y-4, w+8, h+8);}
     }
+    
     doIt();
 }
 
@@ -235,7 +261,7 @@ function progMinus(x,y,w,h,zeit,iz){
     ctx.clearRect(x,y,w,h);    
     ctx.strokeRect(x,y,w,h);    
     ctx.fillRect(x,y,ist,h);
-    var gone = Date.now() - vstart;  
+    var vorbei = Date.now() - vstart;  
     if( ist<=0 ) clearInterval(progInterval);
     }, iz);    
   }

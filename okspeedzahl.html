@@ -161,7 +161,6 @@ canv.addEventListener('click', function(event)
                                     ctx.strokeStyle="green";       
                                     ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe);         
                                     treffer=false;
-                                
                                 }
                                     else {
                                             ctx.clearRect(xBasis,480+20,200,-20);
@@ -185,7 +184,7 @@ canv.addEventListener('click', function(event)
                                             meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,450); 
                                             if(anzahlTreffer % maxDurchlaeufe ==0 )
                                             {zeigBild("schiess.png",50,150,200,200);
-                                            meldung(" Prima  : " + aa ,"bold","16",schriftArt,"red",xBasis,460); 
+                                            meldung(" Prima  : " + aa ,"bold","16",schriftArt,"red",xBasis,450); 
                                             aufschlag = 1500;
                                         }
                             clickenAus=true;
