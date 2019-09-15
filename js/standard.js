@@ -218,16 +218,14 @@ function startTimer(x, y, w, h, zeitGesamt,text,textFont)
         leer=leer+" ";
         } 
     ztext=leer+ztext;
-    ctx.strokeStyle = "blue";
-    ctx.strokeWidth = 20;
-    ctx.strokeRect(x-3,y-3,w+6,h+6);
-    ctx.strokeStyle="#FF0000";
+    ctx.strokeStyle = "blue";    
+    //ctx.strokeRect(x-3,y-3,w+6,h+6);
+   
   
 
     function doIt() {
-        // die vergangene Zeit;
-        var vorbei = Date.now() - vstart;        
-        // die verbleibende Zeit
+        
+        var vorbei = Date.now() - vstart;       
         var verbleibend = zeitGesamt - vorbei;
         // die Breite des Balkens
         var ist = verbleibend / zeitGesamt * w;

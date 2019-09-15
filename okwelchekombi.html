@@ -76,13 +76,12 @@ function ladeGame()
     }
    
 function start()
-{
-    ctx.clearRect(xBasis,400-25 ,400,30)
-    ctx.clearRect(xBasis,430-25 ,200,30) // Treffer
+{   ctx.clearRect(40,65-20,cW-65,20) // Merke dir die...
+    ctx.clearRect(40,95-20,cW-65,20) // Es gibt...
+    ctx.clearRect(xBasis -10,400-40 ,480,30)  // Timer
+    ctx.clearRect(xBasis,400-25 ,400,30) // Treffer
     ctx.clearRect(xBasis,450-25 ,200,30)  // Meldung falsch
-    ctx.clearRect(xBasis,470-25,155,25);  // meldung super
-
-    meldung("Merke dir die Buchstaben/Zahlenkombination","normal","16",schriftArt,"#5a617b",40, 65);    
+   
     iterator=-1; 
     zaehlerClick=-1;
     rundenTreffer=0;
@@ -92,9 +91,8 @@ function start()
     erstellKombination();
     getroffen=false;
     blockenMatrix=false;
-    blockenStart=true;    
-  
-  
+    blockenStart=true;  
+     
     setTimeout(zeigeKombinationen, 500);
     
 }    
@@ -172,7 +170,6 @@ function markiere(farbe,a)
 {
  for (let i=1;i<xCoord.length;i++)
     {
-       
         if((xclick>=xCoord[i-1] && xclick < xCoord[i-1]+xBreite) && (yclick>=yCoord[i-1] && yclick<yCoord[i-1] +yHoehe))
         {
             ctx.lineWidth=a;
@@ -228,23 +225,28 @@ function zeigeKombinationen()
 {
   
 iterator++;
+zeigKombi=true;  
 
-zeigKombi=true;    
     if (iterator<anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen
     {
-        setTimeout(zeigeKombinationen, zeitMerk*1000);   
-        ctx.fillStyle = "red";
-            ctx.font = "30px" + " " + schriftArt;
-            ctx.clearRect(200, 200-60,400,80);
-            ctx.fillText(gesuchtBasis[iterator], 200,200);   
-            startTimer(50, 400, 400, 20, zeitMerk*1000);            
-           
+      
+            ctx.clearRect(200, 200-60,400,80);  // löscht die vorher angzeigte Kombination
+       
+            ctx.fillStyle = "red";
+            ctx.font = "30px" + " " + schriftArt;           
+            ctx.fillText(gesuchtBasis[iterator], 200,200); 
+                   
+            startTimer(50, 400, 400, 20, zeitMerk*1000,"Merken","14px Arial");
+
+            setTimeout(zeigeKombinationen, zeitMerk*1100); 
     }   
 
-        if(iterator==anzahlKombi ) // zeigt danach ALLE Kombinationen 
+        if(iterator===anzahlKombi ) // zeigt danach ALLE möglichen Kombinationen 
         {
-            ctx.clearRect(200, 200-60,400,80);
-            meldung("Klicke die vorher gezeigten Kombinationen an","normal","16",schriftArt,"#5a617b",40, 65);  
+           
+            ctx.clearRect(50-2, 400-2, 400 +3, 20 + 4);
+            ctx.clearRect(200, 200-60,400,80);// löscht die zuletzt angzeigte Kombination
+           
            
             for (let i=0;i<16;i++)
             {
@@ -252,13 +254,16 @@ zeigKombi=true;
                 ctx.font = "30px" + " " + schriftArt;
                 ctx.fillText(gesuchtNeu[i], xCoord[i]+xtestdis +15, yCoord[i]+ 10+yHoehe/2);            
             }
-            zeigKombi=false ;
-        }
 
+            meldung("Klicke jetzt die vorher gezeigten Kombinationen an","normal","16",schriftArt,"#5a617b",40, 65);  
+            zeigKombi=false ;
+         
+        }
+        
     if (iterator>anzahlKombi ) // Beenndet das Anzeige und das Ptogramm wartet jetzt auf dien EventListeber Click
         {  
        
-     
+     alert("feier");
         } 
        
        
