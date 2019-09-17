@@ -219,7 +219,8 @@ function startTimer(x, y, w, h, zeitGesamt,text,textFont)
         } 
     ztext=leer+ztext;
     ctx.strokeStyle = "blue";    
-    //ctx.strokeRect(x-3,y-3,w+6,h+6);
+    console.log("Zeichen Rahmen")
+    ctx.strokeRect(x-3,y-3,w+6,h+6);
    
   
 
