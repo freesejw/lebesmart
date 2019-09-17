@@ -17,6 +17,7 @@ var myVar;
 var startTime,elapsedTime,zeiten="";
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
+var cW = ctx.canvas.width, cH = ctx.canvas.height;  canvas.w
 var zeiten=[];
 var schnitt;
 var xCoord=[], yCoord=[];
@@ -79,7 +80,7 @@ function start()
         ctx.clearRect(160, 200-25,340,25); // löscht 3+ 4 *... Anzeige        
         ctx.clearRect(20,340-20,400,20); //zeiten....
         ctx.clearRect(20,365-20,400,20); //Durchschnitt.....
-        ctx.clearRect(xBasis-10, yBasis1-30,500,ytextdis+50); // löscht die möglichen Lösungen
+        ctx.clearRect(xBasis-10, yBasis1-30,cW,ytextdis+50); // löscht die möglichen Lösungen
         ctx.clearRect(xCoord[1],yCoord[1]-30,500,130); // löscht die Zeile mit der Rechenaufgabe       
         aufbauZeile(rechenSchritte,breite,hoehe);
         vergleichsZahlen();        

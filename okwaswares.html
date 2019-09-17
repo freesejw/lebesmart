@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
- <canvas id="canvas" width="500" height="550"></canvas>
+ <canvas id="canvas" width="500" height="520"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -23,11 +23,11 @@ var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var schrittWeite=1,maxDurchlaeufe=10;
 var durchLaeufe, treffer;
-var gesamteAnzahlBilder=12, pic =new Array, anzahlZeigeBilder=5;
+var gesamteAnzahlBilder=13, pic =new Array, anzahlZeigeBilder=5;
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var repeator, blocken=false ;
 var xBasis=20, yBasis1=280, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var yBasis2= 450, wBasis2=120, yErhoehung=50; 
+var yBasis2= 410, wBasis2=120, yErhoehung=50; 
 var blocke;
 var audio;
 
@@ -45,21 +45,19 @@ var rects = [{x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col: ""},
 
  // Buttons "Go on " usw 
              {x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},
-                    
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},                    
              {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + 10, y: yBasis2 + ytextdis+yErhoehung},
            {na: String.fromCharCode(43)+"  Flitzer",   x: (xBasis + 20 +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,         
            {na: String.fromCharCode(45)+"  Flitzer", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];            
-            
-
+          
 function ladeGame() 
     {   
         meldung("Verbessere Konzentration + visuelle Umsetzung","bold","20",schriftArt,"#5a617b",30, 25);     
            
         meldung("Anzahl Flitzer = " +  maxDurchlaeufe,"normal","16",schriftArt,"#5a617b",xBasis ,380);        
-        meldung("Dies war ein Beispiel !!!! Starte mit Go on","bold","24",schriftArt,"#5a617b",xBasis,450);  
+        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","16",schriftArt,"#5a617b",xBasis,420);  
         mroundedButton();
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         einlesenFlitzerBilder(gesamteAnzahlBilder);
@@ -85,7 +83,7 @@ function ladeGame()
 function start()
 {
     ctx.clearRect(xBasis,420-30,400,30); // Kein Treffer
-    ctx.clearRect(xBasis,450-30,500,30); // Dies war ein Beispiel
+    ctx.clearRect(xBasis,420-30,500,35); // Dies war ein Beispiel
 
     ctx.clearRect(xBasis,60-25,480,25);
     treffer=0;
