@@ -51,8 +51,8 @@ function ladeGame()
     meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","bold","20",schriftArt,"#5a617b",xBasis, 30); 
     meldung("Merke Dir die Bildpositionen ; Merkzeit 4 Sek.","normal","16", schriftArt,"#5a617b",xBasis, 60);   
     meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);
-    meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,300);  
-    meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,340);  
+    meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,260);  
+    meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,300);  
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     roundedButton(3);
     buttonText();     
@@ -113,7 +113,7 @@ if (blocken==false)
         zaehlerClick++;
 
         
-        let zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des getippten feldes 
+        let zwert = geklicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
 
         if (zwert>=0) 
             {            
@@ -136,7 +136,7 @@ if (blocken==false)
                             ctx.clearRect(xBasis,395-30,300,30); 
                             //zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);   
                             ctx.clearRect(xBasis ,220-40,600,70); // Schafft Platz für die Meldung Falsches.....
-                            meldung("Falsches Feld ==> Go on" ,"bold","20",schriftArt,"red",xBasis + 44,220);
+                            meldung("Falsches Feld ==> Go on" ,"bold","16",schriftArt,"blue",xBasis + 44,220);
                            // akustischeMeldung("audio/up.mp3"); 
                             blocken=false;
                             minusPunkte++;                
@@ -146,7 +146,7 @@ if (blocken==false)
             {
                 // Richtige Zahl
                 plusPunkte++;                 
-               //meldung("Punkte gesamt = " + plusPunkte ,"18",schriftArt,"#5a617b",335,300);  
+               //meldung("Punkte gesamt = " + plusPunkte ,"18",schriftArt,"#5a617b",335,260);  
                 //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18",schriftArt,"#5a617b",335,340);  
                 blocken=false;
                 
@@ -182,21 +182,48 @@ canv.addEventListener('click', function(e)
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
                         meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420); 
                         }
-                        meldung("Änderung nur bei Neustart oder Fehler möglich","normal","16",schriftArt,"#5a617b",260,420); 
+
+                        else
+                        {
+                            ctx.clearRect(260,420-30,500,30); 
+                            meldung("Änderung nur bei Neustart oder Fehler möglich","normal","16",schriftArt,"#5a617b",160,420);
+                            
+                                setTimeout(function () 
+                            {
+                                ctx.clearRect(160,420-20,440,30);
+                                meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);   
+                            
+                            }, 2000); 
+
+                        }   
+
                     break; 
                     case 2:
                     if (blocken==false)
+                        {                             
+                            anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
+                            meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);  
+                         }  
+                        else
                         {
-                        anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);  
-                        }                                      
-                    break;                    
+                            ctx.clearRect(260,420-30,500,30); 
+                            meldung("Änderung nur bei Neustart oder Fehler möglich","normal","16",schriftArt,"#5a617b",160,420);
+                            
+                                setTimeout(function () 
+                            {
+                                ctx.clearRect(160,420-20,440,30);
+                                meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);   
+                            
+                            }, 2000); 
+
+                        }   
+                    break;                                           
                     default:
                     alert("War nichts");
                 }                        
         } 
-                meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,300);  
-                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,340);  
+                meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,260);  
+                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,300);  
     }, false);
 
 function aufbauMatrix(zeilen,spalten,breite,hoehe)
@@ -251,7 +278,7 @@ function auswahlZellen(zeilen,spalten)
             }   
 }
 
-function feldNummerSchuss(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
+function geklicktesFeld(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
     // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
     var zw;
     for (var i=0;i<(spaltenZahl*zeilenZahl);i++){
