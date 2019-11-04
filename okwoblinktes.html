@@ -265,24 +265,20 @@ function auswahlButton()
                         }                      
                         break;                            
                    
-                    case 1:                   
-                    if (plusminusBlocker==false)
-                      {                      
+                    case 1: 
+                                   
                             anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
                             var lg = 20 + ctx.measureText("Anzahl Balle  = " +  anzahlBlinks).width 
                             meldung("Anzahl Balle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,410);
-                      }
-                        break;
-                     case 2:
-                     if (plusminusBlocker==false)
-                        {
+                     
+                    break;
+                    case 2:
                                 anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Bälle  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,410);   
-                        }                     
-                        break;
-                       default:
-                        alert("Sorry");
+                                meldung("Anzahl Balle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts ,410);
+                    break;
+                    default:
+                                alert("Sorry");
                 }             
     }
 

@@ -177,46 +177,12 @@ canv.addEventListener('click', function(e)
                         }                      
                     break;
                     case 1:
-                        if (blocken==false)
-                        {
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
                         meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420); 
-                        }
-
-                        else
-                        {
-                            ctx.clearRect(260,420-30,500,30); 
-                            meldung("Änderung nur bei Neustart oder Fehler möglich","normal","16",schriftArt,"#5a617b",160,420);
-                            
-                                setTimeout(function () 
-                            {
-                                ctx.clearRect(160,420-20,440,30);
-                                meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);   
-                            
-                            }, 2000); 
-
-                        }   
-
                     break; 
                     case 2:
-                    if (blocken==false)
-                        {                             
-                            anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                            meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);  
-                         }  
-                        else
-                        {
-                            ctx.clearRect(260,420-30,500,30); 
-                            meldung("Änderung nur bei Neustart oder Fehler möglich","normal","16",schriftArt,"#5a617b",160,420);
-                            
-                                setTimeout(function () 
-                            {
-                                ctx.clearRect(160,420-20,440,30);
-                                meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);   
-                            
-                            }, 2000); 
-
-                        }   
+                        anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);  
                     break;                                           
                     default:
                     alert("War nichts");

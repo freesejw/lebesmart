@@ -69,17 +69,16 @@ function angetippt(rects, x, y) {
         return anz;
 }         
 function roundedButton(a)
-{
-       for (var i = 0; i< a; i++) {       
-       ctx.fillStyle=rects[i].col1;
-       console.log(ctx.fillStyle + "  i  " + i );
-      
-       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
-      // ctx.fill();
-       ctx.fillStyle=rects[i].col2; 
-       roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);
-       ctx.fill();       
-      }
+    {
+        // a : Anzahl Buttons
+         
+        for (var i = 0; i< a; i++) {       
+        ctx.fillStyle=rects[i].col1;         
+        roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);      
+        ctx.fillStyle=rects[i].col2; 
+        roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);
+        ctx.fill();       
+    }
 }
 function roundedRect(x, y, width, height, radius) {
     ctx.beginPath();
@@ -205,25 +204,22 @@ function startTimer(x, y, w, h, zeitGesamt,text,textFont)
     var lg1 = ctx.measureText("  " + text + "  ").width ;
     var lg2 = ctx.measureText(" ").width ;
 
-    var rrw=(w-(w%lg1))/lg1; // gibt an wie oft der Text gebracht wird
+    var rrw=(w-(w%lg1))/lg1; // gibt an wie oft der Text gebracht wird   
     var rest=w-rrw*lg1;// ermittelt Anzahl der Leerzeichen die linkks gesetzt werden 
-    //console.log(lg1 + "  rrw  " + rrw + " rest    " + rest + "   " +ctx.measureText(" ").width);
+  
 
     for(var i=0;i<rrw;i++)
         {
         ztext=ztext+"  " + text + "  "; // Erzeugt den Text im Laufband
         }
-    for(var ii= 0;ii<rest/lg2;ii++) // erzeugt den leer- String der links eingbracht wird
+    for(var ii= 0;ii<rest/lg2;ii++) // erzeugt den leer- String der links eingebracht wird
         {
         leer=leer+" ";
         } 
-    ztext=leer+ztext;
-    ctx.strokeStyle = "blue";    
-    console.log("Zeichen Rahmen")
-    ctx.strokeRect(x-3,y-3,w+6,h+6);
+    ztext=leer+ztext;       
    
+  // Bis hierhin ist der Text im Rahmen des Rechtecks ermittelt
   
-
     function doIt() {
         
         var vorbei = Date.now() - vstart;       
@@ -231,17 +227,26 @@ function startTimer(x, y, w, h, zeitGesamt,text,textFont)
         // die Breite des Balkens
         var ist = verbleibend / zeitGesamt * w;
         // Progressbar zeichnen7
-        ctx.clearRect(x-3, y-3, w+6, h+6);
-        ctx.fillStyle = "#7f7fff";      
-        //ctx.clearRect(x, y, w, h);
-        //ctx.strokeRect(x, y, w, h);
+      
+      ctx.clearRect(x, y, w+100, h);
+
+       ctx.strokeStyle = "blue";     
+       ctx.strokeRect(x-3,y-3,w+6,h+6); 
+
+        ctx.fillStyle = "#7f7fff";    
         ctx.fillRect(x, y, ist, h);
+       
+
         ctx.fillStyle="#5a617b";
         ctx.fillText(ztext,x,y+2*h/3);
+
         // wenn die verbleibende Zeit groesser als 0 ist:
         // erneuten Aufruf der Funktion doIt veranlassen
         if (verbleibend > 0) requestAnimationFrame(doIt);
-        else {ctx.clearRect(x-4, y-4, w+8, h+8);}
+        else 
+         {
+            ctx.clearRect(x-4, y-4, w+8, h+8);
+         }
     }
     
     doIt();

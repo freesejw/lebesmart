@@ -13,7 +13,7 @@
 
 <body onload="ladeGame()">
     <canvas id="canvas" width="500" height="570"></canvas>
-
+   
     <script>
         var canv = document.getElementById("canvas");
         var ctx = canv.getContext("2d");
@@ -28,6 +28,7 @@
         var durchLaeufe, maxDurchLaeufe = 3, zeitMerk = 4, insgesamtTreffer, rundenTreffer;
         var blockenMatrix;
         var blockenStart;
+        var blockenPlusMinus;
         var xCoord = [], yCoord = [];
         var zeilen = 4, spalten = 4;
         var getroffen = false;
@@ -73,8 +74,10 @@
             iterator = 0;
             blockenMatrix = true;
             blockenStart = false;
+            blockenPusMinus=false;
 
         }
+      
 
         function start() {
             ctx.clearRect(40, 65 - 20, cW - 65, 20) // Merke dir die...
@@ -90,15 +93,85 @@
             durchLaeufe++;
             loescheMatrix();
             aufbauMatrix(zeilen, spalten, xBreite, yHoehe);
-            erstellKombination();
+            erstellKombination(); //Erstellt die Matrix mit allen Kombinaionen
             getroffen = false;
             blockenMatrix = false;
             blockenStart = true;
+            blockenPlusMinus = true;
 
             setTimeout(zeigeKombinationen, 500);
         }
 
 
+        function zeigeKombinationen()
+         {
+            
+            iterator++;
+            zeigKombi = true;
+
+            if (iterator < anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen, die zu merken sind 
+            {
+                ctx.clearRect(200, 200 - 60, 400, 80);  // löscht die vorher angzeigte Kombination
+                ctx.fillStyle = "red";
+                ctx.font = "30px" + " " + schriftArt;
+                ctx.fillText(gesuchtBasis[iterator], 200, 200); // bringt die einzelne Kombination, die gesucht wird
+               
+                // Progressbar. zeitMerk ist die Zeit zum Merken. Vorgabe bei den Variablen
+                startTimer(50, 400, 400, 20, zeitMerk * 1000, "Merken ", "14px Arial");// Funktion in standardjs
+
+                setTimeout(zeigeKombinationen, zeitMerk * 1010);
+            }
+
+            if (iterator === anzahlKombi) // zeigt danach ALLE möglichen Kombinationen 
+            {
+                ctx.clearRect(50 - 2, 400 - 2, 400 + 3, 20 + 4);
+                ctx.clearRect(200, 200 - 60, 400, 80);// löscht die zuletzt angzeigte Kombination
+
+                for (let i = 0; i < 16; i++) {
+                    ctx.fillStyle = "green";
+                    ctx.font = "30px" + " " + schriftArt;
+                    ctx.fillText(gesuchtNeu[i], xCoord[i] + xtestdis + 15, yCoord[i] + 10 + yHoehe / 2);
+                }
+                meldung("Klicke jetzt die vorher gezeigten Kombinationen an", "normal", "16", schriftArt, "#5a617b", 40, 65);
+                zeigKombi = false;
+            }
+
+            if (iterator > anzahlKombi) // Beenndet das Anzeige und das Ptogramm wartet jetzt auf dien EventListeber Click
+            {
+                alert("feier");
+            }
+
+        }
+        
+        canv.addEventListener('click', function (e) {
+            // verwaltet die Buttons 
+            let rect = angetippt(rects, e.offsetX, e.offsetY);
+                if (rect)
+                {
+                    switch (getipptRechteck) {
+                    case 0:
+                        if (!blockenStart) { start(); }
+                        break;
+                    case 1:
+                        ctx.clearRect(215,485-20,500,20);   
+                        anzahlKombi = plusMinus(anzahlKombi, 1, 1, 15);                   
+                        meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
+                    break;
+                    case 2:
+                        ctx.clearRect(215,485-20,500,20);  
+                        anzahlKombi = plusMinus(anzahlKombi, -1, 1, 15);
+                        meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
+                        break;
+                    default:
+                        alert("Sorry");
+                }
+             }
+        }, false);
+
+
+        
+        
+        
         canv.addEventListener('click', function (event) {
 
             if (blockenMatrix == false) {
@@ -136,6 +209,7 @@
                         rundeAus = true;
                         blockenMatrix = true;
                         blockenStart = false;
+                        blockenPlusMinus=false;
                         zeigBild("explosion1.jpg", xAbstand, yAbstand, xBreite * spalten, yHoehe * zeilen);
                         setTimeout(function () {
 
@@ -205,80 +279,9 @@
             }
         }
 
-        function zeigeKombinationen() {
+       
 
-            iterator++;
-            zeigKombi = true;
-
-            if (iterator < anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen
-            {
-
-                ctx.clearRect(200, 200 - 60, 400, 80);  // löscht die vorher angzeigte Kombination
-
-                ctx.fillStyle = "red";
-                ctx.font = "30px" + " " + schriftArt;
-                ctx.fillText(gesuchtBasis[iterator], 200, 200);
-
-                startTimer(50, 400, 400, 20, zeitMerk * 1000, "Merken", "14px Arial");
-
-                setTimeout(zeigeKombinationen, zeitMerk * 1100);
-            }
-
-            if (iterator === anzahlKombi) // zeigt danach ALLE möglichen Kombinationen 
-            {
-
-                ctx.clearRect(50 - 2, 400 - 2, 400 + 3, 20 + 4);
-                ctx.clearRect(200, 200 - 60, 400, 80);// löscht die zuletzt angzeigte Kombination
-
-
-                for (let i = 0; i < 16; i++) {
-                    ctx.fillStyle = "green";
-                    ctx.font = "30px" + " " + schriftArt;
-                    ctx.fillText(gesuchtNeu[i], xCoord[i] + xtestdis + 15, yCoord[i] + 10 + yHoehe / 2);
-                }
-
-                meldung("Klicke jetzt die vorher gezeigten Kombinationen an", "normal", "16", schriftArt, "#5a617b", 40, 65);
-                zeigKombi = false;
-
-            }
-
-            if (iterator > anzahlKombi) // Beenndet das Anzeige und das Ptogramm wartet jetzt auf dien EventListeber Click
-            {
-
-                alert("feier");
-            }
-
-
-        }
-
-        canv.addEventListener('click', function (e) {
-            // verwaltet die Buttons 
-            let rect = angetippt(rects, e.offsetX, e.offsetY);
-            if (rect) {
-                auswahlButton();
-            }
-        }, false);
-
-
-        function auswahlButton() {
-            switch (getipptRechteck) {
-                case 0:
-                    if (!blockenStart) { start(); }
-                    break;
-                case 1:
-                    anzahlKombi = plusMinus(anzahlKombi, 1, 1, 15);
-                    // ctx.clearRect(xBasis,320 -20, 300, 20);
-                    meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
-                    break;
-                case 2:
-                    anzahlKombi = plusMinus(anzahlKombi, -1, 1, 15);
-                    //ctx.clearRect(xBasis,320 -20, 300, 20);
-                    meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
-                    break;
-                default:
-                    alert("Sorry");
-            }
-        }
+      
 
 
         function erstellKombination() {
