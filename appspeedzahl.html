@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">     
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
+
+<style></style>
+</head>
+<body onload="ladeGame()"></body>
+<body >
+    <canvas id = "findeZahl"></canvas>
+<script>
+
+var canv = document.getElementById("findeZahl");
+var ctx = canv.getContext("2d");
+canv.width=230;
+canv.height=400;
+var xAbstand=5,yAbstand = 70;     // Verschiebt die Matrix nach rechts und unten
+var xDist=10, yDist=20;  // Verschiebt die Zahlen im Feld;
+var breite = 28, hoehe=28; // Abmessungen der Zellen
+var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
+var anzahlFelder = zeilenZahl*spaltenZahl;
+var maxDurchlaeufe=10; 
+var xCoord = [];  // x Koordinate links oben im Feld
+var yCoord = [];  // y Koordinate links oben im Feld
+var zahlenSpeicher= [];  // zahlenspeicher enthält die ziffer der Matrix als Vektor
+var indexReihe = []; // enhält die Indizes der ausgewählten Zahl ( ziffern der Zahl)
+var indexDoppelt = [];
+var anzahlClicks;
+var punkteGesamt = new Array();
+var trefferListe = new Array();
+var treffer;
+var xPos, yPos,xclick, yclick;;
+var zaehlerTreffer,anzahlTreffer,durchLauf;
+var clickenAus;
+var blocken;
+var gesuchteZahl ; // ist die Zahl, die gesucht werden muss
+var zeitSchranke = 4; // max. Zeit zum finden der Zahl in Sekunden
+var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
+
+var xBasis=5, yBasis=340, wBasis=70, hBasis=30, dBasis=15, xtestdis=5, ytextdis=18;
+
+var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
+             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
+
+
+
+var texts =[{na: String.fromCharCode(9655)+  "Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na:  String.fromCharCode(43)+ "", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na:  String.fromCharCode(45)+ "", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+
+
+
+function ladeGame()
+{
+    meldung("Denk - Geschwindigkeit","bold","20" ,schriftArt,"#5a617b",xAbstand, 30); 
+    meldung("Klick in der Matrix die Zahl,die","normal","16" ,schriftArt,"#5a617b",xAbstand, 60);
+    meldung("anfangs in Bildmitte erscheint","normal","16" ,schriftArt,"#5a617b",xAbstand, 80);
+   //meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"#ea2867",xBasis,90);  
+    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",80, 330);
+
+    ermittleBasisZahlen(zeilenZahl,spaltenZahl);
+   //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);// zahlenspeicher enthält die ziffer der Matrix als Vektor
+    roundedButton(3);
+    buttonText();
+    anzahlTreffer=0;
+    durchLauf=0;
+    blocken=false;
+}
+
+
+function start()
+    { 
+    
+        ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
+        ctx.clearRect(xBasis,90-20,400,30);// Löscht:  Dies ist....
+        ctx.clearRect(xBasis,480-20,280,20); // löscht zeitlimit überschritten    
+        ctx.clearRect(xAbstand,60-20,400,45) // löscht Klick die Zadhl, die bei....
+        zaehlerTreffer=0;
+        zeitAusgang=0;
+        durchLauf++; 
+        anzahlClicks=0;   
+        zahlenSpeicher=[];
+        indexReihe=[];
+        
+        clickenAus=false;
+        blocken=true
+        
+        ermittleBasisZahlen(zeilenZahl,spaltenZahl); // ermittelt die Zahlen für die Matrix, gespeichert in zahlenSpeicher
+        aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);  // Aufbau der Zahlen Matrix  
+        console.log(xCoord[7],xCoord[7]+4*breite,breite);        
+        console.log(yCoord[7],yCoord[7]+4*hoehe,hoehe);
+
+        ctx.clearRect(xCoord[15] + xAbstand +12,yCoord[13] + yAbstand + 14,116 ,116);
+        meldung("Suche:","normal","16",schriftArt,"#5a617b", xCoord[16] + xAbstand,yCoord[16] + yAbstand +20);  
+        meldung(gesuchteZahl.join(""),"bold","24",schriftArt,"red", xCoord[17] + xAbstand,yCoord[21] + yAbstand +30);
+        setTimeout(function () 
+                            {
+                                ctx.clearRect(xCoord[15] + xAbstand +12,yCoord[13] + yAbstand + 14,116 ,116);
+                            // ctx.clearRect(xCoord[7] + xAbstand,yCoord[7] + yAbstand ,140 ,140);   
+                             aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);  // Aufbau der Zahlen Matrix  
+                             id=setInterval(zeitPruef,1000); //Steuert die Zeitüberwachung 
+                            }, 3000);
+        //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);  // Aufbau der Zahlen Matrix  
+        //id=setInterval(zeitPruef,1000); //Steuert die Zeitüberwachung 
+    }
+
+function zeitPruef()
+   {
+        // Misst die Zeit. Bricht bei Zeit�berschreitung den Vorgang ab
+        // gesteuert über zeitAusgang und zeitSchranke
+
+            zeitAusgang++;
+           // console.log("   1  " + zeitAusgang +  " schranke  " + zeitSchranke);
+            if(zeitAusgang >= zeitSchranke)  
+            { 
+                ctx.clearRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*28,28);   
+                meldung("    Zeit überschritten" ,"normal","16",schriftArt,"red",xCoord[42]+ xAbstand + 24,yCoord[42]+yAbstand+17); 
+                ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*28,28);      
+                
+                zeigBild("stopuhr.png",xCoord[8] + xAbstand -5,yCoord[8]+yAbstand -20,150,150);
+                var aa=anzahlTreffer + " Treffer ;  " + durchLauf + " Versuch(e) ";
+                meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,300);                         
+                clearInterval(id);
+                zeitAusgang=0;
+                blocken=false;
+                clickenAus=true;
+            }
+            
+        if (clickenAus)
+            {
+                clearInterval(id);
+                blocken=false; 
+                zeitAusgang=0;               
+            }
+    }
+
+canv.addEventListener('click', function(event) 
+{ 
+  
+        xclick = event.clientX - xAbstand;
+        yclick = event.clientY - yAbstand; 
+       
+
+        // prüft ob der Klick innerhalb der Matrix erfolgte
+        if (((xCoord[0] < xclick) && (xclick < (xCoord[spaltenZahl-1]) + breite ) &&
+                (yCoord[0] < yclick) && (yclick < yCoord[(zeilenZahl*spaltenZahl)-1]+ hoehe)) && clickenAus==false)
+        {
+            anzahlClicks++;
+           
+            if(anzahlClicks<=indexReihe.length){
+            console.log(anzahlClicks+ "    " + indexReihe.length);
+           
+                var treffer=false;    
+                var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des geklickten Feldes
+
+                if (zwert>=0) { treffer= true}
+                    if ( treffer) 
+                    {
+                    
+                        var zw =indexReihe.indexOf(zwert);
+                     
+                    
+                        if (zw>=0)
+                                {
+                                    zaehlerTreffer++;
+                                    xxclick=(Math.floor(xclick/breite))*breite;
+                                    yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+                                    ctx.fillStyle="green";
+                                    ctx.font= "bolder 22px schriftArt";
+                                    ctx.fillText(zahlenSpeicher[indexReihe[zw]],xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);
+                                    ctx.lineWidth="5";
+                                    ctx.strokeStyle="green";       
+                                    ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe);         
+                                    treffer=false;
+                                }
+                                    else {
+                                            
+                                            ctx.clearRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*28,28); 
+                                            meldung("Falsches Feld => go on" ,"normal","16",schriftArt,"red",xCoord[42]+ xAbstand + 14,yCoord[42]+yAbstand+17);                                           var aa=anzahlTreffer + " Treffer ; " + durchLauf + " Versuch(e) ";
+                                            var aa=anzahlTreffer + " Treffer ;  " + durchLauf + " Versuch(e) ";
+                                            meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,300);                                  
+                                            ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*28,28);    
+                                            clickenAus=true ;
+                                            blocken=false;
+                                            xxclick=(Math.floor(xclick/breite))*breite;
+                                            yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
+                                            clearInterval(id);                            
+                                            zeigBild("amerkel2.png",xCoord[8] + xAbstand -5,yCoord[8]+yAbstand -20,150,150);                                                
+                                        }
+                    }
+
+                                    if (zaehlerTreffer == indexReihe.length)
+                                        {             
+                                            var aufschlag=0;
+                                            anzahlTreffer++;               
+                                            var aa=anzahlTreffer + " Treffer ; " + durchLauf + " Versuch(e) ";
+                                            meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,300); 
+                                            if(anzahlTreffer % maxDurchlaeufe ==0 )
+                                            {zeigBild("schiess.png",50,150,200,200);
+                                            meldung(" Prima  : " + aa ,"bold","16",schriftArt,"red",xAbstand,300); 
+                                            aufschlag = 1500;
+                                        }
+                            clickenAus=true;
+                            blocken=false;
+                            clearInterval(id);
+                            setTimeout(function () 
+                            {
+                            start();
+                            }, 700 + aufschlag);
+                                        
+                        }
+            }
+        }    
+}, false); 
+
+canv.addEventListener('click', function(e)
+     {
+       let rect = angetippt(rects, e.offsetX, e.offsetY);        
+        if (rect) 
+        {
+            auswahlButton();           
+        } 
+
+    }, false);
+
+
+
+function auswahlButton()
+    {
+        switch (getipptRechteck) 
+        {
+            case 0:  
+            if (blocken==false) {start();  }                  
+            break;
+            case 1:
+                zeitSchranke=plusMinus(zeitSchranke,1,2,60);
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",5 +xAbstand + breite* spaltenZahl, 510);                         
+                break;
+            case 2:
+                zeitSchranke=plusMinus(zeitSchranke,-1,2,60);
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",5 + xAbstand + breite* spaltenZahl, 510);                            
+                break;
+            default:
+                alert("Sorry");
+        }             
+    }
+
+function getroffen(){
+    {
+        xxclick=(Math.floor(xclick/breite))*breite;
+        yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+        
+        meldung(zahlenSpeicher[indexReihe[1]] ,"normal","16",schriftArt,"#5a617b",xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);    
+        treffer=false;
+                }
+
+}    
+
+function aufbauMatrix(zeilen,spalten,breite,hoehe,zahlen)
+{
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+    for (let i = 0; i<zeilen; i++)
+    {
+        var y=hoehe*i;
+        for(let j=0;j < spalten;j++)
+        {            
+            var x=breite*j;  
+            ctx.lineWidth="1";
+            ctx.strokeStyle="blue";       
+            ctx.strokeRect(x+xAbstand,y+yAbstand,breite,hoehe);
+            ctx.fillStyle="#5a617b";
+            ctx.font= "20px schriftArt";
+
+            var xx=zahlenSpeicher[i*spalten +j];            
+            ctx.fillText(xx,x+xAbstand + xDist,y+yAbstand+yDist);
+           
+            //linke, obere Koordinaten der Rechtecke
+            xCoord.push(x);
+            yCoord.push(y);
+        }
+    }
+  
+}
+
+function ermittleBasisZahlen(zeilen, spalten)
+{
+    function erzeugeLänge() {
+        var zufall = random(9);
+        if(zufall < 7)
+            return 2;
+        else
+            return 3;
+    }
+
+    function erzeugeMatrix(zeilen, spalten) {
+        var matrix = new Array(zeilen);
+        for(var i = 0; i < zeilen; i++) {
+            matrix[i] = new Array(spalten)
+        }
+        return matrix;
+    }
+
+    function fülleMatrix(matrix) {
+        for(var i = 0; i < matrix.length; i++) {
+            for(var j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = random(9)
+            }
+        }
+    }
+
+    function beseitigeDreier(matrix) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+
+        for(var i = 0; i < zeilen; i++) {
+            for(var j = 0; j < spalten; j++) {
+                
+                var k = 1;
+                while(j + k < spalten && matrix[i][j+k] == matrix[i][j])
+                {
+                    k += 1;
+                }
+                
+                if( k >= 3)
+                {
+                    var alternativen = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(
+                            function(value, index, arr) {
+                                return value != matrix[i][j] && value != matrix[i][k];
+                            }
+                        );
+                   // console.log(JSON.stringify(alternativen));
+                    for(var l = 2; l < k; l++) {
+                        var alternative = alternativen[random(alternativen.length - 1)];
+                        alternativen.splice(alternativen.indexOf(alternative), 1);
+                        matrix[i][j+l] = alternative;
+                    }
+                }
+
+                j += k - 1;
+            }
+        }
+    }
+
+    /**
+     *  Wählt aus der übergebenen Matrix ein zufällige Ziffernfolge aus
+     *  und gibt diese zurück. Die Ziffern liegen immer in einer Zeile.
+     *
+     *  @returns {Number|Array} Liste der Ziffern der gesuchten Zahl. Reihenfolge ist wichtig!
+     */
+    function wähleZahl(matrix, längeAusgewählterZahl) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+
+        var zufallsZeile = random(zeilen - 1);
+        var zufallsSpalte = random(spalten - längeAusgewählterZahl)
+
+       // console.log("wähleZahl === Zeile: " + zufallsZeile + " | Spalte: " + zufallsSpalte);
+        var ziffern = [];
+        for(var i = 0; i < längeAusgewählterZahl; i++) {
+            ziffern.push(matrix[zufallsZeile][zufallsSpalte + i])
+        }
+        //console.log("wähleZahl === Wert: " + ziffern);
+        return ziffern;
+    }
+
+    function findeAllePositionen(matrix, ausgewählteZahl) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+        var längeAusgewählterZahl = ausgewählteZahl.length;
+
+        var treffer = [];
+        for(var i = 0; i < zeilen; i++) {
+            for(var j = 0; j < spalten - längeAusgewählterZahl + 1; j++) {
+                var übereinstimmung = true;
+                for(var k = 0; k < längeAusgewählterZahl; k++) {
+                    if(matrix[i][j+k] != ausgewählteZahl[k]) {
+                        übereinstimmung = false;
+                    }
+                }
+
+                if(übereinstimmung) {
+                    treffer.push([i, j]);
+                }
+            }
+        }
+
+        return treffer;
+    }
+
+    function eliminiereDoppelte(matrix, doppelte, gesuchteZahl) {
+        // Baut einen Array aus Ziffern die bedenkenlos gewählt werden können, 
+        // da sich nicht Teil der gesuchten Zahl sind.
+        var gültigeAlternativen = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(
+            function(value, index, arr) {
+                return gesuchteZahl.indexOf(value) == -1;
+            }
+        );
+
+       // console.log("=== eliminiereDoppelte: Mögliche Alternativen zu " + gesuchteZahl + " sind: " + gültigeAlternativen);
+        // Entferne einen zufällig gewählten Treffer, 
+        // damit die Treffer bei doppelten nicht immer in den oberen Zeilen liegen.
+        if(doppelte.length == 1) {
+            doppelte = [];
+        } else {
+            doppelte.splice(random(doppelte.length - 1), 1);
+        }
+        //console.log("=== eliminiereDoppelte: zu löschende Elemente:" + doppelte);
+
+        if(doppelte.length > 0) {
+            for(var i = 0; i < doppelte.length; i++) {
+                for(var j = 0; j < gesuchteZahl.length; j++) {
+                    var zeile = doppelte[i][0];
+                    var spalte = doppelte[i][1] + j;
+                    var indexAlternative = random(gültigeAlternativen.length - 1);
+                  //  console.log(indexAlternative);
+                    var alternative = gültigeAlternativen[indexAlternative];
+                   // console.log("Ersetze [" + zeile + "][" + spalte + "] (" + matrix[zeile][spalte] + ") mit " + alternative);
+                    matrix[zeile][spalte] = alternative;
+                }
+            }
+        }
+
+        return matrix;
+    }
+
+    function arrayEbnen (matrix) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+
+        var eindimensional = [];
+        for(var i = 0; i < zeilen; i++) {
+            for(var j = 0; j < spalten; j++) {
+                eindimensional.push(matrix[i][j]);
+            }
+        }
+        return eindimensional;
+    }
+
+    function baueIndexReihe (matrix, gesuchteZahl) {
+        var zeilen = matrix.length;
+        var spalten = matrix[0].length;
+        var position = findeAllePositionen(matrix, gesuchteZahl)[0];
+        var index = position[0] * spalten + position[1];
+
+        var indizes = [];
+        for(var i = 0; i < gesuchteZahl.length; i++) {
+            indizes.push(index + i);
+        }
+
+        return indizes;
+    }
+
+    var zahlenLänge = erzeugeLänge();
+    var matrix = erzeugeMatrix(zeilen, spalten);
+    fülleMatrix(matrix);
+    beseitigeDreier(matrix);
+    //console.log(matrix);
+
+    gesuchteZahl = wähleZahl(matrix, zahlenLänge);
+
+    var doppelte = findeAllePositionen(matrix, gesuchteZahl);
+    //console.log("Alle Positionen: " + doppelte);
+    eliminiereDoppelte(matrix, doppelte, gesuchteZahl);
+    
+    zahlenSpeicher = arrayEbnen(matrix);
+    indexReihe = baueIndexReihe(matrix, gesuchteZahl);
+    //console.log("IndexReihe: " + indexReihe);
+    //meldung("Suche:","normal","16",schriftArt,"#5a617b", xAbstand+30 + breite * 1, 2 * yAbstand);  
+    //meldung(gesuchteZahl.join(""),"bold","30",schriftArt,"red", 390, 280);
+}
+
+function feldNummerSchuss(xc,yc)
+{    // xc und yc sind die Koordinaten des Klicks 
+    // Liefert deie Nummer des Feldes wenn ein Treffer erfolgte. Dabei wird noch nicht nach Gruppe unterschieden
+    var zw;
+    for (var i=0;i<anzahlFelder;i++){
+
+            if ((xCoord[i] < xc) && (xc < xCoord[i] + breite ) &&
+                (yCoord[i] < yc) && (yc < yCoord[i]+ hoehe))
+                {
+                zw=i;   
+                }
+        }
+    return zw;  
+}
+
+ 
+</script>
+
+
+</body>
+</html>
