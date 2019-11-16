@@ -16,12 +16,11 @@
 
 var canv = document.getElementById("findeZahl");
 var ctx = canv.getContext("2d");
-canv.width=480;
-canv.height=590;
-
-var xAbstand=30,yAbstand = 110;     // Verschiebt die Matrix nach rechts und unten
+canv.width=275;
+canv.height=550;
+var xAbstand=20,yAbstand = 110;     // Verschiebt die Matrix nach rechts und unten
 var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
-var breite = 43, hoehe=43; // Abmessungen der Zellen
+var breite = 33, hoehe=33; // Abmessungen der Zellen
 var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
 var anzahlFelder = zeilenZahl*spaltenZahl;
 var maxDurchlaeufe=10; 
@@ -38,11 +37,11 @@ var xPos, yPos,xclick, yclick;;
 var zaehlerTreffer,anzahlTreffer,durchLauf;
 var clickenAus;
 var blocken;
-
+var gesuchteZahl;
 var zeitSchranke = 6; // max. Zeit zum finden der Zahl in Sekunden
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 
-var xBasis=20, yBasis=530, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+var xBasis=20, yBasis=460, wBasis=70, hBasis=40, dBasis=15, xtestdis=10, ytextdis=25;
 
 var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
              {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
@@ -50,7 +49,7 @@ var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#
 
 
 
-var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+var texts =[{na: "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
            {na:  String.fromCharCode(43)+ "  Zeit", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
            {na:  String.fromCharCode(45)+ "  Zeit", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
 
@@ -58,10 +57,10 @@ var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtestdis -10
 
 function ladeGame()
 {
-    meldung("Steigere deine Denk - Geschwindigkeit","bold","20" ,schriftArt,"#5a617b",xAbstand, 30); 
-    meldung("Finde die Zahl, die bei Spielbeginn ( Go on) erscheint","normal","16" ,schriftArt,"#5a617b",xAbstand, 60);
-    meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"#ea2867",xBasis,90);  
-    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",5 + xAbstand + breite* spaltenZahl, 510);
+    meldung("Denk - Geschwindigkeit","bold","20" ,schriftArt,"#5a617b",xAbstand, 30); 
+    meldung("Finde / Klick die Zahl, die bei","normal","16" ,schriftArt,"#5a617b",xAbstand, 60);
+    meldung("Spielbeginn ( Go on) erscheint","normal","16" ,schriftArt,"#5a617b",xAbstand, 80);  
+    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",125, 440);
 
     ermittleBasisZahlen(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
@@ -77,9 +76,9 @@ function start()
     { 
     
         ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
-        ctx.clearRect(xBasis,90-20,400,30);// Löscht Dies ist....
-        ctx.clearRect(xBasis,480-20,280,20); // löscht zeitlimit überschritten    
-        ctx.clearRect(390, 280-60,200,80) // löscht text2 ( gesuchte Zahl);
+        //ctx.clearRect(xBasis,90-20,400,30);// Löscht Dies ist....
+      //  ctx.clearRect(xBasis,480-20,280,20); // löscht zeitlimit überschritten    
+      //  ctx.clearRect(390, 280-60,200,80) // löscht text2 ( gesuchte Zahl);
         zaehlerTreffer=0;
         zeitAusgang=0;
         durchLauf++; 
@@ -93,7 +92,18 @@ function start()
         ermittleBasisZahlen(zeilenZahl,spaltenZahl); // ermittelt die Zahlen für die Matrix, gespeichert in zahlenSpeicher
         aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);  // Aufbau der Zahlen Matrix  
 
-        id=setInterval(zeitPruef,1000); //Steuert die Zeitüberwachung 
+        //id=setInterval(zeitPruef,1000); //Steuert die Zeitüberwachung 
+        ctx.clearRect(xCoord[15] + xAbstand +12,yCoord[13] + yAbstand + 14,146 ,146);
+        meldung("Suche:","normal","16",schriftArt,"#5a617b", xCoord[16] + xAbstand,yCoord[16] + yAbstand +20);  
+        meldung(gesuchteZahl.join(""),"bold","24",schriftArt,"red", xCoord[17] + xAbstand,yCoord[21] + yAbstand +30);
+        setTimeout(function () 
+                            {
+                                ctx.clearRect(xCoord[15] + xAbstand +12,yCoord[13] + yAbstand + 14,146 ,146);
+                            // ctx.clearRect(xCoord[7] + xAbstand,yCoord[7] + yAbstand ,140 ,140);   
+                             aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);  // Aufbau der Zahlen Matrix  
+                             id=setInterval(zeitPruef,1000); //Steuert die Zeitüberwachung 
+                            }, 800);
+
     }
 
 function zeitPruef()
@@ -105,11 +115,15 @@ function zeitPruef()
            // console.log("   1  " + zeitAusgang +  " schranke  " + zeitSchranke);
             if(zeitAusgang >= zeitSchranke)  
             { 
-                ctx.clearRect(xBasis,500 -20 ,230,20);      
-                meldung("Suchzeit überschritten" ,"bold","16",schriftArt,"red",xBasis,480); 
-                zeigBild("stopuhr.png",100,150,150,150);
+                ctx.clearRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe); 
+                                            meldung("Suchzeit überschritten =>  go on" ,"normal","16",schriftArt,"red",xCoord[42]+ xAbstand ,yCoord[42]+yAbstand+20);                                           var aa=anzahlTreffer + " Treffer ; " + durchLauf + " Versuch(e) ";
+                                                                            
+                                            ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);
+               
+               
+                zeigBild("stopuhr.png",70,150,150,150);
                 var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,450);                         
+                meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,400);                         
                 clearInterval(id);
                 zeitAusgang=0;
                 blocken=false;
@@ -137,68 +151,88 @@ canv.addEventListener('click', function(event)
         {
             anzahlClicks++;
            
-            if(anzahlClicks<=indexReihe.length){
-            console.log(anzahlClicks+ "    " + indexReihe.length);
+            if(anzahlClicks<=indexReihe.length)
+            {
+               // console.log(anzahlClicks+ "    " + indexReihe.length);
            
                 var treffer=false;    
                 var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des geklickten Feldes
 
                 if (zwert>=0) { treffer= true}
-                    if ( treffer) 
+                if ( treffer) 
                     {
                     
                         var zw =indexReihe.indexOf(zwert);
                     
                         if (zw>=0)
-                                {
-                                    zaehlerTreffer++;
+                            {
+                                zaehlerTreffer++;
+                                xxclick=(Math.floor(xclick/breite))*breite;
+                                yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+                                ctx.fillStyle="green";
+                                ctx.font= "bolder 22px schriftArt";
+                                ctx.fillText(zahlenSpeicher[indexReihe[zw]],xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);
+                                ctx.lineWidth="3";
+                                ctx.strokeStyle="green";       
+                                ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe);         
+                                treffer=false;
+                            }
+                            else 
+                                {                                    
+                                    var aa=anzahlTreffer + " Treffer ;  " + durchLauf + " Versuch(e) ";
+                                    meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,400);  
+
+                                    ctx.clearRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);    
+                                    ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);
+                                    meldung("Falsches Feld geklickt","normal","16",schriftArt,"red",xCoord[42]+ xAbstand + 40,yCoord[42]+yAbstand+22);                                 
+                                    zeigBild("amerkel2.png",xCoord[9] + xAbstand -5,yCoord[8]+yAbstand -20,150,150);   
+                                    
+                                    clickenAus=true ;
+                                    blocken=false;
                                     xxclick=(Math.floor(xclick/breite))*breite;
-                                    yyclick=(Math.floor(yclick/hoehe))*hoehe;   
-                                    ctx.fillStyle="green";
-                                    ctx.font= "bolder 22px schriftArt";
-                                    ctx.fillText(zahlenSpeicher[indexReihe[zw]],xxclick +xAbstand + xDist,yyclick+yAbstand+yDist);
-                                    ctx.lineWidth="5";
-                                    ctx.strokeStyle="green";       
-                                    ctx.strokeRect(xxclick+xAbstand,yyclick+yAbstand,breite,hoehe);         
-                                    treffer=false;
+                                    yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
+                                    clearInterval(id); 
+                                                                   
+                                                                                
                                 }
-                                    else {
-                                            ctx.clearRect(xBasis,480+20,200,-20);
-                                            meldung(" Falsches Feld ==> go on" ,"normal","16",schriftArt,"red",xBasis,480); 
-                                            var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                                            meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,450);                                  
-                                            clickenAus=true ;
-                                            blocken=false;
-                                            xxclick=(Math.floor(xclick/breite))*breite;
-                                            yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
-                                            clearInterval(id);                            
-                                            zeigBild("amerkel2.png",100,150,200,200);                                                
-                                        }
                     }
 
-                                    if (zaehlerTreffer == indexReihe.length)
-                                        {             
-                                            var aufschlag=0;
-                                            anzahlTreffer++;               
-                                            var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                                            meldung(" Bisher : " + aa ,"bold","16",schriftArt,"#5a617b",xBasis,450); 
-                                            if(anzahlTreffer % maxDurchlaeufe ==0 )
-                                            {zeigBild("schiess.png",50,150,200,200);
-                                            meldung(" Prima  : " + aa ,"bold","16",schriftArt,"red",xBasis,450); 
-                                            aufschlag = 1500;
-                                        }
+                    if (zaehlerTreffer == indexReihe.length)
+                        {             
+                            var aufschlag=0;
+                            anzahlTreffer++; 
+
+                            var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
+                            meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,400); 
+
+                                if(anzahlTreffer % maxDurchlaeufe ==0 )                               
+                                    {
+                                    ctx.clearRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe); 
+                                    ctx.strokeStyle = "blue";  
+                                    ctx.lineWidth = 1;                                                                         
+                                    ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);                               
+                                    meldung("Weiter so !!!  " + maxDurchlaeufe + "  Durchläufe","normal","16",schriftArt,"black",xCoord[42]+ xAbstand + 14,yCoord[42]+yAbstand+20);   
+                                
+                                    ctx.clearRect(80,150,150,150);
+                                    zeigBild("schiess.png",80,150,150,150);
+                                    aufschlag = 1000;
+                                    }
+
                             clickenAus=true;
                             blocken=false;
+
                             clearInterval(id);
+
                             setTimeout(function () 
                             {
+
                             start();
                             }, 700 + aufschlag);
                                         
                         }
             }
         }    
-}, false); 
+    }, false); 
 
 canv.addEventListener('click', function(e)
      {
@@ -221,11 +255,11 @@ function auswahlButton()
             break;
             case 1:
                 zeitSchranke=plusMinus(zeitSchranke,1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",5 +xAbstand + breite* spaltenZahl, 510);                         
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",125,440);                         
                 break;
             case 2:
                 zeitSchranke=plusMinus(zeitSchranke,-1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",5 + xAbstand + breite* spaltenZahl, 510);                            
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",125,440);                            
                 break;
             default:
                 alert("Sorry");
@@ -443,7 +477,7 @@ function ermittleBasisZahlen(zeilen, spalten)
     beseitigeDreier(matrix);
     //console.log(matrix);
 
-    var gesuchteZahl = wähleZahl(matrix, zahlenLänge);
+    gesuchteZahl = wähleZahl(matrix, zahlenLänge);
 
     var doppelte = findeAllePositionen(matrix, gesuchteZahl);
     //console.log("Alle Positionen: " + doppelte);
@@ -452,8 +486,8 @@ function ermittleBasisZahlen(zeilen, spalten)
     zahlenSpeicher = arrayEbnen(matrix);
     indexReihe = baueIndexReihe(matrix, gesuchteZahl);
     //console.log("IndexReihe: " + indexReihe);
-    meldung("Suche:","normal","16",schriftArt,"#5a617b", xAbstand+30 + breite * spaltenZahl, 2 * yAbstand);  
-    meldung(gesuchteZahl.join(""),"bold","30",schriftArt,"red", 390, 280);
+  // meldung("Suche:","normal","16",schriftArt,"#5a617b", xAbstand+30 + breite * spaltenZahl, 2 * yAbstand);  
+    //meldung(gesuchteZahl.join(""),"bold","30",schriftArt,"red", 390, 280);
 }
 
 function feldNummerSchuss(xc,yc)
