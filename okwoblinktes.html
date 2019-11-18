@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="275" height="440"></canvas>
+    <canvas id="canvas" width="255" height="440"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -31,8 +31,8 @@ var xCoord=[], yCoord=[];
 var zeilen = 5, spalten=5;
 
 
-var xAbstand=50,yAbstand = 100;     // Verschiebt die Matrix nach rechts und unten
-var xBasis=20, yBasis=360, wBasis=70, hBasis=40, dBasis=10, xtestdis=1, ytextdis=25;
+var xAbstand=30,yAbstand = 100;     // Verschiebt die Matrix nach rechts und unten
+var xBasis=10, yBasis=360, wBasis=70, hBasis=40, dBasis=10, xtestdis=1, ytextdis=25;
 var  yErhoehung=10; 
 var xTextRechts=xBasis +  (wBasis+ dBasis);
 
@@ -53,9 +53,9 @@ var texts =[{na:"Go on", x: xBasis + 10, y: yBasis + ytextdis+yErhoehung},
 
 function ladeGame() 
     {   
-        meldung("Übe die Merkspanne","bold","20",schriftArt,"#5a617b",40, 30);  
-        meldung("Merke die auftauchenden Bälle : ","normal","16",schriftArt,"#5a617b",40, 60);   
-        meldung("Position + Reihenfolge","normal","16",schriftArt,"#5a617b",40, 80);     
+        meldung("Übe die Merkspanne","bold","20",schriftArt,"#5a617b",20, 30);  
+        meldung("Merke die auftauchenden Bälle : ","normal","16",schriftArt,"#5a617b",20, 60);   
+        meldung("Position + Reihenfolge","normal","16",schriftArt,"#5a617b",20, 80);     
         meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts + 15,350);
         roundedButton(3);
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
