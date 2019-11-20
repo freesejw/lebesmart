@@ -17,7 +17,7 @@
 var canv = document.getElementById("findeZahl");
 var ctx = canv.getContext("2d");
 canv.width=275;
-canv.height=550;
+canv.height=510;
 var xAbstand=20,yAbstand = 110;     // Verschiebt die Matrix nach rechts und unten
 var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var breite = 33, hoehe=33; // Abmessungen der Zellen
@@ -41,7 +41,7 @@ var gesuchteZahl;
 var zeitSchranke = 6; // max. Zeit zum finden der Zahl in Sekunden
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 
-var xBasis=20, yBasis=460, wBasis=70, hBasis=40, dBasis=15, xtestdis=10, ytextdis=25;
+var xBasis=20, yBasis=420, wBasis=70, hBasis=40, dBasis=15, xtestdis=10, ytextdis=25;
 
 var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
              {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
@@ -60,7 +60,7 @@ function ladeGame()
     meldung("Denk - Geschwindigkeit","bold","20" ,schriftArt,"#5a617b",xAbstand, 30); 
     meldung("Finde / Klick die Zahl, die bei","normal","16" ,schriftArt,"#5a617b",xAbstand, 60);
     meldung("Spielbeginn ( Go on) erscheint","normal","16" ,schriftArt,"#5a617b",xAbstand, 80);  
-    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",125, 440);
+    meldung("Suchzeit: " +  zeitSchranke + " Sek.","normal","16",schriftArt,"#5a617b",125, 400);
 
     ermittleBasisZahlen(zeilenZahl,spaltenZahl);
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
@@ -76,13 +76,11 @@ function start()
     { 
     
         ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
-        //ctx.clearRect(xBasis,90-20,400,30);// Löscht Dies ist....
-      //  ctx.clearRect(xBasis,480-20,280,20); // löscht zeitlimit überschritten    
-      //  ctx.clearRect(390, 280-60,200,80) // löscht text2 ( gesuchte Zahl);
-        zaehlerTreffer=0;
-        zeitAusgang=0;
+       if (durchLauf== 0){ ctx.clearRect(xAbstand, 60-20,canv.width,45 );} //löscht "finde...."
+        zaehlerTreffer=0, zeitAusgang=0, anzahlClicks=0;   
+        //zeitAusgang=0;
         durchLauf++; 
-        anzahlClicks=0;   
+       // anzahlClicks=0;   
         zahlenSpeicher=[];
         indexReihe=[];
         
@@ -98,7 +96,7 @@ function start()
         meldung(gesuchteZahl.join(""),"bold","24",schriftArt,"red", xCoord[17] + xAbstand,yCoord[21] + yAbstand +30);
         setTimeout(function () 
                             {
-                                ctx.clearRect(xCoord[15] + xAbstand +12,yCoord[13] + yAbstand + 14,146 ,146);
+                             ctx.clearRect(xCoord[15] + xAbstand +12,yCoord[13] + yAbstand + 14,146 ,146);
                             // ctx.clearRect(xCoord[7] + xAbstand,yCoord[7] + yAbstand ,140 ,140);   
                              aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);  // Aufbau der Zahlen Matrix  
                              id=setInterval(zeitPruef,1000); //Steuert die Zeitüberwachung 
@@ -122,8 +120,8 @@ function zeitPruef()
                
                
                 zeigBild("stopuhr.png",70,150,150,150);
-                var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,400);                         
+                var aa=anzahlTreffer + " Treffer  bei  " + durchLauf + " Versuchen ";
+                meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,70);                         
                 clearInterval(id);
                 zeitAusgang=0;
                 blocken=false;
@@ -180,7 +178,7 @@ canv.addEventListener('click', function(event)
                             else 
                                 {                                    
                                     var aa=anzahlTreffer + " Treffer ;  " + durchLauf + " Versuch(e) ";
-                                    meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,400);  
+                                    meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,70);  
 
                                     ctx.clearRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);    
                                     ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);
@@ -202,8 +200,8 @@ canv.addEventListener('click', function(event)
                             var aufschlag=0;
                             anzahlTreffer++; 
 
-                            var aa=anzahlTreffer + " Treffer  von  " + durchLauf + " Versuchen ";
-                            meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,400); 
+                            var aa=anzahlTreffer + " Treffer  bei  " + durchLauf + " Versuchen ";
+                            meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,70); 
 
                                 if(anzahlTreffer % maxDurchlaeufe ==0 )                               
                                     {
