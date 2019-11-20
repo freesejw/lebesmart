@@ -20,7 +20,7 @@ var cW = ctx.canvas.width, cH = ctx.canvas.height;
 var xBreite=35 , yHoehe=35;
 var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
-var durchLaeufe, treffer;
+var durchLauf, treffer;
 var bgColor="Lavender";
 var blinkReihe=[];
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
@@ -61,7 +61,7 @@ function ladeGame()
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         treffer=0;
-        durchLaeufe=0;
+       durchLauf=0;
         plusminusBlocker=false;
         startBlocker=false;
     
@@ -71,10 +71,11 @@ function start()
     {
         //ctx.clearRect(30,350-20,450,20);// Falsches Feld....
        // ctx.clearRect(xBasis ,370,400,30);
+       if (durchLauf== 0){ ctx.clearRect(20, 60-20,canv.width,45 );} //löscht "finde...."
         iterator=0; 
         zaehlerClick=0;
         zaehlerTreffer=0;
-        durchLaeufe++;
+       durchLauf++;
         loescheMatrix();
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         blinkReihe=auswahlBlinkZellen(zeilen,spalten);
@@ -170,14 +171,14 @@ canv.addEventListener('click', function(event)
                         feldBlocken=true;
                         plusminusBlocker=false; 
                         startBlocker=false;                          
-                        meldung("Geschafft : " + treffer + " bei " +durchLaeufe + "  Versuch(e)","normal","16",schriftArt,"#5a617b",30,310);
+                        meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuch(e)","normal","16",schriftArt,"#5a617b",15,70);
                         }
         
                 if (zaehlerTreffer == anzahlBlinks)
                 {
                     feldBlocken=true;
                         treffer++
-                        meldung("Geschafft : " + treffer + " bei " +durchLaeufe + "  Versuch(e)","normal","16",schriftArt,"#5a617b",30,310);
+                        meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuch(e)","normal","16",schriftArt,"#5a617b",15,70);
                         var aufschlag=0;
                         if(treffer==5)
                             {
