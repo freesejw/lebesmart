@@ -190,7 +190,7 @@ canv.addEventListener('click', function(event)
                                     xxclick=(Math.floor(xclick/breite))*breite;
                                     yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
                                     clearInterval(id); 
-                                                                   
+                                    start();                               
                                                                                 
                                 }
                     }
@@ -253,11 +253,11 @@ function auswahlButton()
             break;
             case 1:
                 zeitSchranke=plusMinus(zeitSchranke,1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",125,440);                         
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",125,400);                         
                 break;
             case 2:
                 zeitSchranke=plusMinus(zeitSchranke,-1,2,60);
-                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",125,440);                            
+                meldung("Suchzeit " +  zeitSchranke + " Sek.","normal","16",schriftArt,"blue",125,400);                            
                 break;
             default:
                 alert("Sorry");
