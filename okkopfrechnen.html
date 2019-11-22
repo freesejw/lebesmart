@@ -18,23 +18,21 @@ var startTime,elapsedTime,zeiten="";
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
 var cW = ctx.canvas.width, cH = ctx.canvas.height;  canvas.w
-var zeiten=[];
-var schnitt;
+var zeiten=[], schnitt;
 var xCoord=[];
 var operand;
-var rechenSchritte=3, schrittWeite=1,string;
+var rechenSchritte=2, schrittWeite=1,string;
 var durchLaeufe,richtig;
-var ergebnis, ergebnisIndex;
-var summe=0; 
+var ergebnis, ergebnisIndex,summe;
 
 var xBasis=5, yBasis1=140, wBasis1=40, hBasis=40, dBasis=5, xtextdis=12, ytextdis=25;
 var yBasis2= 360, wBasis2=70, yErhoehung=50; 
 var bgCol="5a617b";
 var breite=20,xAbstand=10,yZeile =60, xDist=10,yDist=25;
-var stopploesung;
+
 var stoppstarten;
 var sekunden;
-var timer = new stoppenZeit(drawTime);
+
 var falschGetippt=false;
 
 
@@ -66,8 +64,9 @@ function ladeGame()
         roundedButton(3);
         buttonText();        
         richtig=0;
+        summe=0;
         durchLaeufe=0;
-        stopploesung = true;
+        
         stoppstarten = false;
     }
 
@@ -78,22 +77,27 @@ function start()
         //meldung("Klick die obige Zahl an, die dem Ergebnis entspricht","normal","16",schriftArt,"#5a617b",20,310);
         if(durchLaeufe==0)
         {
-        //meldung("Anzahl Richtige :  " + richtig,"bold","16",schriftArt,"#5a617b",20,240); 
+        //Löscht die Meldungen / Infos
+        
         ctx.clearRect(30, 180-25,340,25); //  Löscht 3+ 4 *... Anzeige        
         ctx.clearRect(20,260-18,400,18); //Zeiten / Durchlauf
         ctx.clearRect(20,280-18,400,18); //Durchschnitt.....
         }
         if (falschGetippt == true)
-        {
+        {            
          ctx.clearRect(xBasis-10, yBasis1-30,cW,ytextdis+50); // löscht die möglichen Lösungen + Daumen Bld
         ctx.clearRect(xCoord[1],yZeile + yDist +10 -30,500,30); // löscht die Zeile mit der Rechenaufgabe
         falschGetippt=false;       
         }
         aufbauZeile(rechenSchritte,breite);
-        vergleichsZahlen();        
-        timer.start();
-        stopploesung = false;        
+        vergleichsZahlen(); 
+
+        startTime = Date.now(); 
+
+       // console.log(" start " + sekunden);
+          
         stoppstarten=true;
+        zeigBild("tic2.jpg",xBasis,yBasis2,wBasis2,hBasis);
     }
 
 
@@ -231,12 +235,6 @@ function vergleichsZahlen()
          return zw;
    }  
 
-function llllllllllllllllllllllllloesung()
-    {
-        //ctx.clearRect(20, 310-25, 500, 25);                       
-       // meldung("Lösung : " + string + "  = "+ ergebnis,"normal","16",schriftArt,"#ea2867",20,310);  
-       timer.stop();
-    }
 
 
  canv.addEventListener('click', function(e)
@@ -255,6 +253,9 @@ function vergleich(a)
     
     if(a==ergebnisIndex+3)
         {
+            elapsedTime = Date.now() - startTime;
+           // sekunden= (elapsedTime / 1000 ).toFixed(0);  
+           sekunden= (elapsedTime / 1000 ) 
            
             richtig++;
             //ctx.clearRect(20,310-25,550,25);
@@ -263,19 +264,19 @@ function vergleich(a)
             zeiten.push( sekunden); 
 
             var ausdruck=zeiten ;
-           
+          
             for (var i= 0;i<zeiten.length-1;i++);
               {
-                console.log("  1  " + summe );   
                 summe+=zeiten[i];               
               }
+              console.log(zeiten + "  summe   "+summe + " sek   " +sekunden);  
             var schnitt=(  summe/richtig); 
-            schnitt=Math.floor(schnitt*10)/10;
+            schnitt=(Math.floor(schnitt*10)/10).toFixed(0);
             if(ausdruck.length>8){ausdruck.shift();} 
-            console.log(ausdruck); 
+          
             var ausgabe="";
             for(var ii=0;ii<ausdruck.length;ii++)   
-            {ausgabe=ausgabe + "  " + ausdruck[ii]};
+            {ausgabe=ausgabe + "  " + ausdruck[ii].toFixed(0)};
 
             meldung(( "Zeit/Durchlauf : " + ausgabe ),"normal","16",schriftArt,"#5a617b",20,265);
 
@@ -322,12 +323,16 @@ function auswahlButton()
                     case 1:
                         rechenSchritte= plusMinus(rechenSchritte,1,1,11); 
                         meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis + 10),340);                          
-                        //start();                          
+                        ctx.clearRect(xBasis-10, yBasis1-30,cW,ytextdis+50); // löscht die möglichen Lösungen + Daumen Bld
+                        ctx.clearRect(xCoord[1],yZeile + yDist +10 -30,500,30); // löscht die Zeile mit der Rechenaufgabe
+                        start();                          
                         break;
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,-1,1,11); 
                         meldung("Anzahl Ziffern = " + rechenSchritte,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis +10),340);   
-                        //start();                          
+                        ctx.clearRect(xBasis-10, yBasis1-30,cW,ytextdis+50); // löscht die möglichen Lösungen + Daumen Bld
+                        ctx.clearRect(xCoord[1],yZeile + yDist +10 -30,500,30); // löscht die Zeile mit der Rechenaufgabe
+                        start();                          
                         break;
                      case 3:
                      case 4:
@@ -336,12 +341,11 @@ function auswahlButton()
                      case 7:   
                      case 8:
                         
-                       // ctx.fillText(zz[3],(xBasis + 8 + 3 * (wBasis1+ dBasis)),yBasis1+ ytextdis); 
+                     
                         stoppstarten=false;
                                        
                         durchLaeufe++;                       
-                        vergleich(getipptRechteck);  
-                        timer.stop();
+                        vergleich(getipptRechteck);                         
                         break;  
                         
                         
@@ -354,12 +358,17 @@ function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-function drawTime(zsecs, secs, minu) {
-    //uhrAnzeige(xUhrPosition,yUhrPosition,minu,secs,zsecs) ;  
-    sekunden=secs;   
+
+
+function zeigBild(a,x,y,w,h)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
 }
-
-
       
         
 </script>
