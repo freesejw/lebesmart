@@ -17,94 +17,101 @@
 
 var canv = document.getElementById("StrukturFinden");
 var ctx = canv.getContext("2d");
-canv.width=500;
-canv.height=500;
+canv.width=260;
+canv.height=480;
 
-var xAbstand=60,yAbstand = 110;     // Verschiebt die Matrix nach rechts und unten
+var xAbstand=20,yAbstand = 110;     // Verschiebt die Matrix nach rechts und unten
 var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var xCoord = []; yCoord = [];   // x y Koordinate links oben im Feld
-var audio;
+
 var indexReihe = [];// hier werden die indizes der Felder gespeichert die angezeigt werden sollen
 var plusPunkte = 0,minusPunkte=0;
-var zeilenZahl = 5, spaltenZahl = 5; // Felder pro Spalte und Zeile
-var breite = 50, hoehe=50;
+var zeilenZahl = 6, spaltenZahl = 6; // Felder pro Spalte und Zeile
+var breite = 35, hoehe=35;
 
 var xPos, yPos,xclick, yclick;
 var zaehlerClick, zaehlerTreffer;
-var blocken;
+var blocken,blockenStart;
 
-var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum finden der Zahl in Sekunden
+var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum klicken der Bilder
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
-
-var xBasis=20, yBasis=440, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+var xBasis=10, yBasis=420, wBasis=70, hBasis=35, dBasis=10, xtestdis=10, ytextdis=25;
 
 var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
              {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
-var texts =[{na:String.fromCharCode(9655) + "   Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na: String.fromCharCode(43)+ "   Bilder", x: (xBasis + xtestdis +5+  (wBasis + dBasis)-10),y: yBasis + ytextdis} ,
-           {na: String.fromCharCode(45) + "   Bilder", x: ((xBasis + xtestdis +5) + 2 * (wBasis+ dBasis)) - 10,y: yBasis + ytextdis }];
+var texts =[{na: "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
+           {na:  String.fromCharCode(43)+ "  Bild", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na:  String.fromCharCode(45)+ "  Bild", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
 
 function ladeGame()
 {
-    meldung("Erhöhe die Denkgeschwindigkeit + Merkspanne","bold","20",schriftArt,"#5a617b",xBasis, 30); 
-    meldung("Merke Dir die Bildpositionen ; Merkzeit 4 Sek.","normal","16", schriftArt,"#5a617b",xBasis, 60);   
-    meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);
-    meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,260);  
-    meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,300);  
+    meldung("Speed + Merkspanne","bold","20",schriftArt,"#5a617b",xAbstand, 30); 
+    meldung("Merke Dir die Bildpositionen","normal","16", schriftArt,"#5a617b",xAbstand, 360);   
+    meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",113,405);
+   
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     roundedButton(3);
     buttonText();     
     blocken=false; 
+    blockenStart=false;
+    plusPunkte=0;
 }
 
 function start() 
 { 
-    blocken=true; // Klicken weährend dedr Merkphase verhindern
+    
+    blocken=true; //Klicken in der Matrix während der Merkphase blockiert
+    blockenStart=true; // Klicken auf go on weährend der Merkphase verhindern
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl);//Löscht die Matrix 
-    //ctx.clearRect(xBasis,220-40,350,40);//löscht text " falsches Feld..."
-    zaehlerClick=0;
+    ctx.clearRect(xAbstand, 360 - 25,canv.width,20 ); // löscht merk dir ....
+    //meldung("Punkte : " + (plusPunkte)  ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
+    roundedButton(3);
+    buttonText();  
     zaehlerTreffer=0;     
     indexReihe=[]; 
     zeitAusgang=0; //  
-    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);    
-    auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt sie an 
-   // meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek. Zeit" ,"normal","16",schriftArt,"#5a617b",xBasis,395); 
-   startTimer(xAbstand, 395-25, 250, 20, 4000.,"Merken","16px Arial"); 
-   //startTimer(xAbstand, 380, 250,20, 4*1000);   
-    //progMinus(xAbstand,395,250,16,4,100);
-   id=setInterval(zeitAbfrage,1000);
+    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe); 
+
+    auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt 
+                                             // die entsprechenden Bilder  
+
+    startTimer(xAbstand, 375-25, 210, 20, 4000.,"Merken","16px Arial"); // Progessbar  Zeit zu  
+    zeigBild("tic2.jpg",xBasis,yBasis,wBasis,hBasis);
+    setTimeout(function () 
+                            {
+                            zeitAbfrage(); 
+                            }, 500+zeitSchranke*1000);
 }
 
 function zeitAbfrage()
    {
         // Misst die Zeit.     
-        //meldung("Zeit zum Merken :  " + (zeitSchranke - zeitAusgang) + " Sek. Zeit" ,"normal","16",schriftArt,"#5a617b",xBasis,395); 
-        zeitAusgang=zeitAusgang + 1;   
-        if(zeitAusgang >= zeitSchranke)  
-            { 
-                blocken=false;
-                ctx.clearRect(xAbstand,395 - 25,400,25);   // Merke dir die Position....
-                meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xAbstand,395); 
-                for (var i =0; i<anzahlBilder;i++)
-                {
-                    ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
-                    zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
-                    ctx.lineWidth="3";
-                    ctx.strokeStyle="blue";       
-                    ctx.strokeRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-1,hoehe-1);      
-                    //  Hier werden die zu suchenden Zellen anonymisiert
-                }            
-                clearInterval(id);          
-            }    
+       
+       
+        blocken=false; // Klicken in der Matrix erlaubt 
+        ctx.clearRect(xAbstand,375 - 25,400,25);   // Löscht den startTimer
+        meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xAbstand,375); 
+        for (var i =0; i<anzahlBilder;i++)
+        {
+            ctx.clearRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite,hoehe);
+            zeigBild("neuesAuge.jpg" ,xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
+            ctx.lineWidth="3";
+            ctx.strokeStyle="blue";       
+            ctx.strokeRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-1,hoehe-1);      
+            //  Hier werden die zu suchenden Zellen anonymisiert
+        }            
+        
     }
 
 canv.addEventListener('click', function(event) 
 {   
 if (blocken==false)
  { 
-    ctx.clearRect(xBasis,395-25,300,25);// löscht "falsches Feld....
+   //
+  
+    ctx.clearRect(xBasis,375-25,300,25);// löscht "falsches Feld....
 
         xclick = event.clientX;
         yclick = event.clientY; 
@@ -120,42 +127,44 @@ if (blocken==false)
                 var zw =indexReihe.indexOf(zwert);  //Prüfung auf Treffer bedeutend mit zw > 0  
              
                 if (zw>=0)
-                        {
-                            // Richtige Ziffer == Treffer 
-                            zaehlerTreffer++;
-                            xxclick=(Math.floor(xclick/breite))*breite;
-                            yyclick=(Math.floor(yclick/hoehe))*hoehe; 
-                            ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite-20,hoehe-20);
-                            zeigBild("daumenHoch.png",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
-                         
-                         }
-                        else {    
-                            //falsche Feld
-                            xxclick=(Math.floor(xclick/breite))*breite;
-                            yyclick=(Math.floor(yclick/hoehe))*hoehe;   
-                            ctx.clearRect(xBasis,395-30,300,30); 
-                            //zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);   
-                            ctx.clearRect(xBasis ,220-40,600,70); // Schafft Platz für die Meldung Falsches.....
-                            meldung("Falsches Feld ==> Go on" ,"bold","16",schriftArt,"blue",xBasis + 44,220);
-                           // akustischeMeldung("audio/up.mp3"); 
-                            blocken=false;
-                            minusPunkte++;                
-                            }
+                    {
+                        // Richtige Ziffer == Treffer 
+                        zaehlerTreffer++;
+                        xxclick=(Math.floor(xclick/breite))*breite;
+                        yyclick=(Math.floor(yclick/hoehe))*hoehe; 
+                        ctx.clearRect(xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite-20,hoehe-20);
+                        zeigBild("daumenHoch.png",xCoord[indexReihe[zw]] + xAbstand,yCoord[indexReihe[zw]] + yAbstand ,breite,hoehe);                               
+                    
+                    }
+                    else {    
+                        //falsche Feld geklickt
+
+                        xxclick=(Math.floor(xclick/breite))*breite;
+                        yyclick=(Math.floor(yclick/hoehe))*hoehe;   
+                    
+                        zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);                     
+                        blocken=false;
+                        blockenStart=false;
+                        roundedButton(3);
+                        buttonText();   
+                        minusPunkte++;                
+                        }
             }
             if (zaehlerTreffer == indexReihe.length)
             {
-                // Richtige Zahl
+                // Alle Bilder erfolgreich geklickt
                 plusPunkte++;                 
-               //meldung("Punkte gesamt = " + plusPunkte ,"18",schriftArt,"#5a617b",335,260);  
-                //meldung("Versuche : " + (plusPunkte+minusPunkte)  ,"18",schriftArt,"#5a617b",335,340);  
+                //meldung("Punkte : " + (plusPunkte)  ,"normal","16",schriftArt,"#5a617b",xAbstand,55);  
                 blocken=false;
+                //blockenStart=false;
                 
-               if (plusPunkte==5 || plusPunkte==10)
+               if (plusPunkte==1 || plusPunkte==10)
                     {                      
-                    zeigBild("merkelkuss.png",60,110,259,250); 
+                    zeigBild("merkelkuss.png",xCoord[0] + xAbstand,yCoord[0]+yAbstand,spaltenZahl*breite,zeilenZahl*hoehe); 
                     }
-                setTimeout(function () 
+                    setTimeout(function () 
                         {
+                          
                            start();
                         }, 1500);
              
@@ -165,31 +174,35 @@ if (blocken==false)
 
 canv.addEventListener('click', function(e)
      {
-        var rect = angetippt(rects, e.offsetX, e.offsetY);        
+       // Klick Kontrolle Buttons
+       
+        var rect = angetippt(rects, e.offsetX, e.offsetY); 
+              
         if (rect) 
         {
-            switch (getipptRechteck) // kommt aus angetippt()
+           switch (getipptRechteck) // kommt aus angetippt()
                 {
                     case 0:
-                        if (blocken==false)
+                        if (!blockenStart)
                         {               
                         start();
                         }                      
                     break;
                     case 1:
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",113,405); 
                     break; 
                     case 2:
                         anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",260,420);  
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",113,405);  
                     break;                                           
                     default:
                     alert("War nichts");
                 }                        
         } 
-                meldung("Punkte gesamt = " + plusPunkte ,"bold","16",schriftArt,"#5a617b",335,260);  
-                meldung("Durchgänge : " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",335,300);  
+                meldung("Punkte :  " + plusPunkte ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
+                meldung("Durchgänge :  " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",xAbstand + 90,60);  
+                
     }, false);
 
 function aufbauMatrix(zeilen,spalten,breite,hoehe)
@@ -215,32 +228,21 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
             ctx.strokeRect(xCoord[0]+xAbstand,yCoord[0]+yAbstand,breite*spalten,hoehe*zeilen);    
 }
 
-function zeigBild(a,x,y,w,h)
-{
-    var img = new Image();
-    img.onload = function ()
-     {
-        ctx.drawImage(img, x,y,w,h);
-     }
-    img.src = a;
-}
-
 function auswahlZellen(zeilen,spalten)
 {
-    // Wählt und zeigt die Zellen an, die gesucht werden sollen
+    // Wählt die Zellen aus und  zeigt die Zellen mittels der ilder an, die gesucht werden sollen
     for (var i =0; i<anzahlBilder;i++)
     {
         var zw =Math.max(0,((random(zeilen*spalten) - 1)));
-        console.log(zw);
-
+       
         if (indexReihe.indexOf(zw) <0)
             {               
-                        indexReihe.push(zw);}
-                        else
-                        {i=i-1;}
-                var zu=random(7);
+                indexReihe.push(zw);}
+                else
+                {i=i-1;} // Vermeidet doppelte Auswahl einer Zelle
+                var zu=random(7); // 7 == Anzahl verwendbarer Bilder 
             
-                        zeigBild("face/face" + zu + ".png",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
+                zeigBild("face/face" + zu + ".png",xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-4,hoehe-4);
             }   
 }
 

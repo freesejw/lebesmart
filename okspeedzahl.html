@@ -74,7 +74,7 @@ function ladeGame()
 
 function start()
     { 
-    
+    if(blocken==true){zeigBild("tic2.jpg",xBasis,yBasis,wBasis,hBasis);}      
         ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
        if (durchLauf== 0){ ctx.clearRect(xAbstand, 60-20,canv.width,45 );} //löscht "finde...."
         zaehlerTreffer=0, zeitAusgang=0, anzahlClicks=0;   
@@ -119,13 +119,16 @@ function zeitPruef()
                                             ctx.strokeRect (xCoord[42] + xAbstand,yCoord[42]+yAbstand,7*breite,hoehe);
                
                
-                zeigBild("stopuhr.png",70,150,150,150);
+                zeigBild("stopuhr.png",70,150,140,140);
                 var aa=anzahlTreffer + " Treffer  bei  " + durchLauf + " Versuchen ";
                 meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,70);                         
                 clearInterval(id);
                 zeitAusgang=0;
                 blocken=false;
                 clickenAus=true;
+                ctx.clearRect(xBasis,yBasis,wBasis,hBasis);
+                roundedButton(3);
+                buttonText();       
             }
             
         if (clickenAus)
@@ -156,13 +159,13 @@ canv.addEventListener('click', function(event)
                 var treffer=false;    
                 var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des geklickten Feldes
 
-                if (zwert>=0) { treffer= true}
+                if (zwert>=0) { treffer= true}  // Zwert > 0 dann ein Matrixfeld geklickt 
                 if ( treffer) 
                     {
                     
                         var zw =indexReihe.indexOf(zwert);
                     
-                        if (zw>=0)
+                        if (zw>=0) // zw >= 0 , dann ein richtiges Feld geklickt
                             {
                                 zaehlerTreffer++;
                                 xxclick=(Math.floor(xclick/breite))*breite;
@@ -176,7 +179,8 @@ canv.addEventListener('click', function(event)
                                 treffer=false;
                             }
                             else 
-                                {                                    
+                                {   
+                                    // falsches Feld                                 
                                     var aa=anzahlTreffer + " Treffer ;  " + durchLauf + " Versuch(e) ";
                                     meldung(aa ,"bold","16",schriftArt,"#5a617b",xAbstand,70);  
 
@@ -190,13 +194,17 @@ canv.addEventListener('click', function(event)
                                     xxclick=(Math.floor(xclick/breite))*breite;
                                     yyclick=(Math.floor(yclick/hoehe))*hoehe;                            
                                     clearInterval(id); 
-                                    start();                               
-                                                                                
+                                    ctx.clearRect(xBasis,yBasis,wBasis,hBasis);
+                                    roundedButton(3);
+                                    buttonText();   
+                                                       
                                 }
                     }
 
                     if (zaehlerTreffer == indexReihe.length)
                         {             
+                           // alle Felder richtig geklickt, Ziffer getrffen
+                           
                             var aufschlag=0;
                             anzahlTreffer++; 
 
@@ -212,18 +220,16 @@ canv.addEventListener('click', function(event)
                                     meldung("Weiter so !!!  " + maxDurchlaeufe + "  Durchläufe","normal","16",schriftArt,"black",xCoord[42]+ xAbstand + 14,yCoord[42]+yAbstand+20);   
                                 
                                     ctx.clearRect(80,150,150,150);
-                                    zeigBild("schiess.png",80,150,150,150);
+                                    zeigBild("schiess.png",80,150,120,120);
                                     aufschlag = 1000;
                                     }
 
                             clickenAus=true;
-                            blocken=false;
-
+                            blocken=true;  // start kann wieder audfgerufen werden
                             clearInterval(id);
 
-                            setTimeout(function () 
+                            setTimeout(function () // Zeitverzögerung bis neue Ziffer angezeigt wird
                             {
-
                             start();
                             }, 700 + aufschlag);
                                         
@@ -503,6 +509,15 @@ function feldNummerSchuss(xc,yc)
     return zw;  
 }
 
+function zzeigBild(a,x,y,w,h)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
+}
  
 </script>
 
