@@ -25,55 +25,71 @@ var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var xCoord = []; yCoord = [];   // x y Koordinate links oben im Feld
 
 var indexReihe = [];// hier werden die indizes der Felder gespeichert die angezeigt werden sollen
-var plusPunkte = 0,minusPunkte=0;
+var alleBilderGeklickt=0;
 var zeilenZahl = 6, spaltenZahl = 6; // Felder pro Spalte und Zeile
 var breite = 35, hoehe=35;
-
+var maxDurchlaeufe=10;
+var durchLaeufe=0;
 var xPos, yPos,xclick, yclick;
-var zaehlerClick, zaehlerTreffer;
-var blocken,blockenStart;
+var zaehlerClick; 
+var zaehlerTreffer;// zählt die Treffer einer maxDurchlaeufe Runds 
+var matrixGeblockt,blockenStart;
 
 var anzahlBilder = 3,zeitSchranke = 4;// Anzahl Bilder und max. Zeit zum klicken der Bilder
 var zeitAusgang; // Startwert für die Ermittlung der abgelaufenen Zeit;
 var xBasis=10, yBasis=420, wBasis=70, hBasis=35, dBasis=10, xtestdis=10, ytextdis=25;
 
 var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
-             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: 0.6*wBasis, h: hBasis,col1: "#5a617b",col2: "5a617b"},
+             {x: (xBasis + 1.6 * (wBasis+ dBasis)), y: yBasis, w: 0.6*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 var texts =[{na: "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na:  String.fromCharCode(43)+ "  Bild", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
-           {na:  String.fromCharCode(45)+ "  Bild", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+           {na:  String.fromCharCode(43), x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           {na:  String.fromCharCode(45), x: (xBasis + xtestdis + 1.6 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
 
 function ladeGame()
 {
-    meldung("Speed + Merkspanne","bold","20",schriftArt,"#5a617b",xAbstand, 30); 
-    meldung("Merke Dir die Bildpositionen","normal","16", schriftArt,"#5a617b",xAbstand, 360);   
-    meldung("Anzahl Bilder = " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",113,405);
-   
-    aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
+    meldung("Bilder wieder finden","bold","20",schriftArt,"#5a617b",xBasis, 30); 
+    meldung("Punkte :  " + alleBilderGeklickt ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
+                        meldung("Durchgänge :  " + (durchLaeufe)  ,"normal","16",schriftArt,"#5a617b",xAbstand + 90,60); 
+    var y=120;
+    meldung("Nach Klicken Go on erscheint eine","normal","16", schriftArt,"#5a617b",xBasis, y);   
+    meldung("Matrix.In dieser Matrix tauchen","normal","16",schriftArt,"#5a617b",xBasis,y+20);
+    meldung("einige Bilder auf. Du hast " + zeitSchranke ,"normal","16",schriftArt,"#5a617b",xBasis,y+40); 
+    meldung("Sekunden Zeit dir die Position ","normal","16",schriftArt,"#5a617b",xBasis,y+60);       
+    meldung("zu merken. Nach Ablauf der","normal","16", schriftArt,"#5a617b",xBasis, y+80);
+    meldung("Merkzeit klicke die entsprechenden","normal","16",schriftArt,"#5a617b",xBasis, y+100);
+    meldung("Felder an.","normal","16",schriftArt,"#5a617b",xBasis, y+120);
+    meldung("Die Bilderzahl kannst du mit","normal","16",schriftArt,"#5a617b",xBasis, y+140);
+    meldung("dem + / - Button verändern","normal","16",schriftArt,"#5a617b",xBasis, y+160);
+    meldung("Es gibt " + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, y+190);
+    meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",90,405);  
+    
+  
+    //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe);
     roundedButton(3);
     buttonText();     
-    blocken=false; 
+    matrixGeblockt=true; // wenn matrixGeblockt = false gesetzt ist, können die Felder in der Matrix nicht angeklickt werden
     blockenStart=false;
-    plusPunkte=0;
+    alleBilderGeklickt=0;
 }
 
 function start() 
 { 
     
-    blocken=true; //Klicken in der Matrix während der Merkphase blockiert
+    matrixGeblockt=true; //Klicken in der Matrix während der Merkphase blockiert
     blockenStart=true; // Klicken auf go on weährend der Merkphase verhindern
+    ctx.clearRect(xBasis,120-20,canv.width,190 +20);// Löscht text ladeGame
     ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl);//Löscht die Matrix 
     ctx.clearRect(xAbstand, 360 - 25,canv.width,20 ); // löscht merk dir ....
-    //meldung("Punkte : " + (plusPunkte)  ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
+   
     roundedButton(3);
     buttonText();  
-    zaehlerTreffer=0;     
+    zaehlerTreffer=0; // Zäehlt die Treffer. damit wird geprüft ob alle Felder richtig angeklickt wurden
+    durchLaeufe++;    
     indexReihe=[]; 
     zeitAusgang=0; //  
     aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe); 
-
     auswahlZellen(zeilenZahl,spaltenZahl);   // wählt die felder aus die gesucht werden sollen und zeigt 
                                              // die entsprechenden Bilder  
 
@@ -81,16 +97,14 @@ function start()
     zeigBild("tic2.jpg",xBasis,yBasis,wBasis,hBasis);
     setTimeout(function () 
                             {
-                            zeitAbfrage(); 
+                            versteckeBilder(); 
                             }, 500+zeitSchranke*1000);
 }
 
-function zeitAbfrage()
+function versteckeBilder()
    {
-        // Misst die Zeit.     
-       
-       
-        blocken=false; // Klicken in der Matrix erlaubt 
+        // Versteckt die angezeigten und zu suchenden Bilder      
+        
         ctx.clearRect(xAbstand,375 - 25,400,25);   // Löscht den startTimer
         meldung("Jetzt suche die Bilder" ,"normal","16",schriftArt,"red",xAbstand,375); 
         for (var i =0; i<anzahlBilder;i++)
@@ -102,33 +116,32 @@ function zeitAbfrage()
             ctx.strokeRect(xCoord[indexReihe[i]] + xAbstand,yCoord[indexReihe[i]] + yAbstand ,breite-1,hoehe-1);      
             //  Hier werden die zu suchenden Zellen anonymisiert
         }            
-        
+        matrixGeblockt=false; // Klicken in der Matrix erlaubt  
     }
 
 canv.addEventListener('click', function(event) 
 {   
-if (blocken==false)
+if (matrixGeblockt==false) // dann ist Klicken in der Matrix erlaubt
  { 
-   //
-  
+   
     ctx.clearRect(xBasis,375-25,300,25);// löscht "falsches Feld....
 
-        xclick = event.clientX;
-        yclick = event.clientY; 
-        xclick = xclick - xAbstand ;
-        yclick = yclick - yAbstand ;
-        zaehlerClick++;
+    xclick = event.clientX;
+    yclick = event.clientY; 
+    xclick = xclick - xAbstand ;
+    yclick = yclick - yAbstand ;
+    zaehlerClick++;
 
         
-        let zwert = geklicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
+    let zwert = geklicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
 
         if (zwert>=0) 
             {            
-                var zw =indexReihe.indexOf(zwert);  //Prüfung auf Treffer bedeutend mit zw > 0  
-             
+                var zw =indexReihe.indexOf(zwert);  //Prüfung auf Treffer. Treffer bedeutend mit zw >= 0  
+            // console.log("zw  " + zw);
                 if (zw>=0)
                     {
-                        // Richtige Ziffer == Treffer 
+                        // zw >= 0 => Richtiges Feld == Treffer 
                         zaehlerTreffer++;
                         xxclick=(Math.floor(xclick/breite))*breite;
                         yyclick=(Math.floor(yclick/hoehe))*hoehe; 
@@ -137,40 +150,55 @@ if (blocken==false)
                     
                     }
                     else {    
-                        //falsche Feld geklickt
+                        //zw = - 1  => falsche Feld geklickt
 
                         xxclick=(Math.floor(xclick/breite))*breite;
                         yyclick=(Math.floor(yclick/hoehe))*hoehe;   
                     
                         zeigBild("daumenRunter.png",xCoord[zwert] + xAbstand,yCoord[zwert] + yAbstand ,breite,hoehe);                     
-                        blocken=false;
-                        blockenStart=false;
-                        roundedButton(3);
-                        buttonText();   
-                        minusPunkte++;                
+                        matrixGeblockt=false;
+                        meldung("Punkte :  " + alleBilderGeklickt ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
+                        meldung("Durchgänge :  " + (durchLaeufe)  ,"normal","16",schriftArt,"#5a617b",xAbstand + 90,60); 
+                        //blockenStart=false;
+                       
+                                  
                         }
             }
-            if (zaehlerTreffer == indexReihe.length)
-            {
-                // Alle Bilder erfolgreich geklickt
-                plusPunkte++;                 
-                //meldung("Punkte : " + (plusPunkte)  ,"normal","16",schriftArt,"#5a617b",xAbstand,55);  
-                blocken=false;
-                //blockenStart=false;
+                    if (zaehlerTreffer == anzahlBilder) // zaehlertreffer wird bei Aufruf von start auf 0 gesetzt
+                    {
+                        // Alle Bilder erfolgreich geklickt
+                        alleBilderGeklickt++;               
+                        matrixGeblockt=false;
+                        //blockenStart=false;
+                        meldung("Punkte :  " + alleBilderGeklickt ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
+                        meldung("Durchgänge :  " + (durchLaeufe)  ,"normal","16",schriftArt,"#5a617b",xAbstand + 90,60);  
+                        
+                    } 
                 
-               if (plusPunkte==1 || plusPunkte==10)
-                    {                      
-                    zeigBild("merkelkuss.png",xCoord[0] + xAbstand,yCoord[0]+yAbstand,spaltenZahl*breite,zeilenZahl*hoehe); 
-                    }
-                    setTimeout(function () 
+                        if ((zaehlerTreffer == anzahlBilder) || zw==-1)
                         {
-                          
-                           start();
-                        }, 1500);
-             
-            }
-        }    
-        }, false); 
+
+                            if(durchLaeufe==maxDurchlaeufe)
+                            {
+                            durchLaeufe=0;
+                            ctx.clearRect(xBasis,yBasis,canv.width,hBasis);
+                            meldung("Die " + maxDurchlaeufe + " Durchläufe sind erreicht","normal","16",schriftArt,"red",xBasis,375);   
+                            roundedButton(3);
+                            buttonText();   
+                            }
+                            else 
+                                {      
+                                setTimeout(function () 
+                                            {                          
+                                            start();
+                                            }, 1500);  
+                                }                  
+                        }
+           
+
+        } 
+
+    }, false); 
 
 canv.addEventListener('click', function(e)
      {
@@ -190,18 +218,17 @@ canv.addEventListener('click', function(e)
                     break;
                     case 1:
                         anzahlBilder=plusMinus(anzahlBilder,1,1,25);
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",113,405); 
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",90,405); 
                     break; 
                     case 2:
                         anzahlBilder=plusMinus(anzahlBilder,-1,1,25); 
-                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",113,405);  
+                        meldung("Anzahl Bilder: " +  anzahlBilder,"normal","16",schriftArt,"#5a617b",90,405);  
                     break;                                           
                     default:
                     alert("War nichts");
                 }                        
         } 
-                meldung("Punkte :  " + plusPunkte ,"normal","16",schriftArt,"#5a617b",xAbstand,60);  
-                meldung("Durchgänge :  " + (plusPunkte+minusPunkte)  ,"normal","16",schriftArt,"#5a617b",xAbstand + 90,60);  
+               
                 
     }, false);
 
