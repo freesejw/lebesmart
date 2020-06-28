@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">     
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
+
+<style></style>
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="275" height="440"></canvas>
+     
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var cW = ctx.canvas.width, cH = ctx.canvas.height;  
+
+
+var indexBilder=[];  
+var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
+
+var durchLaeufe, treffer;
+var maxDurchlaeufe=10;
+var anzahlBilder=20, pic =new Array, zeigBilder=20;
+var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
+var zeiten=[];
+var indexGoOnButton=20;
+var doppelt1;
+var doppelt2;
+var kontrolle=[];
+
+var xBasis=20, wBasis1=50, hBasis=40, dBasis=10, xtestdis=20, ytextdis=25;
+var wBasis2=120, yErhoehung=50; 
+
+var yBasis0=080;
+var yBasis1=130;
+var yBasis2=180;
+var yBasis3=230;
+var yBasis4=280;
+var yBasis5=390;
+
+var sekunden;
+var timer = new stoppenZeit(drawTime);
+var xUhrPosition=375;
+var yUhrPosition=545;
+
+//Rechtecke für die Bilder
+var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
+             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
+             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
+
+             {x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
+             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
+             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis},
+
+             {x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis2, w: wBasis1, h: hBasis},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis2, w: wBasis1, h: hBasis},
+             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis2, w: wBasis1, h: hBasis},
+             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis2, w: wBasis1, h: hBasis},
+
+             {x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis3, w: wBasis1, h: hBasis},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis3, w: wBasis1, h: hBasis},
+             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis3, w: wBasis1, h: hBasis},
+             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis3, w: wBasis1, h: hBasis},
+
+             {x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis4, w: wBasis1, h: hBasis},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis4, w: wBasis1, h: hBasis},
+             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis4, w: wBasis1, h: hBasis},
+             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis4, w: wBasis1, h: hBasis},
+
+             {x: xBasis, y: yBasis5, w: 0.6*wBasis2 , h: hBasis -5,col1: "#5a617b",col2: "#5a617b"}];
+           
+var texts =[{na:  "Go on", x: xBasis , y: yBasis5 + ytextdis}];
+
+function ladeGame() 
+    {   
+        meldung("Welches Bild ist doppelt?","bold","20",schriftArt,"#5a617b",xBasis, 30);     
+        meldung("Es werden bei Anklicken des ","normal","16",schriftArt,"#5a617b",xBasis, 170); 
+        meldung("Go on Button 20 Bilder angezeigt.","normal","16",schriftArt,"#5a617b",xBasis, 190);  
+        meldung("Eins der Bilder ist zweimal da.","normal","16",schriftArt,"#5a617b",xBasis, 210);  
+        meldung("Klicke diese beiden Bilder an !","normal","16",schriftArt,"#5a617b",xBasis, 230);  
+
+        meldung("Es gibt "  + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, 260);  
+      
+        treffer=0;
+        durchLaeufe=0;
+       
+        roundedEinzelButton(20);
+        textGoOnButoon();
+
+   
+    }
+
+    function start(){
+        ctx.clearRect(rects[0].x -5, rects[0].y-5, 260, 255);  
+       
+        meldung("Zahl der Durchläufe :     " + durchLaeufe,"normal","16",schriftArt,"#5a617b",xBasis, 360);  
+        erstelleBasisBild()
+        durchLaeufe++;
+        timer.start();
+        kontrolle[0]=false;
+        kontrolle[1]=false
+        //nach 60 Sekunden Abbruch
+        setTimeout(function () {
+        timer.stop();
+        }, 60000);
+    }
+
+    function erstelleBasisBild()
+    {
+        erzeugeDieRechtecke(0,19,"#5a617b",2); // Rexhteck(20) ist der Go on Button
+         
+        einlesenBilder();
+       indexBilder=indexVergleichsBilder();      
+       bestimmeDoppelt(); //        
+       zeichneVorgabeBilder();           
+    }
+    
+    function bestimmeDoppelt(){
+        var neuesBild;
+        var altesBild=random(indexBilder.length)       
+           do
+                {
+                    neuesBild=random(indexBilder.length)            
+                }
+                while(neuesBild===altesBild); 
+                doppelt1=altesBild;
+                doppelt2=neuesBild;
+                indexBilder[altesBild]=indexBilder[neuesBild];                
+               console.log(doppelt1 +  "  " + doppelt2);
+       }  
+
+canv.addEventListener('click', function(e)
+     {
+        var rect = angetippt(rects, e.offsetX, e.offsetY);   
+       
+        if (rect)
+        {   
+            if ( (getipptRechteck==indexGoOnButton))
+                {
+                start();
+                }
+            else 
+            {
+                console.log(doppelt1 + "  get " + getipptRechteck);
+                if ( (getipptRechteck==doppelt1) && ( getipptRechteck<indexGoOnButton))
+                    {
+                        kontrolle[0]=true;
+                        erzeugeDieRechtecke(doppelt1, doppelt1,"green",3);
+                    }
+
+                    if ( (getipptRechteck==doppelt2) && ( getipptRechteck<indexGoOnButton))
+                        { kontrolle[1]=true; 
+                        erzeugeDieRechtecke(doppelt2, doppelt2,"green",3); 
+                        }
+                    if(kontrolle[0] === true && kontrolle[1]===true) 
+                        {
+                            zeigBild("daumenHoch.png",80,150,100,100);
+                            meldung("Zahl der Durchläufe :     " + durchLaeufe,"normal","16",schriftArt,"#5a617b",xBasis, 360);  
+                           if(durchLaeufe<maxDurchlaeufe){
+                            setTimeout(function () 
+                            {
+                              start();
+                            }, 1500); 
+                        } 
+
+                        else{
+
+                            meldung("Glückwunsch Vorgabe ","bold","20",schriftArt,"blue",xBasis, 280);
+                            meldung("Durchläufe abgearbeitet","bold","20",schriftArt,"blue",xBasis, 300);
+                            setTimeout(function () 
+                            {
+                                ctx.clearRect(rects[0].x -5, rects[0].y-5, 260, 290);   
+                            }, 3000); 
+
+                        }
+                            
+                        }   
+                if(getipptRechteck != doppelt1 && getipptRechteck!=doppelt2) 
+                {
+                    erzeugeDieRechtecke(getipptRechteck, getipptRechteck,"red",3);   
+                }
+            }
+              
+        }
+
+       
+
+        }, false);
+      
+
+function indexVergleichsBilder()
+    {
+    //Bestimmt per Zufall die bildernfolge 
+    var zww=[];
+        for (var i =0; i<zeigBilder;i++)
+        {
+        var zw =(random(pic.length));    
+        if (zww.indexOf(zw) <0)
+            {               
+                zww.push(zw);            
+                }
+                        else
+                        {i=i-1;}        
+        } 
+    return zww;
+    }
+
+
+
+function erzeugeDieRechtecke(a,b,farbe,dicke)
+{
+       for (var i = a;i <= b; i++) {
+
+        ctx.lineWidth=dicke;  
+        ctx.strokeStyle=farbe;    
+        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h); 
+
+      }
+
+}
+
+function zeichneVergleichsBilder(){
+    for (let i = 0 ;i<15;i++){
+        var xx =  xBasis + i * (wBasis1 + dBasis);
+        xx=xx-6*(wBasis1+dBasis)*(i>5);
+        var yy = yBasis2 + 50*(i>5);
+
+        //var spiegeln = i === 3
+        zeigBild(pic[indexBilder[i]],xx,yy,wBasis1,hBasis);   
+    }
+ 
+}
+
+function zeichneVorgabeBilder(){     
+    for (let i=0;i<zeigBilder;i++){ 
+         zeigBild(pic[indexBilder[i]], rects[i].x, rects[i].y, rects[i].w, rects[i].h);     
+    } 
+}
+
+function zeigBild(a,x,y,w,h, gespiegelt)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        if(gespiegelt === true) {
+            ctx.scale(1,-1)
+            ctx.drawImage(img,x,-1*(y+h),w,h);
+            ctx.restore();
+            ctx.scale(1,-1);
+        }
+        else
+            ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
+}
+
+function textGoOnButoon()
+{ 
+    ctx.fillStyle = "white";
+    ctx.font = "18px Arial";
+    ctx.fillText(texts[0].na,xBasis + xtestdis -10, yBasis5 + ytextdis);
+}
+
+function einlesenBilder()
+    {
+        for (i=0;i<= anzahlBilder;i++)
+        {
+            pic[i]=  "imageverkehr/verk" + i + ".jpg" 
+        } 
+    };
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) 
+    {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+function drawTime(zsecs, secs, minu) {
+    uhrAnzeige(xUhrPosition,yUhrPosition,minu,secs,zsecs) ;  
+    sekunden=secs;
+}
+function roundedEinzelButton(a)
+    {
+        // a : Buttons nummer       
+        ctx.fillStyle=rects[a].col1;         
+        roundedRect(rects[a].x, rects[a].y, rects[a].w, rects[a].h,10);      
+        ctx.fillStyle=rects[a].col2; 
+        roundedRect(rects[a].x+5, rects[a].y+5, rects[a].w-10, rects[a].h-10,10);
+        ctx.fill();       
+    }
+   
+</script>
+
+</body>
+</html>

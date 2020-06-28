@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">    
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
+
+<style></style>
+</head>
+<body onload="ladeGame()">
+<canvas id="canvas" width="320" height="450"></canvas>
+
+<script>   
+var startTime,elapsedTime,zeiten="";
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var cW = ctx.canvas.width, cH = ctx.canvas.height; 
+var zeiten=[], schnitt;
+var durchLaeufe,richtig;
+var maxDurchlaeufe=10;
+var rechenErgebnis, ergebnisIndex,summe;
+var hoechstens=100; // cent 
+
+var multiplikator=10;
+var bgCol="5a617b";
+var breite=20,yZeile =60, xDist=10;
+
+
+var stoppstarten;
+var sekunden;
+
+var xBasis=10, yBasis1=160, wBasis1=60, hBasis=40, dBasis1=20, xtextdis=20, ytextdis=25;
+var yBasis2= 380, wBasis2=60, dBasis2=20, yErhoehung=0; 
+
+var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + (wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
+             {x: (xBasis + 1.6 *( wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+            
+
+// Lösungs Alternativen  
+             {x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + wBasis1+ dBasis1), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 2 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: xBasis , y: yBasis1+55, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + (wBasis1+ dBasis1)), y: yBasis1 +55, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 2*(wBasis1+ dBasis1)), y: yBasis1 +55, w: wBasis1, h: hBasis,col1: bgCol}];
+
+var texts =[{na:"Go on", x: xBasis + xtextdis -8, y: yBasis2 + ytextdis,},
+           {na: String.fromCharCode(43), x: (xBasis + xtextdis +  wBasis2 + dBasis2 -5),y: yBasis2 + ytextdis} ,
+           {na: String.fromCharCode(45), x: (xBasis + 10 + 1.6 * (wBasis2+ dBasis2)),y: yBasis2 + ytextdis }];
+          
+function ladeGame()
+    {
+        // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
+       
+        anzeigeMeldunden();
+        roundedButton(3);
+        buttonText();        
+        richtig=0;
+        summe=0;
+        durchLaeufe=0;        
+        stoppstarten = false;
+       
+    }
+
+
+function start()
+    {   
+       
+       // meldung("Max. Betrag :  " + hoechstens/100 +" €","normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,360);
+        ctx.clearRect(rects[3].x, 60-20,cW,220);     
+       
+        if (durchLaeufe == 0)
+            {  
+
+            ctx.clearRect(0,285-20 ,cW,70); // löscht Zeit/durchlauf + Durchschnittszeit + Die Max Durchläufe ....
+            ctx.clearRect(0, 80-20,cW,190); //  Löscht Text der Startseite  
+          //  ctx.clearRect(0,315-18,cW,18)// löscht Die  .. Durchläufe ....   
+            //ctx.clearRect(xBasis,yBasis2,cW,hBasis);    
+            }
+
+       
+        aufbauZeile();       
+        vergleichsZahlen(rechenErgebnis); 
+        if (durchLaeufe == 0)
+            {  meldung("Klick jetzt an","normal","16",schriftArt,"5a617b",xBasis,285,cW,20);}
+        startTime = Date.now();
+        stoppstarten=true;
+
+        zeigBild("tic2.jpg",xBasis,yBasis2,wBasis2,hBasis);
+    }
+
+
+function aufbauZeile()
+{
+   // legt die Rechenkette an. In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
+   // rz : Anzahl Ziffern in der Rechenkette
+
+    let rechnung;
+
+        
+        
+        do {
+            rechnung = getRndInteger(hoechstens / multiplikator, hoechstens);    
+            rechenErgebnis= (hoechstens-rechnung);  
+        }           
+        while(rechenErgebnis<=30);
+         
+        let ausgabe1= "Rechnung : " + (rechnung/100).toFixed(2) + " Euro"; 
+        let gegeben  ="Gegeben   : " + (hoechstens/100).toFixed(2)  + " Euro";   
+        let frage = "Wechselgeld ?";  
+        ctx.fillStyle="#5a617b";
+        ctx.font= "normal 18px Arial" + " " + schriftArt;          
+        ctx.fillText(ausgabe1 ,xBasis-10 + xDist,yZeile+10);   
+        ctx.fillText(gegeben ,xBasis-10 + xDist,yZeile+40);  
+        ctx.fillText(frage ,xBasis-10 + xDist,yZeile+80);  
+ 
+}
+ 
+function vergleichsZahlen(re)
+{
+   //Liefert die Zahlen des möglichen Ergebnisses
+   // In  zz[ergebnisIndex] ist das richtige Ergerbnis gespeichert
+   // Die Position wird per Zufall generiert
+    var faktor;
+    let reunten,reoben; 
+    let revektor=[]; 
+    let j=-1; 
+    let zz=[];  
+    let limit ;  
+    if (re >0 && re <=100){limit=0.3;}
+    if (re >100 && re <=500){limit=0.25; }
+    if (re >500 && re <=1000){limit=0.20;}
+    if (re> 1000 && re <10000){limit=0.1;}
+    if (re>10000 && re <100000){limit=0.01;}
+    if (re > 100000){limit=0.001;}
+    
+        reunten=(re-limit*re).toFixed(0);
+        reoben=(re+limit*re).toFixed(0);
+        console.log("re  " + re + "  limit  " + limit +  " reunten " + reunten +"  " +reoben + "revektor" + revektor);
+       
+        for(var i = reunten;i<=reoben;i++)
+        {
+            j++;           
+            revektor[j]=i;         
+        } 
+        console.log(revektor);
+        var zw=shuffle(revektor)
+        console.log(zw);
+    
+    for (var i=0;i<6;i++)
+    {
+        zz[i]=(zw[i]/100).toFixed(2);
+        if (zz[i]==rechenErgebnis){i=i-1;}   
+    }
+
+        ergebnisIndex=getRndInteger(0,5);
+        zz[ergebnisIndex]  = (rechenErgebnis/100).toFixed(2); 
+
+            ctx.fillStyle="black"; 
+            ctx.font= "16px" + " " + schriftArt;      
+            ctx.fillText(zz[0],xBasis +8 ,yBasis1+ ytextdis); 
+            ctx.fillText(zz[1],xBasis + 8 + wBasis1+dBasis1,yBasis1+ytextdis); 
+            ctx.fillText(zz[2],(xBasis + 8 + 2 * (wBasis1 +dBasis1)),yBasis1+ytextdis);
+            ctx.fillText(zz[3],(xBasis + 8 ),yBasis1+ +55 + ytextdis);
+            ctx.fillText(zz[4],(xBasis + 8 +  (wBasis1 + dBasis1)),yBasis1 + 55 + ytextdis );
+            ctx.fillText(zz[5],(xBasis + 8 + 2 * (wBasis1 + dBasis1)),yBasis1 + 55 + ytextdis );
+            for(var i=0;i<6;i++)
+            {
+            ctx.strokeRect (rects[3+i].x, rects[3+i].y,wBasis1,hBasis);
+            }
+}
+ 
+
+
+ canv.addEventListener('click', function(e)
+     {       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        if (rect) 
+        {
+          auswahlButton();            
+        }}, false);
+
+
+function vergleich(a)
+{
+   // als a wird getipptRechteck übergen 
+   
+    if(a==ergebnisIndex+3)
+        {
+            elapsedTime = Date.now() - startTime;
+            // sekunden= (elapsedTime / 1000 ).toFixed(0);  
+            sekunden= (elapsedTime / 1000 )            
+            richtig++;
+           
+           // meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",xBasis, 240);
+            zeigBild("daumenHoch.png",rects[a].x+10,rects[a].y +5,30,30);       
+            zeiten.push( sekunden); 
+
+           // ausgabe der benötigten Zeiten *********************************************
+
+            var ausdruck=zeiten ;
+          
+            for (var i= 0;i<zeiten.length-1;i++);
+              {
+                summe+=zeiten[i];               
+              }
+           
+            var schnitt=(  summe/richtig); 
+            schnitt=(Math.floor(schnitt*10)/10).toFixed(1);
+            if(ausdruck.length>8){ausdruck.shift();} 
+          
+            var ausgabe="";
+            for(var ii=0;ii<ausdruck.length;ii++)   
+            {ausgabe=ausgabe + "  " + ausdruck[ii].toFixed(0)};
+
+            meldung(( "Zeit/Durchlauf : " + ausgabe ),"normal","16",schriftArt,"#5a617b",xBasis,285);
+
+            if (richtig>0)
+                {   
+              //  ctx.clearRect(xBasis,285-16,cW,16)       
+                meldung(( "Durchschnitts Zeit ( Sek. ) : "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis,305);           
+                }
+
+            console.log(durchLaeufe + " 1 " + maxDurchlaeufe);
+        }
+               
+            else 
+                {
+                    zeigBild("daumenRunter.png", rects[a].x+10,rects[a].y+5,30,30); 
+                   // meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",20, 240);
+                }
+
+        // neuer Aufruf 
+        console.log(durchLaeufe + "  " + maxDurchlaeufe);
+              if(durchLaeufe<maxDurchlaeufe) {
+                setTimeout(function () 
+                {
+                   start();
+                }, 300); 
+              }
+              // Abbruch
+              else{
+                meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,325);              
+                ctx.clearRect(xBasis,yBasis2,cW,hBasis);  //löscht die Buttons                
+                roundedButton(3);
+                buttonText();
+                durchLaeufe=0;  
+              }   
+    }
+
+
+function auswahlButton()
+
+    {        
+        switch (getipptRechteck) 
+        {
+            case 0:                                         
+            if(!stoppstarten)
+                    {    
+                        start();
+                        stoppstarten=true;
+                    }    
+                break;
+            
+            case 1:
+          
+                hoechstens= Math.min(100000, hoechstens*multiplikator); 
+                meldung("Max Betrag : " + hoechstens/100 + " €","normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2 + 10),360);                          
+                if(durchLaeufe>0){start(); }                         
+                break;
+            case 2:
+                
+                hoechstens=Math.max(100, hoechstens/multiplikator); 
+                meldung("Max Betrag : " + hoechstens/100 + " €","normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2 +10),360);   
+                if(durchLaeufe>0){start(); }                             
+                break;
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:   
+                case 8:                    
+                stoppstarten=false;                                       
+                durchLaeufe++;                       
+                vergleich(getipptRechteck);                         
+                break;                     
+                default:
+                alert("auswahlButton fehlgeschlagen");
+        }             
+    }
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+
+
+function zeigBild(a,x,y,w,h)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
+}
+function shuffle(a)
+    {
+        for (let i = a.length - 1; i > 0; i--) 
+        {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+    return a;
+    }  
+
+    function anzeigeMeldunden()
+    {
+        meldung("Wechselgeld","bold","20",schriftArt,"#5a617b",xBasis,20 ); 
+        meldung("Eine Rechnung wird mit einem","normal","16",schriftArt,"#5a617b",xBasis,80); 
+        meldung("höheren Betrag beglichen.","normal","16",schriftArt,"#5a617b",xBasis,100);       
+        meldung("Wie hoch ist das Wechselgeld?","normal","16", schriftArt,"#5a617b",xBasis, 120);
+        meldung("Es gibt 6 Lösungsvorschläge.","normal","16",schriftArt,"#5a617b",xBasis, 140);
+        meldung("Klicke deine Lösung an.","normal","16",schriftArt,"#5a617b",xBasis, 160);
+        meldung("Den Rechnungsbetrag kannst du mit","normal","16",schriftArt,"#5a617b",xBasis, 180);
+        meldung("dem + / - Button verändern","normal","16",schriftArt,"#5a617b",xBasis, 200);
+        meldung("Es gibt " + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, 240);
+        meldung("Max. Betrag :  " + hoechstens/100 +" €","normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,360);
+
+        
+    }       
+        
+</script>
+
+</body>
+</html>

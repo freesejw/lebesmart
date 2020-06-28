@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">        
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
+
+<style></style>
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="275" height="400"></canvas>
+     
+<script>
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var speicherTreffer=[];
+var audi0;
+var myVar;
+var reaktionsZeit=1.5;
+var maxDurchlaeufe=10;
+var durchLaeufe, treffer;
+
+var z1, z2;
+var offenButton; 
+var offenVergleich;
+
+var operanden=["+" , "-", "+" , "-" ,"*","/" ];
+var erg1, erg2;
+
+var xBasis=10, yBasis1=120, wBasis1=90, hBasis1=40, dBasis=20;
+var yBasis2= 340, wBasis2=60, hBasis2=40; 
+var yErhoehung=0, xtextdis=20, ytextdis=25;
+
+
+
+var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis2,col1: "red",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: 0.6*wBasis2, h: hBasis2,col1: "#5a617b",col2: "#5a617b"},                      
+             {x: (xBasis + 1.6 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: 0.6*wBasis2, h: hBasis2,col1: "#5a617b",col2: "#5a617b"},             
+
+             {x: xBasis, y: yBasis1 , w: wBasis1, h: hBasis1,col: "#F2F2F2" },
+             {x: xBasis + wBasis1+ dBasis, y: yBasis1 , w: wBasis1, h: hBasis1,col: "#F2F2F2"}];
+
+
+var texts =[{na: "Go on", x: xBasis + xtextdis -15, y: yBasis2 + ytextdis+yErhoehung,},
+           {na:  String.fromCharCode(43), x: (xBasis + 12+  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,         
+           {na:  String.fromCharCode(45), x: (xBasis + 15 + 1.6 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+
+function ladeGame()
+    {
+        
+        meldung("Blitz Entscheidung","bold","20",schriftArt,"#5a617b",xBasis, 35);  
+        var  tb =100;
+        meldung("Es werden 2 Rechenoperationen","normal","16",schriftArt,"#5a617b",xBasis, tb);  
+        meldung("nebeneinander angezeigt. Klicken ,","normal","16",schriftArt,"#5a617b",xBasis, tb + 20);  
+        meldung("sie die Rechenoperation an, die","normal","16",schriftArt,"#5a617b",xBasis, tb + 40);  
+        meldung("das höhere Ergebnis liefert.","normal","16",schriftArt,"#5a617b",xBasis, tb+60); 
+        meldung("Mit dem Plus / Minus Button","normal","16",schriftArt,"#5a617b",xBasis, tb+90); 
+        meldung("können sie die Zeit zum", "normal","16",schriftArt,"#5a617b",xBasis ,tb+110); 
+        meldung("Reagieren verändern.", "normal","16",schriftArt,"#5a617b",xBasis ,tb+130); 
+        meldung("Es gibt " +  maxDurchlaeufe + " Durchläufe.","normal","16,",schriftArt,"#5a617b",xBasis,tb+160); 
+        meldung("Zeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",100, yBasis2 - 20);  
+        roundedButton(3)
+        buttonText(3);
+            
+        offenButton=true;
+        offenVergleich=false;
+        
+    };
+
+
+function start()
+    {
+        ctx.clearRect(xBasis, 70-20, 300, 210);   // Löschen Trefferquote        
+        treffer=0;         
+        durchLaeufe=0;
+        ausgangsBilder();
+        setTimeout(function () 
+                {
+                        iteration()
+                }, 1000); 
+        
+        //iteration(); 
+        offenButton=false;
+        offenVergleich=true;
+      
+    }
+
+function iteration()
+{
+     
+        durchLaeufe++;  
+        ctx.fillStyle="#F2F2F2";
+        ctx.fillRect(rects[3].x, rects[3].y, rects[3].w, rects[3].h);
+        ctx.fillRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);  
+         
+        if (durchLaeufe <= maxDurchlaeufe)
+
+        {           
+            
+            z1=getRnd(1,10) + " " +  operanden[random(6)] + " " +getRnd(1,10); 
+            erg1= ergebnisKette(z1);
+         
+            do {
+                    z2=getRnd(1,10) + " " +  operanden[random(6)] + " " +getRnd(1,10); 
+                    erg2=ergebnisKette(z2);  
+               }
+                while (erg1 == erg2);
+           
+           
+            meldung(z1.valueOf() ,"bold","24",schriftArt,"#5a617b", rects[3].x + 22,rects[3].y + 0.75 * hBasis1);
+            meldung(z2.valueOf() ,"bold","24",schriftArt,"#5a617b", rects[4].x + 22,rects[4].y + 0.75 * hBasis1);
+     
+            setTimeout(function () 
+                {
+                   iteration()
+                }, reaktionsZeit*1000);
+        }
+
+        else
+            {                    
+           
+            offenVergleich=false;
+            offenButton=true;
+            abbruch();
+            }
+}
+
+function abbruch()
+
+    {
+            
+        speicherTreffer.push(treffer);
+        if (speicherTreffer.length>8){speicherTreffer.shift();}     
+        var ausgabeTreffer = "";   
+        for (var ii=0;ii<speicherTreffer.length;ii++){ausgabeTreffer=ausgabeTreffer + "  " +speicherTreffer[ii] }          
+        meldung("Treffer gesamt: " + ausgabeTreffer ,"normal","16",schriftArt,"red",xBasis,190);         
+        meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,230);   
+        ausgangsBilder();
+        
+    }
+
+
+ canv.addEventListener('click', function(e)
+     {       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        if (rect) 
+        {
+            auswahlButton(); 
+                   
+        }}, false);
+
+
+function auswahlButton()
+    {
+        console.log(" getippt" +getipptRechteck);
+        switch (getipptRechteck) 
+                {
+                    case 0:                                         
+                    if (offenButton){start();}
+                        break;
+                    
+                    case 1:
+                    if (offenButton)
+                    {
+                    reaktionsZeit=plusMinus(reaktionsZeit,0.1,0.8,5);
+                    meldung("Zeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",100, yBasis2 - 20);  
+                    
+                    }                                       
+                    break;
+                    case 2:
+                    if (offenButton)
+                    {
+                    reaktionsZeit=plusMinus(reaktionsZeit,-0.1,0.8,5);
+                    meldung("Zeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",100, yBasis2 - 20);  
+                    
+                    }                     
+                        break;
+                     case 3:
+                     //links getippt
+                     console.log(offenVergleich);
+                        if(offenVergleich){ vergleich(3); }                       
+                        break;  
+                     case 4:
+                     //rechts getippt
+                        if(offenVergleich){vergleich(4);}                        
+                        break;                 
+                    default:
+                       alert("ups");
+                }             
+    }
+
+function vergleich(a)
+    {
+    
+       if(a==3 && erg1>erg2){ zeigBild("daumenHoch.png",  rects[3].x + 30, rects[3].y,40,40);}
+       if(a==3 && erg1<erg2){ zeigBild("daumenRunter.png",rects[3].x + 30, rects[3].y,40,40);}
+       if(a==4 && erg1<erg2){ zeigBild("daumenHoch.png",  rects[4].x + 30, rects[4].y,40,40);}
+       if(a==4 && erg1>erg2){ zeigBild("daumenRunter.png",rects[4].x + 30, rects[4].y,40,40);}
+
+     
+            if((a==3 && erg1>erg2) ||(a==4 && erg1<erg2))
+            {
+                treffer++; 
+                meldung("Treffer aktuell : " + treffer ,"normal","16",schriftArt,"blue",xBasis,190);    
+               // ctx.clearRect(xBasis,400,200,-20);     
+              
+            }    
+    }
+    function ausgangsBilder()
+    {
+        //Erstellt den Rahmen
+        ctx.strokeRect(rects[3].x ,rects[3].y, rects[3].w, rects[3].h);
+        ctx.strokeRect(rects[4].x, rects[4].y, rects[4].w, rects[4].h);  
+        // Füllt den Rahmen
+        ctx.fillStyle="#5a617b";
+      
+        }
+
+ function getRnd(min, max) 
+  {
+  return Math.floor(Math.random() * (max - min)) + min;
+ } 
+
+ function ergebnisKette(kette)  
+   {
+      // berechnet den String
+        var zw=kette.match(/(\d+)|([\+\*\-\/\:])/g).reduce((accu, curr) => isNaN(curr) ? 
+        (accu + (curr === ':' ? '/' : curr)) : eval(accu + curr));  
+        return zw;
+   }  
+ 
+ </script>
+
+
+       
+<p>Enjoy !</p>
+
+</body>
+</html>

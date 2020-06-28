@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <h1>Überschriften verändern</h2>
+    <h2>das ist ein test</h2>
+    <p>Beispiel: für den text  </p>
+    <p>und es geht hier weiter</p>
+    
+	<label for="color1">
+        Wähle Farbe Überschriften
+    </label>
+    <input type="color" name="color1" id="color1" value="#ff0000"><br /><br />
+
+
+    
+	<label for="color2">
+        Wähle Farbe Text
+    </label>
+    <input type="color" name="color2" id="color2" value="#ff0000"><br /><br />
+
+    <script>
+	
+        document.getElementById('color1').addEventListener('change', function () {
+            var col = this.value;
+            document.querySelectorAll("h1").forEach(function (h1) {
+            h1.style.color = col;          
+			});
+            document.querySelectorAll("h2").forEach(function (h2) {
+            h2.style.color = col;          
+			});
+
+            document.querySelector("label[for='color1']").style.color = col; 
+        });
+       
+		    document.getElementById('color2').addEventListener('change', function () {
+            var col = this.value;
+            document.querySelectorAll("p").forEach(function (p) {
+            p.style.color = col;
+            });
+
+            document.querySelector("label[for='color2']").style.color = col;
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">    
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+<link href="css/standard.css" rel="stylesheet">
+<script src="js/standard.js"></script>
+
+<style></style>
+</head>
+<body onload="ladeGame()">
+<canvas id="canvas" width="320" height="450"></canvas>
+
+<script>   
+var startTime,elapsedTime,zeiten="";
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var cW = ctx.canvas.width, cH = ctx.canvas.height; 
+var zeiten=[], schnitt;
+var maxZahl=10, schrittWeite=1,grenze=1000000;
+var rechenKette;
+var durchLaeufe,richtig;
+var rechenErgebnis, ergebnisIndex,summe; 
+var maxDurchlaeufe=10;
+var bgCol="5a617b";
+var breite=20,yZeile =60, xDist=10,yDist=25;
+var min=1;
+var max=100;
+var stoppstarten;
+var sekunden;
+
+var xBasis=10, yBasis1=160, wBasis1=40, hBasis=40, dBasis1=5, xtextdis=20, ytextdis=25;
+var yBasis2= 360, wBasis2=60, dBasis2=20, yErhoehung=0; 
+
+var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + (wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
+             {x: (xBasis + 1.6 *( wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+            
+
+// Lösungs Alternativen  
+             {x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + wBasis1+ dBasis1), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 2 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 3 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 4 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
+             {x: (xBasis + 5 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol}];
+
+var texts =[{na:"Go on", x: xBasis + xtextdis -8, y: yBasis2 + ytextdis,},
+           {na: String.fromCharCode(43), x: (xBasis + xtextdis +  wBasis2 + dBasis2 -5),y: yBasis2 + ytextdis} ,
+           {na: String.fromCharCode(45), x: (xBasis + 10 + 1.6 * (wBasis2+ dBasis2)),y: yBasis2 + ytextdis }];
+          
+function ladeGame()
+    {
+        // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
+       
+        meldung("Grundrechnung","bold","20",schriftArt,"#5a617b",xBasis,40 ); 
+        meldung("Es erscheinen 2 Ziffern mit einem ","normal","16",schriftArt,"#5a617b",xBasis,80); 
+        meldung("Operanden wie z.B. 3 + 4 oder 6 * 12","normal","16",schriftArt,"#5a617b",xBasis,100);       
+        meldung("Unterhalb dieser Zeile werden","normal","16", schriftArt,"#5a617b",xBasis, 120);
+        meldung("6 Lösungsvorschläge gebracht","normal","16",schriftArt,"#5a617b",xBasis, 140);
+        meldung("Klicke deine Lösung an.","normal","16",schriftArt,"#5a617b",xBasis, 160);
+        meldung("Die Größe der Zahlen kannst du mit","normal","16",schriftArt,"#5a617b",xBasis, 180);
+        meldung("dem + / - Button verändern","normal","16",schriftArt,"#5a617b",xBasis, 200);
+        meldung("Es gibt " + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, 240);
+        meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,340);
+         
+        roundedButton(3);
+        buttonText();        
+        richtig=0;
+        summe=0;
+        durchLaeufe=0;        
+        stoppstarten = false;
+    }
+
+
+function start()
+    {   
+        meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,340);
+        ctx.clearRect(0, yZeile,cW,160); //  Löscht 3+ 4 *... Anzeige        
+       
+        if (durchLaeufe == 0)
+            {    
+                richtig=0;  
+                zeiten=[];    
+                summe=0;  
+            ctx.clearRect(0,yZeile ,cW,250); // löscht die Zeile mit der Rechenaufgabe
+            ctx.clearRect(0,315-18,cW,18)// löscht Die  .. Durchläufe ....   
+            //ctx.clearRect(xBasis,yBasis2,cW,hBasis);    
+            }
+            durchLaeufe++;
+            aufbauZeile(maxZahl,breite);
+       
+        vergleichsZahlen(); 
+       
+        startTime = Date.now();
+        stoppstarten=true;
+        zeigBild("tic2.jpg",xBasis,yBasis2,wBasis2,hBasis);
+        
+    }
+
+
+function aufbauZeile(rz,breite)
+{
+   // legt die Rechenkette an. In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
+   // rz : Anzahl Ziffern in der Rechenkette
+
+            var ziffer1,ziffer2;
+            var oo;           
+                      
+            var operanden=["+","-","*","/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
+           
+                ziffer1 = getRndInteger(2, rz); // Es werden zahlen zwischen 1 und maxZahl zugelassen
+                ziffer2 = getRndInteger(2, rz);
+                console.log(ziffer1 ,ziffer2);
+                oo=operanden[random(operanden.length)].trim(); 
+
+                let isDivision = (oo==="/")               
+                                
+                if(isDivision)
+                    {                   
+                        ziffer1=Math.max(ziffer1,ziffer2);
+                        
+                        // Findet alle Zahlen aus dem Bereich 1 bis ziffer1 - 1, für die die Moduleoperation null ergibt.
+                        // Aus der Liste dieser Zahlen wird dann zufällig eine ausgewählt.
+
+                        var moeglichkeiten = [];
+                        var delta=-1;
+                        var merkJ=0;
+
+                        do 
+                        {
+                            delta++;  
+                            ziffer1=ziffer1+delta;
+                            
+                                for(var j = Math.max(2 , ziffer1 - 1); j >= 1; j--)
+                                                                        
+                                
+                                { 
+                                    // das Math.max ist wichtig für den Fall, dass xx eins ist.+
+
+                                    if(ziffer1%j == 0 && j>1) 
+                                    {
+                                        moeglichkeiten.push(j)  
+                                        merkJ++;                                                            
+                                    }  
+                                }                                                        
+                        }
+                        while(merkJ==0);
+
+                            let wahl = random(moeglichkeiten.length);
+                            ziffer2 = moeglichkeiten[wahl];
+                                    
+                    }
+              
+              
+                let z1=ziffer1 + " " +  oo + " " +ziffer2; 
+                
+               rechenErgebnis= ergebnisKette(z1);
+             
+                        var ox;                
+                        if (oo ==="+") {ox=String.fromCharCode(43);}
+                        if (oo ==="-") {ox=String.fromCharCode(45);}
+                        if (oo ==="/") {ox=String.fromCharCode(47);}
+                        if (oo ==="*") {ox=String.fromCharCode(120);}
+
+                let ausgabe= ziffer1 + "  " + ox + " " +ziffer2;       
+                ctx.fillStyle="#5a617b";
+                ctx.font= "bolder 20px Arial" + " " + schriftArt;          
+                ctx.fillText(ausgabe ,xBasis-10 + xDist,yZeile+yDist+10);   
+            
+ 
+}
+ 
+function vergleichsZahlen()
+{
+   //Liefert die Zahlen des möglichen Ergebnisses
+   // In  zz[ergebnisIndex] ist das richtige Ergerbnis gespeichert
+   // Die Position wird per Zufall generiert
+    var faktor;
+                                       
+                    if(Math.abs(rechenErgebnis)<=5)
+                            {    
+                                faktor=5;                                
+                            }    
+                       
+                    if(Math.abs(rechenErgebnis)>5 && Math.abs(rechenErgebnis)<=10)
+                            {    
+                                faktor=8;                                
+                            }                            
+                       
+                    if(Math.abs(rechenErgebnis)>10 )
+                            {    
+                                faktor=12;                                
+                            }                               
+    
+    var zz=[];
+
+
+    for (var i=0;i<6;i++)
+    {
+        var min =  rechenErgebnis - faktor;
+        var max = rechenErgebnis + faktor;
+        zz[i]=getRndInteger(min,max);
+        if (zz[i]==rechenErgebnis){i=i-1;}   
+    }
+
+        ergebnisIndex=getRndInteger(0,5);
+        zz[ergebnisIndex]  = rechenErgebnis; 
+
+            ctx.fillStyle="black"; 
+            ctx.font= "16px" + " " + schriftArt;      
+            ctx.fillText(zz[0],xBasis +8 ,yBasis1+ ytextdis); 
+            ctx.fillText(zz[1],xBasis + 8 + wBasis1+dBasis1,yBasis1+ytextdis); 
+            ctx.fillText(zz[2],(xBasis +8 +  2 * (wBasis1+ dBasis1)),yBasis1+ytextdis);
+            ctx.fillText(zz[3],(xBasis + 8 + 3 * (wBasis1+ dBasis1)),yBasis1+ ytextdis);
+            ctx.fillText(zz[4],(xBasis + 8 + 4 * (wBasis1+ dBasis1)),yBasis1 +ytextdis );
+            ctx.fillText(zz[5],(xBasis + 8 + 5 * (wBasis1+ dBasis1)),yBasis1 +ytextdis );
+            for(var i=0;i<6;i++)
+            {
+            filledCircle(rects[3+i].x+20, rects[3+i].y+20,20,0,2,Math.PI);
+            }
+}
+ 
+  function ergebnisKette(kette)
+   {
+        var zw=kette.match(/(\d+)|([\+\*\-\/\:])/g).reduce((accu, curr) => isNaN(curr) ? 
+        (accu + (curr === ':' ? '/' : curr)) : eval(accu + curr));  
+         return zw;
+   }  
+
+
+
+ canv.addEventListener('click', function(e)
+     {       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        if (rect) 
+        {
+          auswahlButton();  
+          
+        }}, false);
+
+
+function vergleich(a)
+{
+   // als a wird getipptRechteck übergen 
+    
+    if(a==ergebnisIndex+3)
+        {
+            elapsedTime = Date.now() - startTime;
+           // sekunden= (elapsedTime / 1000 ).toFixed(0);  
+           sekunden= (elapsedTime / 1000 ) 
+           
+            richtig++;
+           
+            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",xBasis, 240);
+            zeigBild("daumenHoch.png", xBasis -5 + (getipptRechteck- 3) * (wBasis1+ dBasis1),yBasis1-5,50,50);       
+            zeiten.push( sekunden); 
+
+           // ausgabe der benötigten Zeiten *********************************************
+
+            var ausdruck=zeiten ;
+          
+            for (var i= 0;i<zeiten.length-1;i++);
+              {
+                summe+=zeiten[i];               
+              }
+           
+            var schnitt=(  summe/richtig); 
+            schnitt=(Math.floor(schnitt*10)/10).toFixed(1);
+            if(ausdruck.length>8){ausdruck.shift();} 
+          
+            var ausgabe="";
+            for(var ii=0;ii<ausdruck.length;ii++)   
+            {ausgabe=ausgabe + "  " + ausdruck[ii].toFixed(0)};
+
+            meldung(( "Zeit/Durchlauf : " + ausgabe ),"normal","16",schriftArt,"#5a617b",xBasis,265);
+
+            if (richtig>0)
+                {   
+                ctx.clearRect(xBasis,285-16,cW,16)       
+                meldung(( "Durchschnitts Zeit ( Sek. ) : "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis,285);           
+                }
+           
+        }
+               
+            else 
+                {
+                    zeigBild("daumenRunter.png", xBasis -5 + (getipptRechteck- 3) * (wBasis1+ dBasis1),yBasis1-5,50,50); 
+                    meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",20, 240);
+                }
+              // neuer Aufruf 
+              if(durchLaeufe<maxDurchlaeufe) {
+                  console.log(durchLaeufe);
+                setTimeout(function () 
+                {
+                   start();
+                }, 300); 
+              }
+              // Abbruch
+              else{
+                meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,315);              
+                ctx.clearRect(xBasis,yBasis2,cW,hBasis);  //löscht die Buttons                
+                roundedButton(3);
+                buttonText();
+                ende=true;
+                durchLaeufe=0;  
+              }   
+    }
+
+
+function auswahlButton()
+
+    {        
+        switch (getipptRechteck) 
+                {
+                    case 0:                                         
+                    if(!stoppstarten)
+                            {    
+                                start();
+                                stoppstarten=true;
+                            }    
+                        break;
+                   
+                    case 1:
+                        maxZahl= plusMinus(maxZahl,schrittWeite,1,grenze); 
+                        meldung("Maximale Zahl = " + maxZahl,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2 + 10),340);                          
+                      //  durchLaeufe--; 
+                      //  start();                          
+                        break;
+                    case 2:
+                        maxZahl= plusMinus(maxZahl,-schrittWeite,1,grenze); 
+                        meldung("Maximale Zahl = " + maxZahl,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2 +10),340);   
+                       // start();  
+                      //  durchLaeufe--;                         
+                        break;
+                     case 3:
+                     case 4:
+                     case 5:
+                     case 6:
+                     case 7:   
+                     case 8:                    
+                        stoppstarten=false;                                       
+                       // durchLaeufe++;                       
+                        vergleich(getipptRechteck);                         
+                        break;                     
+                     default:
+                       alert("auswahlButton fehlgeschlagen");
+                }             
+    }
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+
+
+function zeigBild(a,x,y,w,h)
+{
+    var img = new Image();
+    img.onload = function ()
+     {
+        ctx.drawImage(img, x,y,w,h);
+     }
+    img.src = a;
+}
+      
+        
+</script>
+
+</body>
+</html>

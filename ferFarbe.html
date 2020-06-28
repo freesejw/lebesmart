@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">   
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href="css/standard.css" rel="stylesheet">
+
+<script src="js/standard.js"></script>
+
+</head>
+<body onload="ladeGame()">
+    <canvas id="canvas" width="290" height="480"></canvas>
+     
+<script>
+var farbe=["#bf7de0","green", "#2149de", "red", "black"];
+var farbNamen = ["Lila","Grün","Blau","Rot","Schwarz"]
+var farbeSuch, farbNamenSuch;   
+var indexFarbe=[]; 
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext("2d");
+var myVar; // für setInterval
+var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
+var blocken;
+var reaktionsZeit=2;
+var maxDurchlaeufe=10;
+
+var durchLaeufe, treffer;
+var vgColor="#8800ff";
+var bgColor="Lavender";
+var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
+var audio;
+
+var xBasis=20, yBasis1=200, wBasis1=35, hBasis=35, dBasis=15, xtextdis=20, ytextdis=25;
+var yBasis2= 400, wBasis2=70, hBasis2=40;yErhoehung=0; 
+
+//Rechtecke für die Farben
+var rects = [{x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col1: "#bf7de0",col2:"black"},
+             {x: (xBasis + wBasis1+ dBasis), y: yBasis1, w: wBasis1, h: hBasis,col1: "green",col2:"black"},
+             {x: (xBasis + 2 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: "#2149de",col2:"black"},
+             {x: (xBasis + 3 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: "red",col2:"black"},
+             {x: (xBasis + 4 * (wBasis1+ dBasis)), y: yBasis1, w: wBasis1, h: hBasis,col1: "black",col2:"black"},
+ // Button fuer Go on usw.
+             // 
+             {x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis2,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: 0.6*wBasis2, h: hBasis2,col1: "#ea2863",col2: "#ea2863"},
+             {x: (xBasis + 1.6 *( wBasis2+ dBasis)), y: yBasis2, w: 0.6*wBasis2, h: hBasis2,col1: "#5a617b",col2: "#5a617b"}];             
+             
+
+ var texts =[{na: "Go on", x: xBasis + xtextdis -10, y: yBasis2 + ytextdis+yErhoehung,},
+           {na: String.fromCharCode(43), x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
+           {na: String.fromCharCode(45), x: (xBasis + 15+ 1.6 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis }];
+       
+
+
+var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
+
+function ladeGame() 
+    {   
+        meldung("Welche Farbe?","bold","20","Arial","#5a617b",80, 25);
+        ctx.strokeStyle="#ea2867";
+        ctx.strokeRect(xBasis,60,200,40);
+       
+        //ctx.fillStyle="Lavender";
+        //ctx.fillRect( 80,60, 200, 40);  // Rechteck um "RED" Text
+        meldung(" Grün ? ","normal","16", "Arial","red",100, 88);
+        meldung("Tippe die Farbe des obigen Wortes","normal","16","Arial","#5a617b",xBasis, 125);
+        meldung("Hier im Beispiel wäre es Rot","normal","16","Arial","#5a617b",xBasis, 150);
+        meldung("Es gibt " + maxDurchlaeufe + " Durchläufe","normal","16","Arial","#5a617b",xBasis, 175);
+        
+        meldung("Reaktionszeit = " ,"normal","16","Arial","#5a617b",95 ,380);
+        meldung(reaktionsZeit + " Sek.","normal","16","Arial","#5a617b",215 ,380);
+        roundedButton(); // Rechtecke / Button werden hier gezeichnet 
+        buttonText();  // und hier mit Text versehen falls keine Farbe genommen wird 
+        blocken=false;
+    }
+
+    canv.addEventListener('click', function(e)
+     {
+       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);
+        
+        if (rect)
+            {           
+                auswahlButton();            
+                if ( (vergleichIndex==farbeSuch) && ( getipptRechteck<farbe.length))
+                    { treffer++; 
+                   // meldung( treffer + " Treffer  bei " + durchLaeufe + " Durchläufe","bold","16" ,"Arial","#5a617b",xBasis, 300);
+                    }  
+            }   
+        }, false);
+
+function start()
+
+    {
+        durchLaeufe=0;
+        blocken = true;
+        treffer=0; 
+        ctx.clearRect(0,160,500,200)  // Löscht den Siegeskranz
+        ctx.strokeRect( xBasis,60, 200, 40);        
+        ctx.clearRect(xBasis,150 -20 ,200,20);   // löscht "" Hier im Beispiel wäre es Blau"
+        ctx.clearRect(xBasis,175 -20 ,200,20);   // löscht "" Hier im Beispiel wäre es Blau"
+        ctx.clearRect(xBasis,88-20, 180, 25); // Löscht den Text der anzutippenden Farbe       
+        ctx.clearRect(xBasis,340-20,300, 20); // löscht : .. Treffer bei ... Durchläufe
+        indexFarbe=auswahlIndex(); // Die farbe der Farb rechtecke werden bei jedem start aufruf geändert
+        neueButton(indexFarbe);
+      //  console.log("indexFarbe  " + indexFarbe); 
+       // erzeugeButton();//roundedButton();
+       // buttonText();
+        farbeSuch=999;
+
+        myVar = setInterval(folgeFarbe, reaktionsZeit*1000);        
+    }
+
+function folgeFarbe()
+    {    
+       
+        var farbeSuchAlt=farbeSuch;
+
+        if(durchLaeufe <maxDurchlaeufe)
+            {
+                durchLaeufe++;
+                do
+                {
+                    farbeSuch=random(farbe.length);// Index der Farbe in der das Wort angeboten wird            
+                }
+                while(farbeSuchAlt===farbeSuch);    
+           // console.log("farbeSuch  " + farbeSuch);
+            farbNamenSuch=random(farbNamen.length); // Index des Namens der Farbe
+            ctx.strokeStyle="#ea2867";
+            ctx.strokeRect(xBasis,60,200,40);
+            ctx.clearRect(xBasis,60, 200, 40);// löscht den Farbnamen im Textfeld
+            meldung(farbNamen[farbNamenSuch],"bold","16","Arial",farbe[farbeSuch],xBasis +80, 88);  
+           
+            }
+        else
+            {              
+            clearInterval(myVar);
+           // akustischeMeldung("audio/up.mp3");
+           
+            ctx.clearRect(0,160,500,200) 
+            siegerKranz(treffer,xBasis,150,200,200);           
+            ctx.fillStyle = "blue";
+            ctx.font = "18px Arial";            
+            ctx.fillText("Treffer " + treffer,xBasis +60,240);    
+            blocken=false;
+            abbruch();
+            }
+    }
+
+function auswahlIndex()
+    {
+    //Bestimmt per Zufall die Farbenfolge 
+    var zww=[];
+        for (var i =0; i<farbe.length;i++)
+        {
+        var zw =(random(farbe.length));    
+        if (zww.indexOf(zw) <0)
+            {           
+                zww.push(zw);            
+            }
+         else
+            {i=i-1;}        
+        } 
+    return zww;
+    }
+
+function abbruch()
+    {
+    clearInterval(myVar);   
+    }
+ 
+
+
+function auswahlButton()
+    {
+        
+        switch (getipptRechteck) 
+        
+        {
+                    case 0:                    
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    //console.log("getippt   " + getipptRechteck);
+                    vergleichIndex=indexFarbe[getipptRechteck]; 
+                    break;   
+                    case 5:
+                        if (blocken ==false){start();} 
+                        break;                            
+                    case 6:                  
+                    if (blocken ==false){reaktionsZeit=plusMinus(reaktionsZeit,0.25,0.5, 10);}
+                    meldung("Reaktionszeit = " ,"normal","16","Arial","#5a617b",95 ,380);
+                    meldung(reaktionsZeit.toFixed(2) + " S.","normal","16","Arial","#5a617b",215 ,380);                                     
+                    break;
+                    case 7:
+                    if (blocken ==false){reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0.5, 10);}
+                     meldung("Reaktionszeit = " ,"normal","16","Arial","#5a617b",95 ,380);
+                     meldung(reaktionsZeit.toFixed(2) + " S.","normal","16","Arial","#5a617b",215 ,380);                                   
+                    break;  
+                    default:
+                    alert("Sorry");
+                }             
+    }
+
+function random(max)
+          {
+            return Math.floor((Math.random() *max));
+          }
+
+function angetippt(rects, x, y) {
+    var zw;
+    var isCollision = false;
+    for (let i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+                isCollision = rects[i];   
+                getipptRechteck=i;
+            
+                }
+    }
+    return isCollision;
+}
+
+
+function roundedButton()
+{
+       for (var i = 0; i < rects.length; i++) {       
+       ctx.fillStyle=rects[i].col1;
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+     //  ctx.fillStyle=rects[i].col1;  
+     //  roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+      }
+}
+
+function neueButton(ind)
+{
+       for (var i = 0; i < 5; i++) {       
+       ctx.fillStyle=farbe[ind[i]];
+       roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h,10);
+     //  ctx.fillStyle=rects[i].col1;  
+     //  roundedRect(rects[i].x+5, rects[i].y+5, rects[i].w-10, rects[i].h-10,10);       
+      }
+}
+function buttonText()
+ { 
+        ctx.fillStyle = "white";
+        ctx.font = "18px Arial";
+        for (var i =0, len = 3; i < len; i++) 
+        {      
+        ctx.fillText(texts[i].na,texts[i].x, texts[i].y);           
+        }
+   }
+
+   
+
+function plusMinus(ausgang,delta,unten,oben)
+{
+        // Mehr oder weniger Zeit zum Suchen
+        let anz=ausgang; 
+        if ((anz + delta)< oben && delta>0)
+        {anz=anz + delta; }
+        if ((anz + delta)> unten && delta<=0)
+        {anz=anz + delta; }         
+        return anz;
+}   
+
+
+  function roundedRect(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + radius);
+  ctx.lineTo(x, y + height - radius);
+  ctx.arcTo(x, y + height, x + radius, y + height, radius);
+  ctx.lineTo(x + width - radius, y + height);
+  ctx.arcTo(x + width, y + height, x + width, y + height-radius, radius);
+  ctx.lineTo(x + width, y + radius);
+  ctx.arcTo(x + width, y, x + width - radius, y, radius);
+  ctx.lineTo(x + radius, y);
+  ctx.arcTo(x, y, x, y + radius, radius);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+ // ctx.fillStyle="Lavender";
+  ctx.fill();
+} 
+
+function siegerKranz(a,x,y,w,h){
+
+if((a>=0) &&  (a <= 3)){    zeigBild("kranz0.png",x,y,w,h);}
+if((a>=4) &&  (a <= 6)){    zeigBild("kranz1.png",x,y,w,h);}
+if((a>=7) &&  (a <= 9)){    zeigBild("kranz2.png",x,y,w,h);}
+if(a==10)              {    zeigBild("kranz3.png",x,y,w,h);}
+  
+}
+</script>
+  
+<p>Enjoy !</p>
+
+</body>
+</html>
