@@ -21,47 +21,56 @@ var xBreite=35 , yHoehe=35;
 var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var durchLauf, treffer;
+var maxDurchlaeufe=10;
+var anzahlBaelle=4;
 var bgColor="Lavender";
 var blinkReihe=[];
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
 var feldBlocken;
 var plusminusBlocker;
 
+
 var xCoord=[], yCoord=[];
 var zeilen = 5, spalten=5;
-
+var neuStart=false;
 
 var xAbstand=30,yAbstand = 100;     // Verschiebt die Matrix nach rechts und unten
 var xBasis=10, yBasis=360, wBasis=70, hBasis=40, dBasis=10, xtestdis=1, ytextdis=25;
-var  yErhoehung=10; 
+var yErhoehung=10; 
 var xTextRechts=xBasis +  (wBasis+ dBasis);
 
-var zaehlerClick,zaehlerTreffer,iterator,anzahlBlinks=4;
+var zaehlerClick,zaehlerTreffer,iterator;
 var audio;
 
 //Rechtecke für die Bilder
 var rects = [{x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"},                        
-             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
-
-
+             {x: 35+(xBasis + wBasis  + dBasis), y: yBasis + yErhoehung, w: wBasis/2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},                        
+             {x: 35+(xBasis + 1.5 * (wBasis + dBasis)), y: yBasis + yErhoehung, w: wBasis/2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 var texts =[{na:"Go on", x: xBasis + 10, y: yBasis + ytextdis+yErhoehung},
-           {na: String.fromCharCode(43)+" Bälle", x: (xBasis + 8 +  wBasis + dBasis),y: yBasis + ytextdis + yErhoehung},
-           {na: String.fromCharCode(45)+" Bälle", x: (xBasis +8 + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis + yErhoehung}];
+           {na: " " +  String.fromCharCode(43), x: 35+(xBasis + 8 +  wBasis + dBasis),y: yBasis + ytextdis + yErhoehung},
+           {na: " " +String.fromCharCode(45), x:35+ (xBasis +8 +  1.5*(wBasis+ dBasis)),y: yBasis + ytextdis + yErhoehung}];
           
 
 function ladeGame() 
     {   
-        meldung("Übe die Merkspanne","bold","20",schriftArt,"#5a617b",20, 30);  
-        meldung("Merke die auftauchenden Bälle : ","normal","16",schriftArt,"#5a617b",20, 60);   
-        meldung("Position + Reihenfolge","normal","16",schriftArt,"#5a617b",20, 80);     
-        meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts + 15,350);
+        meldung("Wo sind die Bälle?","bold","20",schriftArt,"#5a617b",20, 30);  
+        meldung("Merke bei den auftauchenden","normal","16",schriftArt,"#5a617b",10, 120);        
+        meldung("Bällen die ","normal","16",schriftArt,"#5a617b",10, 140); 
+        meldung("Reihenfolge + Position","bold","16",schriftArt,"red",82, 140); 
+        meldung("Es gibt " + maxDurchlaeufe + "  Durchläufe","normal","16",schriftArt,"#5a617b",20, 190); 
+        meldung( "Der Button mit + Zeichen" ,"normal","16",schriftArt,"#5a617b",10, 230);       
+        meldung( "erhöht die Anzahl Bälle" ,"normal","16",schriftArt,"#5a617b",10, 250);    
+        meldung( "Der Button mit - Zeichen" ,"normal","16",schriftArt,"#5a617b",10, 270);       
+        meldung( "vermindert die Anzahl Bälle" ,"normal","16",schriftArt,"#5a617b",10, 290); 
+        meldung( "Minimum 3 Bälle" ,"normal","16",schriftArt,"#5a617b",10, 310); 
+
+        meldung("Anzahl Bälle = " +  anzahlBaelle,"normal","16",schriftArt,"#5a617b",xTextRechts + 15,350);
         roundedButton(3);
         buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
-        aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
+        //aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
         treffer=0;
-       durchLauf=0;
+        durchLauf=0;
         plusminusBlocker=false;
         startBlocker=false;
     
@@ -69,20 +78,32 @@ function ladeGame()
 
 function start()
     {
-        //ctx.clearRect(30,350-20,450,20);// Falsches Feld....
-       // ctx.clearRect(xBasis ,370,400,30);
-       if (durchLauf== 0){ ctx.clearRect(20, 60-20,canv.width,45 );} //löscht "finde...."
-        iterator=0; 
+       
+       ctx.clearRect(10,90-20,250,230); // löscht die alte Matrix
+       aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
+      
+       if (durchLauf== 0){ 
+           ctx.clearRect(0, 120-20,canv.width,230 );//löscht "Merke ...."
+           meldung("Geschafft :  0  bei 0  Versuchen","normal","16",schriftArt,"#5a617b",15,70);
+           } //löscht "Merke ...."
+        
+        
         zaehlerClick=0;
         zaehlerTreffer=0;
-       durchLauf++;
+        durchLauf++;
+     // neuStart=false;
         loescheMatrix();
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
+       
         blinkReihe=auswahlBlinkZellen(zeilen,spalten);
-        myVar=setInterval(zeige,1000);
+       
         feldBlocken=true; 
         plusminusBlocker=true;
         startBlocker=true;
+
+        iterator=0; 
+        myVar=setInterval(zeige,1000);
+        
     }
 
 function zeige()
@@ -91,22 +112,22 @@ function zeige()
 
     iterator++;
 
-    if (iterator <= anzahlBlinks)
+    if (iterator <= anzahlBaelle) // zeichnet den aktuellen Ball 
+    
         {
-      
-        zeigBild("ball.png",xCoord[blinkReihe[iterator]]+2,yCoord[blinkReihe[iterator]]+2,30,30);       
-      
+              zeigBild("ball.png",xCoord[blinkReihe[iterator]]+2,yCoord[blinkReihe[iterator]]+2,30,30);       
         }
 
-    if (iterator>1)
+    if (iterator>1)  // löscht den vorherigen Ball
         {
         ctx.clearRect(xCoord[blinkReihe[iterator-1]]+2,yCoord[blinkReihe[iterator-1]]+2,xBreite-6,yHoehe-6);            
         }
-    if (iterator>anzahlBlinks)
+    if (iterator>anzahlBaelle)
         {
         ctx.clearRect(xCoord[blinkReihe[iterator]]+4,yCoord[blinkReihe[iterator]]+2,xBreite-6,yHoehe-6);
             clearInterval(myVar);
-            feldBlocken=false;  
+            feldBlocken=false; 
+            meldung("Suche die Bälle jetzt","normal","16",schriftArt,"#5a617b",xBasis,320)
         }            
 
 }
@@ -128,7 +149,6 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
             //linke, obere Koordinaten der Rechtecke
             xCoord.push(x);
             yCoord.push(y);
-       
         }
     }   
 }  
@@ -146,74 +166,110 @@ function auswahlBlinkZellen(zeilen,spalten)
 
 canv.addEventListener('click', function(event)
     {   
-        if (feldBlocken == false)
+    if (feldBlocken == false)
+    {
+        xclick = event.clientX; 
+        yclick = event.clientY;  
+     
+    if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
+                        &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe))
         {
-                xclick = event.clientX; 
-                yclick = event.clientY;  
-            
-        if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
-                            &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe))
-        {
-                zaehlerClick++;        
-                var zwert = geglicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
-                var zw =blinkReihe[zaehlerClick];
-
-                
-                if (zw == zwert)
-                    {
-                        zaehlerTreffer++;
-                        xxclick=(Math.floor(xclick/xBreite))*xBreite;
-                        yyclick=(Math.floor(yclick/yHoehe))*yHoehe;                              
-                        zeigBild("daumenHoch.png",xCoord[blinkReihe[zaehlerClick]] +3 ,yCoord[blinkReihe[zaehlerClick]]+3,30,30);                                                      
-                    }
-                    else {
-                        zeigBild("daumenRunter.png",xCoord[zwert] +3 ,yCoord[zwert]+3,30,30);
+           
+            ctx.clearRect(xBasis,320-20,300,20);// Löscht: Suche die Bälle jetzt           
+            zaehlerClick++;        
+            var zwert = geglicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
+            var zw =blinkReihe[zaehlerClick];           
+            if (zw == zwert)
+            {
+                    zaehlerTreffer++;
+                    xxclick=(Math.floor(xclick/xBreite))*xBreite;
+                    yyclick=(Math.floor(yclick/yHoehe))*yHoehe;                              
+                    zeigBild("daumenHoch.png",xCoord[blinkReihe[zaehlerClick]] +3 ,yCoord[blinkReihe[zaehlerClick]]+3,30,30);                                                      
+                    
+                    if (zaehlerTreffer == anzahlBaelle)
+                        {
                         feldBlocken=true;
-                        plusminusBlocker=false; 
-                        startBlocker=false;                          
-                        meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuch(e)","normal","16",schriftArt,"#5a617b",15,70);
-                        }
-        
-                if (zaehlerTreffer == anzahlBlinks)
-                {
-                    feldBlocken=true;
                         treffer++
-                        meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuch(e)","normal","16",schriftArt,"#5a617b",15,70);
-                        var aufschlag=0;
-                        if(treffer==5)
-                            {
-                                loescheMatrix();
-                                zeigBild("rakete0.jpg",xAbstand,yAbstand,175,175);
-                                aufschlag=1500;
-                            }
-                        if(treffer==10)
-                            {
-                                zeigBild("rakete1.jpg",xAbstand,yAbstand,175,175);
-                                aufschlag=1500;
-                            }
-                            if(treffer==15)
-                            {
-                                zeigBild("rakete2.jpg",xAbstand,yAbstand,175,175);
-                                aufschlag=1500;
-                            }
-                            if(treffer==20)
-                            {
-                                zeigBild("rakete3.jpg",xAbstand,yAbstand,175,175);
-                                aufschlag=1500;
-                            }
-                        plusminusBlocker=false; 
-                        setTimeout(function () 
-                            {
-                            loescheMatrix();
-                                start();
-                            }, 700+ aufschlag);                     
+                        neuStart=true;
+                        meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuche","normal","16",schriftArt,"#5a617b",15,70);
+                        }    
+            }    
+                    else {
+                        zeigBild("daumenRunter.png",xCoord[zwert] +3 ,yCoord[zwert]+3,30,30);                                                           
+                        meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuch(en)","normal","16",schriftArt,"#5a617b",15,70);
+                        neuStart=true;
+                        }
+           
+                     console.log(" vorher  " + durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu " + neuStart);      
+                    // plusminusBlocker=false;
+                 
+            
+                 if((durchLauf<maxDurchlaeufe) && (neuStart==true))
+                {
+                    console.log("  < max 1 " +durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu  " + neuStart );  
+                    neuStart=false;
+                  
+                    console.log("  < max 2 " +durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu  " + neuStart );  
+                  
+                    setTimeout(function () 
+                    {
+                      startBlocker=false; 
+                      loescheMatrix(); 
+                      start();
+                    
+                        }, 1000); 
+                    
                 }
-            }  
-        }  
+
+                if((durchLauf==maxDurchlaeufe) && (neuStart==true)) 
+               
+                {
+                    console.log(" =max  " + durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + " neu "+neuStart);  
+                    durchLauf=0;
+                   
+                    setTimeout(function () 
+                    {
+                    loescheMatrix();
+                    treffer=0;
+                    meldung("Durchläufe erledigt","normal","16",schriftArt,"blue",38,160); 
+                    meldung("Jetzt kannst du Anzahl","normal","16",schriftArt,"blue",38,180); 
+                    meldung("Bälle verändern","normal","16",schriftArt,"blue",38,200);  
+                    feldBlocken=true;
+                    plusminusBlocker=false; 
+                    startBlocker=false;  
+                
+                    }, 1000); 
+                
+                }  
+        }       
+    }
 
 } , false); 
 
+function siegeskranz(treffer){
+    if(treffer==2)
+            {
+                loescheMatrix();
+                zeigBild("rakete0.jpg",xAbstand,yAbstand,175,175);
+                aufschlag=1500;
+            }
+        if(treffer==10)
+            {
+                zeigBild("rakete1.jpg",xAbstand,yAbstand,175,175);
+                aufschlag=1500;
+            }
+            if(treffer==15)
+            {
+                zeigBild("rakete2.jpg",xAbstand,yAbstand,175,175);
+                aufschlag=1500;
+            }
+            if(treffer==20)
+            {
+                zeigBild("rakete3.jpg",xAbstand,yAbstand,175,175);
+                aufschlag=1500;
+            }
 
+}
 
 function geglicktesFeld(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
     // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
@@ -267,16 +323,17 @@ function auswahlButton()
                         break;                            
                    
                     case 1: 
-                                   
-                            anzahlBlinks= plusMinus(anzahlBlinks,1,2,12); 
-                            var lg = 20 + ctx.measureText("Anzahl Balle  = " +  anzahlBlinks).width 
-                            meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts +15,350);
-                     
+                            if(plusminusBlocker==false){ 
+                            anzahlBaelle= plusMinus(anzahlBaelle,1,2,12); 
+                            var lg = 20 + ctx.measureText("Anzahl Balle  = " +  anzahlBaelle).width 
+                            meldung("Anzahl Bälle = " +  anzahlBaelle,"normal","16",schriftArt,"#5a617b",xTextRechts +15,350);
+                            }
                     break;
-                    case 2:
-                                anzahlBlinks=  plusMinus(anzahlBlinks,-1,2,12);  
-                                var lg = 20 + ctx.measureText("Anzahl Bälle  = " +  anzahlBlinks).width 
-                                meldung("Anzahl Bälle = " +  anzahlBlinks,"normal","16",schriftArt,"#5a617b",xTextRechts + 15 ,350);
+                    case 2:if(plusminusBlocker==false){ 
+                                anzahlBaelle=  plusMinus(anzahlBaelle,-1,2,12);  
+                                var lg = 20 + ctx.measureText("Anzahl Bälle  = " +  anzahlBaelle).width 
+                                meldung("Anzahl Bälle = " +  anzahlBaelle,"normal","16",schriftArt,"#5a617b",xTextRechts + 15 ,350);
+                    }
                     break;
                     default:
                                 alert("Sorry");

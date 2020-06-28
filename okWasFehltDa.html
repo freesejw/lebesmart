@@ -89,12 +89,15 @@ function ladeGame()
         einlesenBilder();
         indexBilder=indexVergleichsBilder();          
         zeichneVorgabeBilder();
+        
         verschwunden=random(zeigBilder);        
         indexBilder.splice(verschwunden,1);   
-        indexBilder=shuffle(indexBilder);
+       indexBilder=shuffle(indexBilder);
         zeichneVergleichsBilder();      
     }
-    
+
+       
+
   
 canv.addEventListener('click', function(e)
      {

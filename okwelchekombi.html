@@ -12,28 +12,38 @@
 </head>
 
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="570"></canvas>
+    <canvas id="canvas" width="300" height="510"></canvas>
    
     <script>
         var canv = document.getElementById("canvas");
         var ctx = canv.getContext("2d");
         var cW = ctx.canvas.width, cH = ctx.canvas.height;
 
-        var warteZeit = 3000;
-        var anzahlKombi = 3;
+        var warteZeit = 300;
 
-        var xBreite = 100, yHoehe = 60;
+        var anzahlSuchKombi = 2;
+        var zaehltGezeigteKombi = 0;
+
+        var xBreite = 50, yHoehe = 35;
         var myVar, myVar1; // für setInterval
         var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
-        var durchLaeufe, maxDurchLaeufe = 3, zeitMerk = 4, insgesamtTreffer, rundenTreffer;
+
+        var durchLaeufe=0;// Zählt die Anzahl der Durchläufe. Wird  bei dem Aufruf von Start erhöht
+        var maxDurchLaeufe = 2; // Maximale Anzahl von durchläufen
+        var insgesamtKlicks=0; // gibt an wie oft Kombinatonen in der Matrix angeklickt wurde über alle Durchläufe 
+        var insgesamtTreffer=0; // zählt wieviel Treffer erzielt werden vom Spielaufruf bis maxDurchlaeufe
+        var rundenTreffer;   // zählt wieviel Treffer in dem jeweiligen Durchgang erzielt wurden
+        var rundenKlick;
+
+        var zeitZumMerken = 4;
+        
         var blockenMatrix;
         var blockenStart;
         var blockenPlusMinus;
         var xCoord = [], yCoord = [];
-        var zeilen = 4, spalten = 4;
+        var zeilen = 6, spalten = 4;
         var getroffen = false;
-        var zaehlerClick;
-        var iterator = 0;
+        
         var audio;
         var gesuchtBasis = [], gesuchtNeu = [];
         var startDate, endDate, diffSeconds;
@@ -41,37 +51,43 @@
 
         var buch1 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
         var buch2 = ["H", "I", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G"];
-        var zahl = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5];
+        var zahl = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5,6,7];
         var total = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
             "H", "I", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G",
             1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5];
 
         //Rechtecke für die Buttons 
 
-        var xAbstand = 50, yAbstand = 130;     // Verschiebt die Matrix nach rechts und unten
-        var xBasis=20, yBasis=460, wBasis=70, hBasis=40, dBasis=15, xtestdis=10, ytextdis=25; 
-               var yErhoehung = 50;
+        var xAbstand = 20, yAbstand = 80;     // Verschiebt die Matrix nach rechts und unten
+        var xBasis=10, yBasis=390, wBasis=70, hBasis=40, dBasis=15, xtextdis=8, ytextdis=28; 
+        var yErhoehung = 50;
 
-        var rects = [{ x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis, col1: "#82CE86", col2: "#82CE86" },
-        { x: (xBasis + wBasis2 + dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis, col1: "#5a617b", col2: "#5a617b" },
-        { x: (xBasis + 2 * (wBasis2 + dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis, col1: "#5a617b", col2: "#5a617b" }];
+        var rects = [{ x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis, col1: "#82CE86", col2: "#82CE86" },
+        { x: (xBasis + wBasis + dBasis), y: yBasis + yErhoehung, w: 0.6*wBasis, h: hBasis, col1: "#5a617b", col2: "#5a617b" },
+        { x: (xBasis + 1.6 * (wBasis + dBasis)), y: yBasis + yErhoehung, w: 0.6*wBasis, h: hBasis, col1: "#5a617b", col2: "#5a617b" }];
 
-        var texts = [{ na: String.fromCharCode(9655) + "  Go on", x: xBasis + 10, y: yBasis2 + ytextdis + yErhoehung },
-        { na: String.fromCharCode(43) + "  Kombi", x: (xBasis + 20 + wBasis2 + dBasis), y: yBasis2 + ytextdis + yErhoehung },
-        { na: String.fromCharCode(45) + "  Kombi", x: (xBasis + 15 + 2 * (wBasis2 + dBasis)), y: yBasis2 + yErhoehung + ytextdis }];
+        var texts = [{ na:" Go on", x: xBasis + 7
+        , y: yBasis + ytextdis + yErhoehung },
+        { na: String.fromCharCode(43), x: (xBasis + 18 + wBasis + dBasis), y: yBasis + ytextdis + yErhoehung },
+        { na: String.fromCharCode(45), x: (xBasis + 19 + 1.6 * (wBasis + dBasis)), y: yBasis + yErhoehung + ytextdis }];
+
 
         function ladeGame() {
-            meldung("Verbessere Konzentration und Kurzzeitgedächnis", "bold", "20", schriftArt, "#5a617b", 20, 35);
-            meldung("Merke dir die Buchstaben/Zahlenkombination", "normal", "16", schriftArt, "#5a617b", 40, 65);
-            meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
-            meldung("Es gibt nach jedem Start " + maxDurchLaeufe + " Durchläufe. Merkzeit beträgt " + zeitMerk + "(S)", "normal", "16", schriftArt, "#5a617b", 40, 95);
-            insgesamtTreffer = 0;
-            roundedButton(3);
-            buttonText();  // und hier mit Text versehen falls keine bilder genommen werden 
-            aufbauMatrix(zeilen, spalten, xBreite, yHoehe);
-            insgesamtTreffer = 0;
-            durchLaeufe = 0;
-            iterator = 0;
+            meldung("Buchstaben- / Zahlenkombination", "bold", "18", schriftArt, "#5a617b", 5, 35); 
+            meldung("Es erscheinen Buchstaben -", "normal", "16", schriftArt, "#5a617b", 10, 125);
+            meldung("Zahlenkombinationen wie s3E.", "normal", "16", schriftArt, "#5a617b", xBasis, 145); 
+            meldung("Merke dir diese Kombinationen.", "normal", "16", schriftArt, "#5a617b", xBasis, 165);                    
+            meldung("Klicke in der darauf erscheinenden", "normal", "16", schriftArt, "#5a617b", xBasis, 185); 
+            meldung("Matrix diese Kombis an.", "normal", "16", schriftArt, "#5a617b", xBasis, 205); 
+            meldung("Die Anzahl ist mit +/- veränderbar.", "normal", "16", schriftArt, "#5a617b", xBasis, 235);  
+            meldung("Es gibt nach jedem Start " + maxDurchLaeufe + " Durchläufe." ,"normal", "16", schriftArt, "#5a617b", xBasis, 255);           
+          
+            meldung("Die Merkzeit beträgt " + zeitZumMerken + " Sek.", "normal", "16", schriftArt, "#5a617b", xBasis, 275);            
+            meldung("Anzahl Kombi. " + anzahlSuchKombi, "normal", "16", schriftArt, "#5a617b", 100, yBasis+yErhoehung - 20);
+       
+            roundedButton(3); // Erstellt die Button Go On / + kombi + / - Kombi
+            buttonText();  // und hier mit Text versehen falls keine bilder genommen werden          
+                      
             blockenMatrix = true;
             blockenStart = false;
             blockenPusMinus=false;
@@ -80,24 +96,23 @@
       
 
         function start() {
-            ctx.clearRect(40, 65 - 20, cW - 65, 20) // Merke dir die...
-            ctx.clearRect(40, 95 - 20, cW - 65, 25) // Es gibt...
+            ctx.clearRect(xBasis,125-20,300,180) // Merke dir die...
+           // ctx.clearRect(40, 95 - 20, cW - 65, 25) // Es gibt...
             ctx.clearRect(xBasis - 10, 400 - 40, 480, 30)  // Timer
-            ctx.clearRect(xBasis, 400 - 25, 400, 30) // Treffer
-            ctx.clearRect(xBasis, 450 - 25, 200, 30)  // Meldung falsch
+            ctx.clearRect(xBasis, 300 - 25, 400, 30) // Treffer
+            ctx.clearRect(xBasis, 340 - 25, 400, 30)  // Meldung falsch
            // ctx.clearRect(50 - 4, 400 - 4, 500 + 8, 100 + 8); ////////////////////////  Rahmen
             ctx.lineWidth = 1
-            iterator = -1;
-            zaehlerClick = -1;
-            rundenTreffer = 0;
+            zaehltGezeigteKombi = -1;
+            rundenKlick = 0;
+            rundenTreffer = 0; // zählt die Treffer in der Runde  während insgesamtreffer die Treffer in allen Durschgängen Zählt
             durchLaeufe++;
-            loescheMatrix();
-            aufbauMatrix(zeilen, spalten, xBreite, yHoehe);
-            erstellKombination(); //Erstellt die Matrix mit allen Kombinaionen
             getroffen = false;
             blockenMatrix = false;
             blockenStart = true;
             blockenPlusMinus = true;
+            zeigBild("tic2.jpg",xBasis,yBasis +yErhoehung,wBasis ,hBasis);
+            erstellKombination(); //Erstellt die Matrix mit allen Kombinaionen          
 
             setTimeout(zeigeKombinationen, 500);
         }
@@ -106,41 +121,39 @@
         function zeigeKombinationen()
          {
             
-            iterator++;
+            zaehltGezeigteKombi++;
             zeigKombi = true;
 
-            if (iterator < anzahlKombi) // zeigt sequentiell die ausgewählten Kombinationen, die zu merken sind 
+            if (zaehltGezeigteKombi < anzahlSuchKombi) // zeigt sequentiell die ausgewählten Kombinationen, die zu merken sind . Die variable anzahlSuchKombi bestimmt die Anzahl Kombinationen
             {
-                ctx.clearRect(200, 200 - 60, 400, 80);  // löscht die vorher angzeigte Kombination
+                ctx.clearRect(120, 200 - 60, 400, 80);  // löscht die vorher angzeigte Kombination
                 ctx.fillStyle = "red";
-                ctx.font = "30px" + " " + schriftArt;
-                ctx.fillText(gesuchtBasis[iterator], 200, 200); // bringt die einzelne Kombination, die gesucht wird
+                ctx.font = "22px" + " " + schriftArt;
+                ctx.fillText(gesuchtBasis[zaehltGezeigteKombi], 120, 200); // bringt die einzelne Kombination, die gesucht wird
                
-                // Progressbar. zeitMerk ist die Zeit zum Merken. Vorgabe bei den Variablen
-                startTimer(50, 400, 400, 20, zeitMerk * 1000, "Merken ", "14px Arial");// Funktion in standardjs
+                // Progressbar. zeitZumMerken ist die Zeit zum Merken. Vorgabe bei den Variablen
+                startTimer(xBasis, 340, 220, 20, zeitZumMerken * 1000, "Merken ", "14px Arial");// Funktion in standardjs
 
-                setTimeout(zeigeKombinationen, zeitMerk * 1010);
+                setTimeout(zeigeKombinationen, zeitZumMerken * 1010);
             }
 
-            if (iterator === anzahlKombi) // zeigt danach ALLE möglichen Kombinationen 
+            if (zaehltGezeigteKombi === anzahlSuchKombi) // zeigt danach ALLE möglichen Kombinationen in Form einer Matrix
             {
-                ctx.clearRect(50 - 2, 400 - 2, 400 + 3, 20 + 4);
-                ctx.clearRect(200, 200 - 60, 400, 80);// löscht die zuletzt angzeigte Kombination
-
-                for (let i = 0; i < 16; i++) {
+                ctx.clearRect(xBasis - 2, 400 - 2, 400 + 3, 20 + 4); // löscht startTimer
+                ctx.clearRect(120, 200 - 30, 400, 30);// löscht die zuletzt angzeigte Kombination
+                aufbauMatrix(zeilen, spalten, xBreite, yHoehe,xAbstand,yAbstand);
+                for (let i = 0; i < zeilen*spalten; i++) {
                     ctx.fillStyle = "green";
-                    ctx.font = "30px" + " " + schriftArt;
-                    ctx.fillText(gesuchtNeu[i], xCoord[i] + xtestdis + 15, yCoord[i] + 10 + yHoehe / 2);
+                    ctx.font = "20px" + " " + schriftArt;
+                    ctx.fillText(gesuchtNeu[i], xCoord[i] + xtextdis , yCoord[i] +  ytextdis);
                 }
-                meldung("Klicke jetzt die vorher gezeigten Kombinationen an", "normal", "16", schriftArt, "#5a617b", 40, 65);
+                meldung("Klicke die gezeigten Kombinationen", "normal", "16", schriftArt, "#5a617b", xBasis, 340);
+                meldung("an", "normal", "16", schriftArt, "#5a617b", xBasis, 360);
                 zeigKombi = false;
+                // jetzt wird auf die Eingabe gewartet
             }
 
-            if (iterator > anzahlKombi) // Beenndet das Anzeige und das Ptogramm wartet jetzt auf dien EventListeber Click
-            {
-                alert("feier");
-            }
-
+          
         }
         
         canv.addEventListener('click', function (e) {
@@ -153,14 +166,14 @@
                         if (!blockenStart) { start(); }
                         break;
                     case 1:
-                        ctx.clearRect(215,485-20,500,20);   
-                        anzahlKombi = plusMinus(anzahlKombi, 1, 1, 15);                   
-                        meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
+                        ctx.clearRect(100,yBasis + yErhoehung-20,500,20);   
+                        anzahlSuchKombi = plusMinus(anzahlSuchKombi, 1, 1, 15);                   
+                        meldung("Anzahl Kombi.ationen = " + anzahlSuchKombi, "normal", "16", schriftArt, "#5a617b", 100, yBasis+yErhoehung - 20);
                     break;
                     case 2:
-                        ctx.clearRect(215,485-20,500,20);  
-                        anzahlKombi = plusMinus(anzahlKombi, -1, 1, 15);
-                        meldung("Anzahl Kombinationen = " + anzahlKombi, "normal", "16", schriftArt, "#5a617b", 215, 485);
+                        ctx.clearRect(100,yBasis + yErhoehung-20,500,20);  
+                        anzahlSuchKombi = plusMinus(anzahlSuchKombi, -1, 1, 15);
+                        meldung("Anzahl Kombi. = " + anzahlSuchKombi, "normal", "16", schriftArt, "#5a617b", 100, yBasis+yErhoehung - 20);
                         break;
                     default:
                         alert("Sorry");
@@ -170,75 +183,91 @@
 
 
         
-        
-        
-        canv.addEventListener('click', function (event) {
+        canv.addEventListener('click', function (event) 
+        {
 
-            if (blockenMatrix == false) {
-                xclick = event.clientX;
+            if (blockenMatrix == false)
+            {
+                xclick = event.clientX ;
                 yclick = event.clientY;
+                ctx.clearRect(xBasis,340-20,400,40);// Löscht: Klick die gezeigten Komb....
+                
+               
                 var imFeld = (xclick > xCoord[0] && (xclick < xCoord[spalten - 1] + xBreite)
                     && yclick > yCoord[0] && (yclick < yCoord[zeilen * spalten - 1] + yHoehe));
 
-                if (imFeld && (zaehlerClick < anzahlKombi) && zeigKombi == false) {
-                    zaehlerClick++;
+                if (imFeld && (rundenKlick < anzahlSuchKombi) && zeigKombi == false) 
+                {
+                    rundenKlick++;
+                    insgesamtKlicks++;
                     let zw = gesuchtNeu[geglicktesFeld(xclick, yclick)];
+                  
+                    for (let i = 0; i <= anzahlSuchKombi; i++) 
+                      {
+                        if (zw == gesuchtBasis[i])
+                         { getroffen = true; }
+                      }
 
-                    // alert(" zw "+ zw + "zaehlerclick"  + zaehlerClick + " neu  " +gesuchtNeu +" basis  " +gesuchtBasis );
-
-                    for (let i = 0; i <= anzahlKombi; i++) {
-
-                        if (zw == gesuchtBasis[i]) {
-                            getroffen = true;
-                        }
-                    }
-                    if (getroffen == true) {
+                    // Ermittlung ob richtiges Feld oder falsches Feld geklickt wurde
+                    if (getroffen == true) 
+                    {
                         insgesamtTreffer++;
-                        rundenTreffer++;
-                        // meldung("Treffer =  " + insgesamtTreffer ,"bold","16",schriftArt,"red",xBasis,430); 
-                        meldung("Treffer insgesamt : " + insgesamtTreffer + "  bei :  " + durchLaeufe + "  Durchgängen", "bold", "16", schriftArt, "red", xBasis, 400);
-                        markiere("green", "3");
+                        rundenTreffer++;                       
+                        meldung("Treffer : " + insgesamtTreffer + "   Mögliche Treffer :  " + insgesamtKlicks , "bold", "16", schriftArt, "red", xBasis, 340);                
+                        markiere("daumenHoch.png");
                     }
 
-                    else {
-                        blockenMatrix = true;
-                        markiere("red", "6");
-                        ctx.clearRect(xBasis, 400 - 25, 500, 30)
-                        meldung("Falsch. ==> Go on", "bold", "16", schriftArt, "red", xBasis, 450);
-                        // akustischeMeldung("audio/eat.mp3");  
-                        rundeAus = true;
-                        blockenMatrix = true;
-                        blockenStart = false;
-                        blockenPlusMinus=false;
-                        zeigBild("explosion1.jpg", xAbstand, yAbstand, xBreite * spalten, yHoehe * zeilen);
-                        setTimeout(function () {
+                    else {                                             
+                        meldung("Treffer : " + insgesamtTreffer + "   Mögliche Treffer :  " + insgesamtKlicks , "bold", "16", schriftArt, "red", xBasis, 340);                
+                        markiere("daumenRunter.png");
+                        
+                         }
+                    // Ende Ermittlung Feld
 
-                        }, 2000);
 
-                    }
-
-                    if (rundenTreffer == anzahlKombi) {
+                    if (rundenKlick == anzahlSuchKombi) // Anzahl Klicks = Anzahl gesucter Kombis
+                        {
+                           
                         blockenMatrix = true;
                         blockenStart = false;
-                        loescheMatrix();
-                        zeigBild("schiess.png", 50, 100, 250, 250);
-                        if (durchLaeufe < maxDurchLaeufe) {
-                            setTimeout(function () {
-                                start();
-                            }, 1000);
+
+                        if (durchLaeufe == maxDurchLaeufe ) 
+                                {
+                                  meldung(" Die " + maxDurchLaeufe + " Durchäufe sind beendet", "bold", "16", schriftArt, "red", xBasis, 380); 
+                                  setTimeout(function(){
+                                   loescheMatrix();   
+                                  },500);
+                                  loescheMatrix();  
+                                  durchLaeufe=0;      // für den Fall dass das Programm noch einmal aufgerufen wird     
+                                  insgesamtKlicks=0;  // dito
+                                  insgesamtTreffer=0; // dito  
+                                  ctx.clearRect(xBasis +15,yBasis +yErhoehung,wBasis +150,hBasis)
+                                  roundedButton(3); // Erstellt die Button Go On / + kombi + / - Kombi
+                                  buttonText();  // und hier mit Text versehen falls keine bilder genommen werden              
+                                }
+            
+                            else {
+                                setTimeout(function () {
+                                                loescheMatrix();
+                                                start();
+                                            }, 1000);
+                                }
+                     
                         }
-                    }
-                }
+                   
+                } // If imFleld geklickt
                 getroffen = false;
-            }
+
+            }  // if blocken Matrix = false;
+
         }, false);
 
-        function markiere(farbe, a) {
+        function markiere(bild) {
             for (let i = 1; i < xCoord.length; i++) {
                 if ((xclick >= xCoord[i - 1] && xclick < xCoord[i - 1] + xBreite) && (yclick >= yCoord[i - 1] && yclick < yCoord[i - 1] + yHoehe)) {
-                    ctx.lineWidth = a;
-                    ctx.strokeStyle = farbe;
-                    ctx.strokeRect(xCoord[i - 1] + 8, yCoord[i - 1] + 8, xBreite - 8, yHoehe - 8);
+                   
+                   zeigBild(bild,xCoord[i - 1] + 1, yCoord[i - 1] + 1, xBreite - 5, yHoehe - 5);
+               
                 }
             }
         }
@@ -259,12 +288,16 @@
             return zw;
         }
 
-        function aufbauMatrix(zeilen, spalten, breite, hoehe) {
+        function aufbauMatrix(zeilen, spalten, breite, hoehe,verschobenX,verschobenY) {
             // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
             for (let i = 0; i < zeilen; i++) {
-                let y = yAbstand + hoehe * i;
+                var y=verschobenY +  hoehe*i;
                 for (let j = 0; j < spalten; j++) {
-                    let x = xAbstand + breite * j;
+                    let x = verschobenX + breite * j;
+                 
+            ctx.lineWidth="1";
+            ctx.strokeStyle="blue";       
+            ctx.strokeRect(x,y,breite,hoehe);
 
                     xCoord.push(x);
                     yCoord.push(y);
@@ -279,12 +312,7 @@
             }
         }
 
-       
-
-      
-
-
-        function erstellKombination() {
+               function erstellKombination() {
 
             function shuffleArray(array) {
                 for (var i = array.length - 1; i > 0; i--) {

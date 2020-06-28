@@ -51,7 +51,7 @@ function angetippt(rects, x, y) {
      
        var sD=schriftDicke;
        var sG=schriftGroesse;
-        var lg = 10 + ctx.measureText(text).width 
+       var lg = 20 + ctx.measureText(text).width 
        ctx.clearRect(xm, ym-schriftGroesse+2,lg,25);
         ctx.fillStyle = farbe;        
         ctx.font = sD + ' ' + (sG + "px "+ schriftArt);              

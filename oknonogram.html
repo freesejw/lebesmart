@@ -22,7 +22,8 @@ var spalten = 5;
 var grid=[];
 var gridVektor=[];
 var inhaltZeilen, inhaltSpalten;
-var xAbstand=70,yAbstand = 150;     // Verschiebt die Matrix nach rechts und unten
+//var xAbstand=50,yAbstand = 150;     // Verschiebt die Matrix nach rechts und unten
+var xAbstand=20,yAbstand = 50; 
 var xDist=10, yDist=22;  // Verschiebt die Zahlen im Feld;
 var xCoord =[],yCoord=[];
 var xBreite=28,yHoehe=28;
@@ -31,21 +32,22 @@ var zaehlerTreffer;
 var anzahlEins;
 var falsch;
 var audio;
+var maxSpalten=12
 
 //Rechtecke für die Buttons
 
-var xBasis=20, yBasis1=220, wBasis1=60, hBasis=30, dBasis=40, xtextdis=20, ytextdis=20;
-var yBasis2= 500, wBasis2=120, yErhoehung=50; 
+var xBasis=20, hBasis=30, dBasis=20, xtextdis=20, ytextdis=20;
+var yBasis= 565, wBasis=80, yErhoehung=0; 
 
-var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#ea2867",col2: "#ea2867"},
-             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
+var rects = [{x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+            
+             {x: (xBasis + 1 *( wBasis+ dBasis)), y: yBasis + yErhoehung, w: 0.4*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+             {x: (xBasis + 1.4 * (wBasis+ dBasis)), y: yBasis + yErhoehung, w: 0.4*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
-var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10, y: yBasis2 + ytextdis+yErhoehung,},
-           {na: String.fromCharCode(9673)+"  Abbruch", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
-           {na: String.fromCharCode(43)+"  Größer", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
-           {na: String.fromCharCode(45)+"  Kleiner", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
+var texts =[{na:  String.fromCharCode(9655)+ "Go on", x: xBasis + xtextdis -10, y: yBasis + ytextdis+yErhoehung,},
+         
+           {na: " " + String.fromCharCode(43),  x: (xBasis +  1 * (wBasis+ dBasis+3)),y: yBasis + ytextdis },
+           {na: " " + String .fromCharCode(45), x: (xBasis + 1.4 * (wBasis+ dBasis + 3)),y: yBasis + yErhoehung + ytextdis }];
 
 
 function ladeGame(){
@@ -79,9 +81,7 @@ canv.addEventListener('click', function(event)
                             yyclick=(Math.floor(yclick/yHoehe))*yHoehe;   
                             ctx.fillStyle="#5a617b";
                             ctx.fillRect(xCoord[zwert] ,yCoord[zwert] ,xBreite,yHoehe);
-                            meldung("Treffer : "+ zaehlerTreffer,"bold","16",schriftArt,"#5a617b",328,420);
-                            meldung( "von insgesamt  :  " + anzahlEins,"normal","16",schriftArt,"#5a617b",328,450); 
-
+                           
                             ctx.clearRect(330,480-25,200,25);
                         }
                         else 
@@ -97,7 +97,7 @@ canv.addEventListener('click', function(event)
                     if (zaehlerTreffer == anzahlEins)
                     {
                      akustischeMeldung("audio/down.mp3"); 
-                     meldung("Geschafft!  Glückwunsch  " ,"bold","20",schriftArt,"#ea2867",30,480);  
+                     meldung("Geschafft!  Glückwunsch  " ,"bold","20",schriftArt,"#ea2867",20,150);  
                       //  rundeAus=true;
                        
                     }
@@ -135,7 +135,10 @@ for (let i=0; i<z; i++) {
    for (let j=0; j<s; j++) {
       grid[i][j] = random(2); 
       gridVektor.push(grid[i][j]);  
-      if (grid[i][j]==1 ){anzahlEins++};  
+      if (grid[i][j]==1 ){
+          anzahlEins++
+         };  
+      console.log("  ANZ " *anzahlEins); 
    }
 }
 console.log("grid  " + gridVektor);
@@ -143,11 +146,12 @@ console.log("grid  " + gridVektor);
 
 function aufbauBasisMatrix(zeilen,spalten,br,ho)
 {
-   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Bilder gezeichnet
+   // legt eine Matrix an . In derren Elemente werden nachfolgend die ausgewählten Felder markiert
 	
     for (let i = 0; i<zeilen; i++)
     {
         var y=yAbstand+ ho*i;
+        console.log(y + "  ho " + ho);
         for(let j=0;j < spalten;j++)
         {                     
             var x=xAbstand+ br*j;  
@@ -178,7 +182,7 @@ function erweiterungZeile(zeilen,spalten,br,ho,co,jj)
     for (let i = 0;i<co.length; i++)
     {
         var y=ho*jj;
-        var x=br*(spalten +i+1);  
+        var x=br*(spalten +i+0);  
             ctx.lineWidth="2";
             ctx.strokeStyle="#5a617b";  
               
@@ -201,7 +205,7 @@ function erweiterungSpalten(zeilen,spalten,br,ho,co,jj)
     for (let i = 0;i<co.length; i++)
     {
 		
-        var y=(zeilen +i +1)*ho;
+        var y=(zeilen +i +0)*ho;
         var x=br*jj;  
             ctx.lineWidth="2";
             ctx.strokeStyle="#5a617b";  
@@ -273,29 +277,20 @@ function analyseSpalten(zeil,spalt){
 	return filledTiles;
 }
 
-
-
-
-
-
-
-
-
-
 function plusMinusSonder(sw)
 {
   spalten=spalten + sw; 
   
-  if ( spalten<= 2 || spalten >10) 
+  if ( spalten<= 4 || spalten >maxSpalten) 
   {    
     
-      meldung("Nonogramm  = Arbeit an der Logik","bold","20",schriftArt,"#5a617b",65,90 );  
+      meldung("Nonogramm  = Logik","bold","20",schriftArt,"#5a617b",20,90 );  
       spalten=spalten - sw;
       sw=0;
   }
   zeilen=spalten;
-  xAbstand=xAbstand-sw*5;
-  yAbstand=yAbstand-sw*15;
+ // xAbstand=xAbstand-sw*5;
+ // yAbstand=yAbstand-sw*15;
   //let lg = 20 + ctx.measureText("Anzahl Zeilen / Spalten  = ").width 
  
   
@@ -320,15 +315,12 @@ function auswahlButton()
                     case 0:
                         start();                       
                         break;                            
+                   
                     case 1:
-                        abbruch(); 
-                        start();                       
-                        break;
-                    case 2:
                         plusMinusSonder(1); 
                         start();                       
                         break;
-                     case 3:
+                     case 2:
                         plusMinusSonder(-1);  
                         start();                      
                         break;
@@ -343,9 +335,13 @@ function start(){
     yCoord=[];
     grid=[];
     gridVektor=[];
-    meldung("Nonogramm  = Arbeit an der Logik","bold","20",schriftArt,"#5a617b",65,30 );  
+    meldung("Nonogramm  = Logik","bold","20",schriftArt,"#5a617b",20,30 );  
 	aufbauInhaltMatrix(zeilen,spalten);
 	aufbauBasisMatrix(zeilen,spalten,xBreite,yHoehe);
+    for (i=0;i<3;i++){
+    rects[i].y=yAbstand+(zeilen +5) *yHoehe;   
+    texts[i].y= ytextdis+yErhoehung +yAbstand+(zeilen +5)*yHoehe;
+    }
     roundedButton(rects.length);  
     buttonText(rects.length);	
 	inhaltZeilen=analyseZeilen(zeilen,spalten);
@@ -353,25 +349,23 @@ function start(){
 	zaehlerTreffer=0;   
 }
 
-function abbruch(){
-    ctx.clearRect(0,0,canv.width,canv.height);
-    meldung("Nonogramm  = Arbeit an der Logik","bold","20",schriftArt,"#5a617b",65,30 );
-    xCoord=[];
-    yCoord=[];
-    grid=[];
-    gridVektor=[]; 
-    
-}
+
+
 
 function erklaerung(s,x,y,d){
     meldung("Die Zahlen hinter jeder Zeile und unter jeder Spalte geben an","normal",s,schriftArt,"#5a617b",x,y );
     meldung("wie viele Kästchen in der jeweiligen Zeile bzw. Spalte sind.","normal",s,schriftArt,"#5a617b",x,y+d);    
     meldung("Die Zahlenfolge < 1 1 > hinter einer Zeile bedeutet, dass sich in ","normal",s," Arial","#5a617b",x,y + 3*d);  
     meldung("dieser zwei EINZELNE Kästchen verbergen.","normal",s,schriftArt,"#5a617b",x,y+4*d);  
-    meldung("Beginne mit < GO on >","normal",s,schriftArt,"#5a617b",x,y+17*d);  
-    meldung("Mit < Grösser> und <Kleiner> auf der <Go on> Seite veränderst du","normal",s,schriftArt,"#5a617b",x,y+19*d); 
-    meldung("die Anzahl der Zeilen und Spalten. (Minimum 3; Maximum 10)","normal",s,schriftArt,"#5a617b",x,y+20*d);    
+    meldung("Beginne mit < GO on >","normal",s,schriftArt,"#5a617b",x,y+16*d);  
+    meldung("Mit < Grösser> und <Kleiner> auf der <Go on> Seite veränderst du","normal",s,schriftArt,"#5a617b",x,y+17*d); 
+    meldung("die Anzahl der Zeilen und Spalten. (Minimum 5; Maximum 12)","normal",s,schriftArt,"#5a617b",x,y+18*d);  
+    meldung("Bei Markierung eines Feldes , das nicht zur Lösung gehört,","normal",s,schriftArt,"red",x,y+20*d);  
+    meldung("erscheint ein X. ACHTUNG : Es kann mehrere Lösungen geben.","normal",s,schriftArt,"red",x,y+21*d);  
+    //meldung("ACHTUNG : Es kann mehrere Lösungen geben.","normal",s,schriftArt,"red",x,y+22*d);
+    meldung("Finde dann die hier verwandte","normal",s,schriftArt,"red",x,y+22*d);
 }  
+
 
 function zeigBild(a,x,y,w,h)
 {

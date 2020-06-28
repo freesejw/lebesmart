@@ -9,96 +9,104 @@
 
 <style></style>
 </head>
-<body onload="ladeGame()"></body>
-    <canvas id="canvas" width="500" height="600"></canvas>
+<body onload=""></body>
+    <canvas id="canvas" width="290" height="400"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
 var cW = ctx.canvas.width, cH = ctx.canvas.height;  
-var myVar;
-var indexBilder=[],smilepic=[]; 
+var auswahlIndex=[];
+var indexBilder=[];
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var durchLaeufe, maxDurchlaeufe=10, treffer;
+var speicherTreffer=[];
 var reaktionsZeit =3;
-var anzahlBilder=25, pic =new Array, smile=new Array,zeigBilder=4;
+var anzahlBilder=25, pic =new Array,zeigBilder=4;
 var spiegel;
 var clEvent=false;
 var Vergleich;
 var offenButtonZeit;
-var yBasis0=150;
-var yBasis1=230;
-var yBasis2=350;
-var yBasis3=500;
+var yBasis0=70; // Erste Reihe Bilder
+var yBasis1=160;// Zweite Rihe
+var yBasis2=340; // Buttons
 
-var xBasis=20, wBasis1=100, hBasis=140, dBasis=20, xtextdis=0, ytextdis=24;
-var wBasis2=120, yErhoehung=50; 
+
+var xBasis=20, wBasis1=80, hBasis1=80, dBasis=20, xtextdis=0, ytextdis=24;
+var wBasis2=60, hBasis2=40,yErhoehung=50; 
 
 //Rechtecke für die Bilder
-var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
-             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
-             {x: (xBasis + 2 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
-             {x: (xBasis + 3 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis},
+var rects = [{x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis1},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis0, w: wBasis1, h: hBasis1},
+             {x: (xBasis + 0 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis1},
+             {x: (xBasis + 1 * (wBasis1 + dBasis)), y: yBasis1, w: wBasis1, h: hBasis1},
+
+             {x: xBasis, y: yBasis2, w: wBasis2, h: hBasis2,col1: "red",col2:"#82CE86"},
+             {x: (xBasis + wBasis2+ dBasis), y: yBasis2, w: 0.6*wBasis2, h: hBasis2,col1: "#5a617b",col2: "#5a617b"},                      
+             {x: (xBasis + 1.6 * (wBasis2+ dBasis)), y: yBasis2, w: 0.6*wBasis2, h: hBasis2,col1: "#5a617b",col2: "#5a617b"}];             
+
           
-             {x: xBasis, y: yBasis3, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis3, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},                      
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis3, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];             
+    
+var texts =[{na: " Go on", x: xBasis + xtextdis -5, y: yBasis2 + ytextdis},
+           {na:  String.fromCharCode(43), x: (xBasis + 12+  wBasis2 + dBasis),y: yBasis2 + ytextdis} ,         
+           {na:  String.fromCharCode(45), x: (xBasis + 15 + 1.6 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis }];
 
-
-var texts =[{na:"   "+  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10, y: yBasis3 + ytextdis,},
-           {na: "  " + String.fromCharCode(43)+"  Zeit", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis3 + ytextdis} ,         
-           {na: "    " + String.fromCharCode(45)+"  Zeit", x: (xBasis + 0 + 2 * (wBasis2+ dBasis)),y: yBasis3 + ytextdis}];
+ladeGame();
           
 function ladeGame() 
-    {   
-        meldung("Übe dich in Konzentration","bold","20",schriftArt,"#5a617b",120, 50);     
-        meldung("Ein Bild ist gespiegelt! KLICK es an","normal","18",schriftArt,"#5a617b",xBasis, 120);  
-        meldung("Dies ist ein Beispiel !!!! Starte mit Go on","bold","20",schriftArt,"red",xBasis,420)
-        meldung("Es gibt " + maxDurchlaeufe + " Durchgänge","normal","16"," schriftArt","#5a617b",xBasis ,340); 
-        meldung("Zeit zum Reagieren = " +  reaktionsZeit + " Sek","normal","16,"," schriftArt","#5a617b",xBasis ,380);    
+    {          
+       meldung("Finde gespiegeltes Bild","bold","20",schriftArt,"#5a617b",xBasis, 35);  
+        var  tb =100;
+        meldung("Es werden 4 Bilder angezeigt","normal","16",schriftArt,"#5a617b",xBasis, tb);  
+        meldung("Sie haben das gleichr Motiv.","normal","16",schriftArt,"#5a617b",xBasis, tb + 20);  
+        meldung("Eins ist aber spiegelverkehrt.","normal","16",schriftArt,"#5a617b",xBasis, tb + 40);  
+        meldung("Klicken sie das an.","normal","16",schriftArt,"#5a617b",xBasis, tb+60); 
+        meldung("Mit dem Plus / Minus Button","normal","16",schriftArt,"#5a617b",xBasis, tb+90); 
+        meldung("können sie die Zeit zum", "normal","16",schriftArt,"#5a617b",xBasis ,tb+110); 
+        meldung("Reagieren verändern.", "normal","16",schriftArt,"#5a617b",xBasis ,tb+130); 
+        meldung("Es gibt " +  maxDurchlaeufe + " Durchläufe.","normal","16,",schriftArt,"#5a617b",xBasis,tb+160); 
+        meldung("Zeit:  " +  reaktionsZeit + " Sek","normal","16", schriftArt,"#5a617b",90 ,330);    
         pic=einlesenBilder("Spiegeln/sp",anzahlBilder,".jpg");
-        smile=einlesenBilder("lach",2,".png")
-
-        //buttonText();
         offenButtonZeit=true;
         mroundedButton();
         buttonText();
-       
-        erstelleBasisBild();  // dient nur zur Ansicht        
-        
+        durchLaeufe=0;      
     }
-
+   
     function start(){
-       
-        ctx.clearRect(xBasis,420-30,400,30);// löscht " dies ist ein ...."
-        ctx.clearRect(xBasis,490-24,490,30);//
+        ctx.clearRect(rects[0].x -5, rects[0].y-5, 260, 235);  
+        auswahlIndex0=[];
+        mroundedButton();
+        buttonText();       
         erstelleBasisBild();
         clEvent=true;
-        durchLaeufe=0;
-        treffer=0;       
+        durchLaeufe=0;    
+        treffer=0; 
+        meldung("Treffer aktuell : " + treffer ,"bold","16",schriftArt,"red",xBasis,290);          
         offenButtonZeit=false;
-        erstelleBasisBild();
-        
-        myVar = setInterval(function () {
+        erstelleBasisBild();        
+        setTimeout(function () {
         iteration()
         }, 3000);
 
     }
 
     function iteration()
-    {
-        
+    {       
         durchLaeufe++;  
         if(durchLaeufe<maxDurchlaeufe)
             {
                 erstelleBasisBild();
+                setTimeout(function () {
+                iteration()
+                }, reaktionsZeit*1000);
             }      
            
         else 
             {
                 clEvent=false; 
                 offenButtonZeit=true;
-                clearInterval(myVar);
+                abbruch();
             }
     }
 
@@ -107,56 +115,51 @@ function ladeGame()
     {
        // console.log(getipptRechteck);
         switch (getipptRechteck) 
-                {
-                  
-                    case 0:
-                           
-                    case 1:
-                           
-                    case 2:
-                           
-                    case 3:
-                           vergleich=getipptRechteck;
-                           break;                     
-                    case 4:
-                           if (offenButtonZeit==true)
-                           start();
-                           break;       
-                    case 5:
-                            if (offenButtonZeit==true)
-                            {
-                            reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
-                            meldung("Zeit zum Reagieren prp Bild = " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,380);                      
-                            }                                       
-                            break;
-                    case 6:
-                            if (offenButtonZeit==true)
-                            {
-                            reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
-                            meldung("Zeit zum Reagieren pro Bild= " +  reaktionsZeit.toFixed(2) + " Sek","normal","16"," schriftArt","#5a617b",xBasis ,380); 
-                            }                     
-                            break;                                 
-                    default:
-                            alert("ups");
-                }             
+                {            
+                case 0:
+                        
+                case 1:
+                        
+                case 2:
+                        
+                case 3:
+                        vergleich=getipptRechteck;
+                        break;                     
+                case 4:
+                        if (offenButtonZeit==true)
+                        start();
+                        break;       
+                case 5:
+                        if (offenButtonZeit==true)
+                        {
+                        reaktionsZeit=plusMinus(reaktionsZeit,0.25,1,15);
+                        meldung("Zeit:  " +  reaktionsZeit + " Sek","normal","16", schriftArt,"#5a617b",xBasis ,330);  
+                        }                                       
+                        break;
+                case 6:
+                        if (offenButtonZeit==true)
+                        {
+                        reaktionsZeit=plusMinus(reaktionsZeit,-0.25,0,15);
+                        meldung("Zeit:  " +  reaktionsZeit + " Sek","normal","16", schriftArt,"#5a617b",xBasis ,330);  
+                        }                     
+                        break;                                 
+                default:
+                        alert("ups");
+            }             
     }
 
     function erstelleBasisBild()
     {
-       
         indexBilder=(random(pic.length));              
-        zeichneVorgabeBilder();
-       
+        zeichneVorgabeBilder();      
     }
     
     function mroundedButton()
         {
-      
-        for (var i = 4;i < 7; i++) 
+          for (var i = 4;i < 7; i++) 
             {              
-                ctx.fillStyle=rects[i].col1;
-                           
-                roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h -100,10); 
+                ctx.fillStyle=rects[i].col1;             
+                roundedRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h ,10); 
                 ctx.fill();          
             }
         } 
@@ -175,38 +178,36 @@ function ladeGame()
 canv.addEventListener('click', function(e)
      {
         var rect = angetippt(rects, e.offsetX, e.offsetY);   
-       
+        var gt=getipptRechteck
         if (rect)
         {          
-            if( getipptRechteck<4) 
+            if( gt<4) 
              {  
-                console.log(clEvent);
-                if (clEvent==true)
+              if (clEvent==true)
                 {
                    
                     if ( (vergleich==spiegel)) //&& ( getipptRechteck<indexBilder.length)&&blocke==false)
                         {  
                             treffer++;                              
                             blocke= true; 
-                            meldung("Treffer : " + treffer ,"bold","16",schriftArt,"red",xBasis,450); 
-                           // zeigBild(smile[1], rects[vergleich].x,rects[vergleich].y,50,50);  
-                           zeigBild(smile[1],  rects[spiegel].x,rects[spiegel].y-10,50,50);  
+                            meldung("Treffer aktuell : " + treffer ,"bold","16",schriftArt,"red",xBasis,290);                           
+                            
+                            zeigBild("daumenHoch.png", rects[getipptRechteck].x,rects[getipptRechteck].y,50,50); 
+                            setTimeout(function () {
+                            zeigBild(pic[auswahlIndex[vergleich]], rects[gt].x, rects[gt].y, rects[gt].w, rects[gt].h,spiegel,gt);    
+                            }, 250);
+                           
                         }
                             else
                             {
-                                ctx.clearRect(xBasis,490-24,490,30);// 
-                                meldung("Falsch   ==> Go on","normal","18",schriftArt,"red",xBasis,450)
-                                akustischeMeldung("audio/up.mp3"); 
-                               // zeigBild("daumenRunter.png", rects[getipptRechteck].x,rects[getipptRechteck].y,50,50); 
-                               //zeigBild("smile2.jpg", rects[vergleich].x,rects[vergleich].y,50,50);   
-                                
-                            }
-                          //  clearInterval(myVar);      
-                } 
-             
-            //start();
+                              zeigBild("daumenRunter.png", rects[gt].x,rects[gt].y,50,50); 
+                              setTimeout(function () {
+                              zeigBild(pic[auswahlIndex[vergleich]], rects[gt].x, rects[gt].y, rects[gt].w, rects[gt].h,spiegel,gt);    
+                            }, 250);
+                            }                          
+                }                  
             }
-        
+         
         }
 
     }, false);
@@ -214,9 +215,10 @@ canv.addEventListener('click', function(e)
 function zeichneVorgabeBilder()
     {
             spiegel=random(4);
-        for (var i=0;i<zeigBilder;i++)
+            for (var i=0;i<zeigBilder;i++)
         { 
-            zeigBild(pic[indexBilder], rects[i].x, rects[i].y, rects[i].w, rects[i].h,spiegel,i);     
+            zeigBild(pic[indexBilder], rects[i].x, rects[i].y, rects[i].w, rects[i].h,spiegel,i); 
+            auswahlIndex[i]=indexBilder;   
         }     
     }
 
@@ -253,6 +255,16 @@ function einlesenBilder(a,b,c)
         return zpic; 
     };
 
+
+function abbruch()
+    {       
+        speicherTreffer.push(treffer);
+        if (speicherTreffer.length>8){speicherTreffer.shift();}     
+        var ausgabeTreffer = "";   
+        for (var ii=0;ii<speicherTreffer.length;ii++){ausgabeTreffer=ausgabeTreffer + "  " +speicherTreffer[ii] }          
+        meldung("Treffer gesamt: " + ausgabeTreffer ,"normal","16",schriftArt,"red",xBasis,270);         
+        meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,290);   
+    }
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) 
     {

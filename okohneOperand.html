@@ -9,101 +9,155 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-<canvas id="canvas" width="500" height="550"></canvas>
+<canvas id="canvas" width="300" height="500"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
 var ctx = canv.getContext("2d");
-var xCoord=[], yCoord=[];
+var xCoord=[], yCoord=[]; // Koordinaten für die Ziffern und Operandern Anzeige
+var xxCoord=[], yyCoord=[]; // Koordinaten der + / - Felder
+var kontrolleGetippt=[]; // Initiert mit 0. wird auf 1 gesetzt wenn ein Plus / Minus Feld aktiviert wirdiS
+var operandGewaehlt=[]; // speichert die perZufall ausgewählten Operanden
+var zahlGewaehlt=[];  // Speichert die per Zufall ausgewählten Ziffern 
 var operand;
-
-var rechenSchritte=2, schrittWeite=1,string;
+var maxRechenschritte=6; // Maximal mögliche Operanden in einer rechenZeile
+var rechenSchritte=3; // Startwert für Zahlder Operanden
+var string; //peichert die Rechenkette
 var z1, z2;
-var xBasis=20, yBasis1=220, wBasis1=60, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
-var yBasis2= 440, wBasis2=120, yErhoehung=50; 
-var durchgang;
-var xtextdis=20;
-var breite=20,hoehe=40,xAbstand=10,y =140, xDist=10,yDist=130;
-var schieb=40;
-var rects = [{x: xBasis, y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis2+ dBasis), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
-             {x: (xBasis + 2 *( wBasis2+ dBasis)), y: yBasis2, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
-             {x: (xBasis + 2 * (wBasis2+ dBasis)), y: yBasis2 + yErhoehung, w: wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
+
+var durchgang =0; // zaehlt die anzahl der Durchgänge
+var breite=17,hoehe=25,xAbstand=10, xDist=10,yAbstand=130;
+var ergebnisProg; // ergebnis der rechenzeile lt. Programm 
+var ergebnisUser; // Ergebnis der rechenzeile lt. User
+var xBasis=5, hBasis=40, dBasis=20, xtextdis=10, ytextdis=25;
+var yBasis= 380, wBasis=80, yErhoehung=50; 
+
+
+var rects = [{x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + wBasis+ dBasis), y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
+             {x: (xBasis + 2 *( wBasis+ dBasis)), y: yBasis +yErhoehung, w: 0.4*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
+             {x: (xBasis + 2.4 * (wBasis+ dBasis)), y: yBasis + yErhoehung, w: 0.4*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
 
 
-var texts =[{na:  String.fromCharCode(9655)+ "  Go on", x: xBasis + xtextdis -10, y: yBasis2 + ytextdis+yErhoehung},
-           {na: String.fromCharCode(9673)+"  Lösung", x: (xBasis + xtextdis +  wBasis2 + dBasis),y: yBasis2 + ytextdis + yErhoehung} ,
-           {na: String.fromCharCode(43)+"  Operand", x: (xBasis + 15+ 2 * (wBasis2+ dBasis)),y: yBasis2 + ytextdis },
-           {na: String.fromCharCode(45)+"  Operand", x: (xBasis + 15 + 2 * (wBasis2+ dBasis)),y: yBasis2 + yErhoehung + ytextdis }];
-         
+var texts =[{na: "Go on", x: xBasis + xtextdis, y: yBasis + ytextdis+yErhoehung},
+           {na: "Lösung", x: (xBasis + xtextdis +  wBasis + dBasis),y: yBasis + ytextdis + yErhoehung} ,
+           {na: String.fromCharCode(43), x: (xBasis + 10+ 2 * (wBasis+ dBasis)),y: yBasis + yErhoehung +ytextdis },
+           {na: String.fromCharCode(45), x: (xBasis + 15 + 2.4 * (wBasis+ dBasis)),y: yBasis + yErhoehung + ytextdis }];
 
+ 
 function ladeGame()
     {
         
-        meldung("Logik // Erhöhe die geistige Ausdauer","bold","20",schriftArt,"#5a617b",15, 35+ 40);  
-        meldung("Welche Rechenzeichen (  +   -   *  ) müssen eingesetzt werden?","normal","16",schriftArt,"#5a617b",15, 220);        
-        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +300 ,yBasis2 -35);        
+        meldung("Bestimme Operanden","bold","20",schriftArt,"#5a617b",15, 35+ 40);  
+        meldung("Welche Rechenzeichen ( +  -  ) ","normal","16",schriftArt,"#5a617b",15, 275);
+        meldung("müssen eingesetzt werden?","normal","16",schriftArt,"#5a617b",15, 295);  
+        aufbauZeile(rechenSchritte,breite,hoehe);
+        meldung("Eine Lösung in diesem Beispiel ist: ","normal","16",schriftArt,"#5a617",15,325);  //staat 320
+        meldung(string,"normal","16",schriftArt,"#5a617",15,345);  
+        meldung("Die Zahl der Operanden ändern sie" ,"normal","16",schriftArt,"#5a617b",15,370);        
+        meldung("über  die + / - Buttons","normal","16",schriftArt,"#5a617b",15,390);  
         roundedButton(4);
         buttonText();          
-        aufbauZeile(rechenSchritte,breite,hoehe);
-        durchgang=0;
-        loesung0();
-        zeigBild("Images/berg.jpg",400,0,100,180);
+     
     }
 
 
 function start()
     {
-        ctx.clearRect(0,y,400,35); // Löschen Anzahl operanden
-        ctx.clearRect(0,280-30,550,30); //
-        ctx.clearRect(xBasis, 380 - 30, 400, 40);   // Löschen Lösung Anzeige
-        ctx.clearRect(xBasis, 320-24, 400, 34);   // Beispiel Lösung          
-        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",xBasis, 445);          
+        ctx.clearRect(15, 275-24, 300,215); // Löscht Text von Welche ... bis string 
+        ctx.clearRect(0,130,400,175); //
+        //ctx.clearRect(xBasis, 380 - 30, 400, 40);   // Löschen Lösung Anzeige
+        zahlGewaehlt=[];      
+        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",15, 320);          
         aufbauZeile(rechenSchritte,breite,hoehe);
+        roundedButton(4);
+        buttonText();  
+       
        
     }
-function aufbauZeile(ele,breite,hoehe)
+function aufbauZeile(operationen,breite,hoehe)
 {
-   // legt eine Zeile an . In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
-
-        var anzahlZahlen=ele+1;
-        var anzahlOperanden=ele;
-        var anzahlFelder=ele*2 + 1 + 2; // + 2 sind für = ergebnis
-        var operanden=["+" , " - " , "*"];
+   // legt eine Rechenzeile an . In derren Elemente werden nachfolgend die Zahlen und opranden  eingetragen
+       
+        var anzahlZahlen=operationen+1;
+        var anzahlOperanden=operationen;
+        var anzahlFelder=operationen*2 + 1 + 2; // + 2 sind für = ergebnis
+        var operanden=["+" , "-"];
         string="";
         xCoord=[];
         yCoord=[];
-
+        xxCoord=[];
+        yyCoord=[];
+        var jj=-2;  // wird bei der Anzeige der + und - Felder benötigt
         for (let i = 0; i<anzahlFelder; i++)
-        {
-                var x=breite*i;              
-                //inke, obere Koordinaten der Rechtecke
-                //koordinaten der unsichtbaren Zellen
-                xCoord.push(x);
-                yCoord.push(y);
-        }
+            {
+                    var x=xAbstand+breite*i;   
+                    var y =hoehe + yAbstand;  
+                   
+                //koordinaten der unsichtbaren Zellen für Ziffern und Fragezeichen
+
+                    xCoord.push(x);
+                    yCoord.push(y);
+                   
+                // Koordinaten und Füllung der Plus / Minus felder    
+                    if((i+1)%2==0 && (i<anzahlFelder-2))
+                    {
+                       jj=jj+2;
+                        for ( j=0;j<2;j++)
+                        {
+                            xxCoord[j+jj]=xCoord[i] ;
+                            yyCoord[j+jj]=yCoord[i]+(j+1)*hoehe;
+                          //  console.log(" j "+ j + " jj "+jj + "  j + jj " + (j+jj));
+                            ctx.strokeRect (xxCoord[j+jj] ,yyCoord[j+jj],breite, hoehe); 
+                            ctx.fillStyle="#5a617b";
+                            ctx.font= "30px" + " " + schriftArt; 
+
+                            ctx.fillText (operanden[j],xxCoord[j+jj] ,hoehe + yyCoord[j+jj]);  
+
+                            kontrolleGetippt[j+jj]=0; // Vekor für Überprüfung auf Plus / Minus angetippt wird auf Nullgestzt
+                            operandGewaehlt[j+jj]=operanden[j] // Vektor gefüllt mit abwechselnd + -
+                       
+                        }
+                    }    
+                    //ctx.strokeRect (xCoord[i] + xAbstand,hoehe + yCoord[i] - 25,br,hoehe); 
+                       
+            }
+            
+           
    
     for (let i = 0 ; i <anzahlZahlen;i++)
     {
-            ctx.fillStyle="#5a617b";
-            ctx.font= "18px" + " " + schriftArt;
-            var rr=random(9)+1; 
-            string=string + rr;  
-            ctx.fillText(rr,xCoord[i*2]+xAbstand + xDist,yCoord[i*2]+yDist);
+           // her werden die Ziffern der Rechenkette ermittelt und in den String geschrieben
+            rechenZahl=random(9)+1; 
+            zahlGewaehlt.push(rechenZahl);
+            string=string + rechenZahl; 
 
-            if (i < anzahlOperanden){
-            var oo=operanden[random(3)];
-            ctx.fillStyle="red"; 
-            ctx.font= "18px" + " " + schriftArt;  
-            ctx.fillText("?",xCoord[i*2+1]+xAbstand + xDist,yCoord[i*2+1]+yDist);
-            string=string +oo.valueOf();  
+                    ctx.fillStyle="#5a617b";
+                    ctx.font= "20px" + " " + schriftArt;
+                    ctx.fillText(rechenZahl,xCoord[i*2] + xDist,yCoord[i*2]);
+
+                    // Setzen der fragezeichen zwischen den Ziffern
+                    if( i <anzahlZahlen-1){
+                    ctx.fillStyle="red" ;  
+                    ctx.font="18px" + " " + schriftArt; 
+                    ctx.fillText("?",xCoord[i*2+1] + xDist,yCoord[i*2+1]);
+                    }
+
+            if (i < anzahlOperanden)
+            {
+                var oo=operanden[random(2)]; // Hier werden die Operanden ermittelt
+                string=string +oo.valueOf();  
             }
+
             else{
-                ctx.fillText("=",xCoord[i*2+1]+xAbstand + xDist,yCoord[i*2+1]+yDist); 
-                //var erg=eval(string); Liefert Lösung incl Rechenregeln
-                var erg=ergebnisKette(string);
-                ctx.fillText(erg,xCoord[i*2+2]+xAbstand + xDist,yCoord[i*2+2]+yDist);      
+                ctx.fillText("=",xCoord[i*2]+xAbstand +10 + xDist,yCoord[i*2+1]); // Setzen des Gleichheitszeichen 
+                //var ergebnisProg=eval(string); Liefert Lösung incl Rechenregeln
+                ergebnisProg=ergebnisKette(string); //Ermittlung Rechenergebnis
+
+                ctx.fillText(ergebnisProg,xCoord[i*2+2]+xAbstand + xDist,yCoord[i*2+2]); // Anzeigen Ergebnis
+               // console.log("rechenzahhl  " + rechenZahl + "  zahlGewaehlt  " +  zahlGewaehlt+"   " +string);
+
             }
          
     }
@@ -112,40 +166,143 @@ function aufbauZeile(ele,breite,hoehe)
 }
  
  
-  function ergebnisKette(kette)
+  function ergebnisKette(kette)  
    {
+      // berechnet den String
         var zw=kette.match(/(\d+)|([\+\*\-\/\:])/g).reduce((accu, curr) => isNaN(curr) ? 
         (accu + (curr === ':' ? '/' : curr)) : eval(accu + curr));  
         return zw;
    }  
 
-function loesung0()
-    {
-        ctx.clearRect(xBasis, 320 - 20, 500, 34);               
-        meldung("Eine Lösung in diesem Beispiel ist: " + string,"normal","16",schriftArt,"#5a617",xBasis,320);  
-       
-    }
-
     function loesung()
     {
-       
+        // zeigt die Lösung lt Programm an. Muss nicht eindeutig sein
         ctx.clearRect(xBasis, 320-20, 500, 30);               
-        meldung("Eine Lösung : " + string,"normal","18",schriftArt,"red",xBasis,320);  
-       
+        meldung("Mögliche Lösung : " + string,"normal","18",schriftArt,"red",15,320);     
     }
 
 
  canv.addEventListener('click', function(e)
      {       
-        var rect = angetippt(rects, e.offsetX, e.offsetY);
+       //Prüft welcher Button (Go on usw) geklickt wurde
+       
+        var rect = angetippt(rects, e.offsetX, e.offsetY);       
         if (rect) 
         {
-            auswahlButton();  
-            //vergleich();         
-        }}, false);
+                auswahlButton();           
+            
+         }}, false);
 
 
+        canv.addEventListener('click', function(e)
+     {       
+        
+            xclick = event.clientX; 
+            yclick = event.clientY;  
 
+     if (yclick > yyCoord[0] &&(yclick<275))
+       {
+           var zwert = geglicktesFeld(xclick,yclick) // liefert den Index des getippten felde            
+           console.log("zwert   " +zwert);  
+           auswaehlen(zwert,kontrolleGetippt);
+           beschriften(kontrolleGetippt,operandGewaehlt);
+           ergUser(zahlGewaehlt,kontrolleGetippt,operandGewaehlt);
+           if (ergebnisUser==ergebnisProg){
+            durchgang++;   
+            zeigBild("daumenHoch.png",xxCoord[rechenSchritte]+ breite + 50,yyCoord[0]+hoehe/3,50,50);
+            setTimeout(function () {
+                                               
+               start();
+               }, 500);
+           }
+      
+                 
+      } }, false);
+
+
+    function auswaehlen(auswahl,kontrolleGetippt)
+    {
+           
+            if (auswahl%2==0){             
+                kontrolleGetippt[auswahl+1]=0;
+                if (kontrolleGetippt[auswahl]==0){kontrolleGetippt[auswahl]=1;}
+                    else
+                    {
+                    kontrolleGetippt[auswahl]=0;
+                    }
+            }
+        
+            if (auswahl%2>0){
+                kontrolleGetippt[auswahl-1]=0;
+                if (kontrolleGetippt[auswahl]==0){kontrolleGetippt[auswahl]=1;}
+                    else
+                        {
+                        kontrolleGetippt[auswahl]=0;
+                        }
+            }
+            console.log("auswahl"  + auswahl%2 +"  zahl " + zahlGewaehlt + " kontroll  " +kontrolleGetippt + "  Op " + operandGewaehlt);
+
+    }
+
+
+    function beschriften(kon,oper)
+    {
+
+        for (let i = 0;i<kon.length;i++){
+            ctx.fillStyle="black"; 
+                        ctx.font= "36px" + " " + schriftArt;  
+                        ctx.fillText(operandGewaehlt[i],xxCoord[i] ,yyCoord[i]+hoehe); // Zeichnet die Fragezeichen    
+            
+            if(kontrolleGetippt[i])
+            {
+                ctx.fillStyle="red"  
+                ctx.fillText(operandGewaehlt[i],xxCoord[i] ,yyCoord[i]+hoehe); // Zeichnet die Fragezeichen    
+            }
+        }
+    } 
+   
+
+    function ergUser(zahlGewaehlt,kontrolleGetippt,operandGewaehlt)
+    {
+      kurzoperand=[];
+      ergebnisUser="";
+        for (let i = 0;i<kontrolleGetippt.length;i++)
+        {
+
+            if (kontrolleGetippt[i]){
+                kurzoperand.push(operandGewaehlt[i]);
+            }
+          
+        }
+        for(let i=0;i<kurzoperand.length;i++){
+        ergebnisUser=ergebnisUser+zahlGewaehlt[i] + kurzoperand[i]
+        console.log(ergebnisUser);
+        } 
+        ergebnisUser=ergebnisUser+zahlGewaehlt[zahlGewaehlt.length -1]
+       ergebnisUser=ergebnisKette(ergebnisUser);
+     
+    }
+
+    function geglicktesFeld(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
+    // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
+    var zw;
+    for (var i=0;i<rechenSchritte*2;i++){
+        
+       //console.log(xxCoord[i] + " xc " + xc + "breite  " + breite);
+      // console.log(yyCoord[i] + " yc " + yc + "hoehe  " + hoehe);
+        if ((xxCoord[i] < xc) && (xc< xxCoord[i] + breite ) &&
+            (yyCoord[i] < yc) && (yc < yyCoord[i]+ hoehe))
+            {
+            zw=i;      
+         console.log("zw  " + zw);
+        }
+        else{
+      
+        } 
+     }
+  
+  return zw;  
+}
 
 function auswahlButton()
     {
@@ -160,25 +317,14 @@ function auswahlButton()
                         loesung();                        
                         break;
                     case 2:
-                        rechenSchritte= plusMinus(rechenSchritte,1,0,11); 
-                        ctx.clearRect(xBasis+240,yBasis2 -35 -20, 200, 20); 
-                        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +300 ,yBasis2 -35); 
+                        rechenSchritte= plusMinus(rechenSchritte,1,0,maxRechenschritte); 
                         start();                         
                         break;
                     case 3:
-                        rechenSchritte= plusMinus(rechenSchritte,-1,0,11); 
-                        ctx.clearRect(xBasis+240,yBasis2 -35 -20, 200, 20); 
-                        meldung("Anzahl Operanden :  " + rechenSchritte,"normal","16",schriftArt,"#5a617b",xBasis +300 ,yBasis2 -35);                                                         
+                        rechenSchritte= plusMinus(rechenSchritte,-1,0,maxRechenschritte); 
                         start();
                         break;
-                     case 4:
-                     //links getippt
-                        vergleich(4);                        
-                        break;  
-                     case 5:
-                     //rechts getippt
-                        vergleich(5);                        
-                        break;                 
+                             
                     default:
                        alert("ups");
                 }             
@@ -201,30 +347,15 @@ function auswahlOperand(a1,a2)
                 operand="-"; 
                 return z1 - z2;   
                 break;
-            case 2:
-                operand="*"; 
-                return z1 * z2;   
-                break;
-             case 3:
-                operand= "+";
-                return z1 + z2;
-                break;
+            
            
             default:
             alert("was falsch");
         } 
     }
 
-function boxMeldung(melde,x,y,w,h,k1,k2,o)
-    {       
-        ctx.rect(x,y,w,h);
-        ctx.stroke();
-        ctx.fillStyle=bgColor;
-        ctx.fillRect(x,y,w,h);      
-        meldung(melde,"normal","35",schriftArt,"#5a617b",x+30,y+45  );
-    }
 
-    zeigBild("Images/berg.jpg",400,0,100,150);
+    
 </script>
 
 
