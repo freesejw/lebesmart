@@ -20,6 +20,9 @@ var kontrolleGetippt=[]; // Initiert mit 0. wird auf 1 gesetzt wenn ein Plus / M
 var operandGewaehlt=[]; // speichert die perZufall ausgewählten Operanden
 var zahlGewaehlt=[];  // Speichert die per Zufall ausgewählten Ziffern 
 var operand;
+var durchlauf;
+var treffer;
+var gezeigt; // wird gleich true gesetzt wenn die Lösung gezeigt wurde
 var maxRechenschritte=6; // Maximal mögliche Operanden in einer rechenZeile
 var rechenSchritte=3; // Startwert für Zahlder Operanden
 var string; //peichert die Rechenkette
@@ -58,8 +61,10 @@ function ladeGame()
         meldung("Die Zahl der Operanden ändern sie" ,"normal","16",schriftArt,"#5a617b",15,370);        
         meldung("über  die + / - Buttons","normal","16",schriftArt,"#5a617b",15,390);  
         roundedButton(4);
-        buttonText();          
-     
+        buttonText();  
+        durchlauf = 0;        
+        treffer=0;
+        gezeigt=false;
     }
 
 
@@ -69,7 +74,8 @@ function start()
         ctx.clearRect(0,130,400,175); //
         //ctx.clearRect(xBasis, 380 - 30, 400, 40);   // Löschen Lösung Anzeige
         zahlGewaehlt=[];      
-        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",15, 320);          
+        meldung( "Anzahl Durchgänge :  " + durchgang,"normal","16",schriftArt,"#5a617b",15, 320);    
+        meldung( "Anzahl Richtige :  " + treffer,"normal","16",schriftArt,"#5a617b",15, 345);          
         aufbauZeile(rechenSchritte,breite,hoehe);
         roundedButton(4);
         buttonText();  
@@ -203,12 +209,18 @@ function aufbauZeile(operationen,breite,hoehe)
      if (yclick > yyCoord[0] &&(yclick<275))
        {
            var zwert = geglicktesFeld(xclick,yclick) // liefert den Index des getippten felde            
-           console.log("zwert   " +zwert);  
+           //console.log("zwert   " +zwert);  
            auswaehlen(zwert,kontrolleGetippt);
            beschriften(kontrolleGetippt,operandGewaehlt);
            ergUser(zahlGewaehlt,kontrolleGetippt,operandGewaehlt);
            if (ergebnisUser==ergebnisProg){
-            durchgang++;   
+            console.log(gezeigt + "o  g t  " + treffer);   
+            durchgang++; 
+            if (gezeigt==false)
+            {treffer++;}
+            else
+            {gezeigt=false;}
+            console.log(gezeigt + " g t  " + treffer); 
             zeigBild("daumenHoch.png",xxCoord[rechenSchritte]+ breite + 50,yyCoord[0]+hoehe/3,50,50);
             setTimeout(function () {
                                                
@@ -314,7 +326,8 @@ function auswahlButton()
 
                         break;
                     case 1:
-                        loesung();                        
+                        loesung();
+                        gezeigt=true;                        
                         break;
                     case 2:
                         rechenSchritte= plusMinus(rechenSchritte,1,0,maxRechenschritte); 
