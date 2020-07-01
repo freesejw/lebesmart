@@ -29,7 +29,7 @@
         var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 
         var durchLaeufe=0;// Zählt die Anzahl der Durchläufe. Wird  bei dem Aufruf von Start erhöht
-        var maxDurchLaeufe = 2; // Maximale Anzahl von durchläufen
+        var maxDurchLaeufe = 3; // Maximale Anzahl von durchläufen
         var insgesamtKlicks=0; // gibt an wie oft Kombinatonen in der Matrix angeklickt wurde über alle Durchläufe 
         var insgesamtTreffer=0; // zählt wieviel Treffer erzielt werden vom Spielaufruf bis maxDurchlaeufe
         var rundenTreffer;   // zählt wieviel Treffer in dem jeweiligen Durchgang erzielt wurden
@@ -96,6 +96,7 @@
       
 
         function start() {
+            meldung("Anzahl Kombi: " + anzahlSuchKombi, "normal", "16", schriftArt, "#5a617b", 100, yBasis+yErhoehung - 20);
             ctx.clearRect(xBasis,125-20,300,180) // Merke dir die...
            // ctx.clearRect(40, 95 - 20, cW - 65, 25) // Es gibt...
             ctx.clearRect(xBasis - 10, 400 - 40, 480, 30)  // Timer
@@ -168,7 +169,7 @@
                     case 1:
                         ctx.clearRect(100,yBasis + yErhoehung-20,500,20);   
                         anzahlSuchKombi = plusMinus(anzahlSuchKombi, 1, 1, 15);                   
-                        meldung("Anzahl Kombi.ationen = " + anzahlSuchKombi, "normal", "16", schriftArt, "#5a617b", 100, yBasis+yErhoehung - 20);
+                        meldung("Anzahl Kombi. = " + anzahlSuchKombi, "normal", "16", schriftArt, "#5a617b", 100, yBasis+yErhoehung - 20);
                     break;
                     case 2:
                         ctx.clearRect(100,yBasis + yErhoehung-20,500,20);  

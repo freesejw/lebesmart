@@ -28,7 +28,7 @@ var indexReihe = [];// hier werden die indizes der Felder gespeichert die angeze
 var alleBilderGeklickt=0;
 var zeilenZahl = 6, spaltenZahl = 6; // Felder pro Spalte und Zeile
 var breite = 35, hoehe=35;
-var maxDurchlaeufe=10;
+var maxDurchlaeufe=3;
 var durchLaeufe=0;
 var xPos, yPos,xclick, yclick;
 var zaehlerClick; 
@@ -86,6 +86,7 @@ function start()
     roundedButton(3);
     buttonText();  
     zaehlerTreffer=0; // Zäehlt die Treffer. damit wird geprüft ob alle Felder richtig angeklickt wurden
+    
     durchLaeufe++;    
     indexReihe=[]; 
     zeitAusgang=0; //  
@@ -166,7 +167,7 @@ if (matrixGeblockt==false) // dann ist Klicken in der Matrix erlaubt
             }
                     if (zaehlerTreffer == anzahlBilder) // zaehlertreffer wird bei Aufruf von start auf 0 gesetzt
                     {
-                        // Alle Bilder erfolgreich geklickt
+                        // Alle Bilder eines Durchgangs wurden erfolgreich geklickt
                         alleBilderGeklickt++;               
                         matrixGeblockt=false;
                         //blockenStart=false;
@@ -180,6 +181,7 @@ if (matrixGeblockt==false) // dann ist Klicken in der Matrix erlaubt
 
                             if(durchLaeufe==maxDurchlaeufe)
                             {
+                                alleBilderGeklickt=0;    
                             durchLaeufe=0;
                             ctx.clearRect(xBasis,yBasis,canv.width,hBasis);
                             meldung("Die " + maxDurchlaeufe + " Durchläufe sind erreicht","normal","16",schriftArt,"red",xBasis,375);   
