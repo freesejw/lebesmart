@@ -9,7 +9,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-<canvas id="canvas" width="300" height="500"></canvas>
+<canvas id="canvas" width="300" height="480"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -19,21 +19,20 @@ var xxCoord=[], yyCoord=[]; // Koordinaten der + / - Felder
 var kontrolleGetippt=[]; // Initiert mit 0. wird auf 1 gesetzt wenn ein Plus / Minus Feld aktiviert wirdiS
 var operandGewaehlt=[]; // speichert die perZufall ausgewählten Operanden
 var zahlGewaehlt=[];  // Speichert die per Zufall ausgewählten Ziffern 
-var operand;
-var durchlauf;
+var operand; // speichert die Rechenart + - : erzeugt per Zufall
 var treffer;
 var gezeigt; // wird gleich true gesetzt wenn die Lösung gezeigt wurde
-var maxRechenschritte=6; // Maximal mögliche Operanden in einer rechenZeile
-var rechenSchritte=3; // Startwert für Zahlder Operanden
+var maxRechenschritte=7; // Maximal mögliche Operanden in einer rechenZeile
+var rechenSchritte=2; // Startwert für Zahlder Operanden
 var string; //peichert die Rechenkette
 var z1, z2;
 
-var durchgang =0; // zaehlt die anzahl der Durchgänge
+var durchgang; // zaehlt die anzahl der Durchgänge
 var breite=17,hoehe=25,xAbstand=10, xDist=10,yAbstand=130;
 var ergebnisProg; // ergebnis der rechenzeile lt. Programm 
 var ergebnisUser; // Ergebnis der rechenzeile lt. User
 var xBasis=5, hBasis=40, dBasis=20, xtextdis=10, ytextdis=25;
-var yBasis= 380, wBasis=80, yErhoehung=50; 
+var yBasis= 360, wBasis=80, yErhoehung=50; 
 
 
 var rects = [{x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
@@ -58,11 +57,11 @@ function ladeGame()
         aufbauZeile(rechenSchritte,breite,hoehe);
         meldung("Eine Lösung in diesem Beispiel ist: ","normal","16",schriftArt,"#5a617",15,325);  //staat 320
         meldung(string,"normal","16",schriftArt,"#5a617",15,345);  
-        meldung("Die Zahl der Operanden ändern sie" ,"normal","16",schriftArt,"#5a617b",15,370);        
-        meldung("über  die + / - Buttons","normal","16",schriftArt,"#5a617b",15,390);  
+        meldung("Die Anzahl Operanden ändern sie" ,"normal","16",schriftArt,"#5a617b",15,370);        
+        meldung("über  die  + / -  Buttons","normal","16",schriftArt,"#5a617b",15,390);  
         roundedButton(4);
         buttonText();  
-        durchlauf = 0;        
+        durchgang = 0;        
         treffer=0;
         gezeigt=false;
     }
@@ -115,11 +114,11 @@ function aufbauZeile(operationen,breite,hoehe)
                             xxCoord[j+jj]=xCoord[i] ;
                             yyCoord[j+jj]=yCoord[i]+(j+1)*hoehe;
                           //  console.log(" j "+ j + " jj "+jj + "  j + jj " + (j+jj));
-                            ctx.strokeRect (xxCoord[j+jj] ,yyCoord[j+jj],breite, hoehe); 
+                            ctx.strokeRect (xxCoord[j+jj] + 6 ,yyCoord[j+jj],breite, hoehe); 
                             ctx.fillStyle="#5a617b";
                             ctx.font= "30px" + " " + schriftArt; 
 
-                            ctx.fillText (operanden[j],xxCoord[j+jj] ,hoehe + yyCoord[j+jj]);  
+                            ctx.fillText (operanden[j] ,xxCoord[j+jj] +6,hoehe + yyCoord[j+jj]);  
 
                             kontrolleGetippt[j+jj]=0; // Vekor für Überprüfung auf Plus / Minus angetippt wird auf Nullgestzt
                             operandGewaehlt[j+jj]=operanden[j] // Vektor gefüllt mit abwechselnd + -
@@ -190,7 +189,7 @@ function aufbauZeile(operationen,breite,hoehe)
 
  canv.addEventListener('click', function(e)
      {       
-       //Prüft welcher Button (Go on usw) geklickt wurde
+       //Prüft welcher Button in der unteren Reihe (Go on usw) geklickt wurde
        
         var rect = angetippt(rects, e.offsetX, e.offsetY);       
         if (rect) 
@@ -225,7 +224,7 @@ function aufbauZeile(operationen,breite,hoehe)
             setTimeout(function () {
                                                
                start();
-               }, 500);
+               }, 1000);
            }
       
                  
@@ -263,12 +262,12 @@ function aufbauZeile(operationen,breite,hoehe)
         for (let i = 0;i<kon.length;i++){
             ctx.fillStyle="black"; 
                         ctx.font= "36px" + " " + schriftArt;  
-                        ctx.fillText(operandGewaehlt[i],xxCoord[i] ,yyCoord[i]+hoehe); // Zeichnet die Fragezeichen    
+                        ctx.fillText(operandGewaehlt[i],xxCoord[i] +6,yyCoord[i]+hoehe); // Zeichnet die Fragezeichen    
             
             if(kontrolleGetippt[i])
             {
                 ctx.fillStyle="red"  
-                ctx.fillText(operandGewaehlt[i],xxCoord[i] ,yyCoord[i]+hoehe); // Zeichnet die Fragezeichen    
+                ctx.fillText(operandGewaehlt[i],xxCoord[i] +6,yyCoord[i]+hoehe); // Zeichnet die Fragezeichen    
             }
         }
     } 
@@ -321,7 +320,7 @@ function auswahlButton()
         switch (getipptRechteck) 
                 {
                     case 0:  
-                        durchgang++;                                   
+                       // durchgang++;                                   
                         start();
 
                         break;
