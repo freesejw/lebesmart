@@ -18,7 +18,7 @@ var canv = document.getElementById("nanogram");
 var ctx = canv.getContext("2d");
 canv.width=500;
 canv.height=600;
-var spalten = 5;
+var spalten = 4;
 var grid=[];
 var gridVektor=[];
 var inhaltZeilen, inhaltSpalten;
@@ -88,15 +88,11 @@ canv.addEventListener('click', function(event)
                            {
                             ctx.fillStyle="#5a617b";
                             ctx.font= "38px Arial";
-                            ctx.fillText("x",xCoord[zwert]+xDist-7 ,yCoord[zwert]+yDist+2); 
-                            falsch.play();
-                            meldung("Falsch","normal","16",schriftArt,"#ea2867",330,480);  
-                                                                       
+                            ctx.fillText("x",xCoord[zwert]+xDist-7 ,yCoord[zwert]+yDist+2);                                                                   
                             }
             
                     if (zaehlerTreffer == anzahlEins)
-                    {
-                     akustischeMeldung("audio/down.mp3"); 
+                    {                     
                      meldung("Geschafft!  Glückwunsch  " ,"bold","20",schriftArt,"#ea2867",20,150);  
                       //  rundeAus=true;
                        
@@ -133,12 +129,15 @@ let count = 1;
 for (let i=0; i<z; i++) {
     grid[ i ] = [];
    for (let j=0; j<s; j++) {
-      grid[i][j] = random(2); 
+      grid[i][j] = random(3); 
+      if(grid[i][j]==2) {grid[i][j]=1;}  
       gridVektor.push(grid[i][j]);  
+
       if (grid[i][j]==1 ){
-          anzahlEins++
-         };  
-      console.log("  ANZ " *anzahlEins); 
+          anzahlEins++        
+         }; 
+      
+      console.log("  ANZ " + anzahlEins); 
    }
 }
 console.log("grid  " + gridVektor);
@@ -281,7 +280,7 @@ function plusMinusSonder(sw)
 {
   spalten=spalten + sw; 
   
-  if ( spalten<= 4 || spalten >maxSpalten) 
+  if ( spalten<= 3 || spalten >maxSpalten) 
   {    
     
       meldung("Nonogramm  = Logik","bold","20",schriftArt,"#5a617b",20,90 );  
@@ -377,11 +376,6 @@ function zeigBild(a,x,y,w,h)
     img.src = a;
 }
 
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    }
 
 </script>
 
