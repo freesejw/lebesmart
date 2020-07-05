@@ -44,7 +44,7 @@ var rects = [{x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#82
              {x: (xBasis + 1 *( wBasis+ dBasis)), y: yBasis + yErhoehung, w: 0.4*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
              {x: (xBasis + 1.4 * (wBasis+ dBasis)), y: yBasis + yErhoehung, w: 0.4*wBasis, h: hBasis,col1: "#5a617b",col2: "#5a617b"}];
 
-var texts =[{na:  String.fromCharCode(9655)+ "Go on", x: xBasis + xtextdis -10, y: yBasis + ytextdis+yErhoehung,},
+var texts =[{na:  "Go on", x: xBasis + xtextdis -10, y: yBasis + ytextdis+yErhoehung,},
          
            {na: " " + String.fromCharCode(43),  x: (xBasis +  1 * (wBasis+ dBasis+3)),y: yBasis + ytextdis },
            {na: " " + String .fromCharCode(45), x: (xBasis + 1.4 * (wBasis+ dBasis + 3)),y: yBasis + yErhoehung + ytextdis }];
@@ -82,7 +82,7 @@ canv.addEventListener('click', function(event)
                             ctx.fillStyle="#5a617b";
                             ctx.fillRect(xCoord[zwert] ,yCoord[zwert] ,xBreite,yHoehe);
                            
-                            ctx.clearRect(330,480-25,200,25);
+                         //   ctx.clearRect(330,480-25,200,25);
                         }
                         else 
                            {
