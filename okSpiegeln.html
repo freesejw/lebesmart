@@ -262,7 +262,7 @@ function abbruch()
         if (speicherTreffer.length>8){speicherTreffer.shift();}     
         var ausgabeTreffer = "";   
         for (var ii=0;ii<speicherTreffer.length;ii++){ausgabeTreffer=ausgabeTreffer + "  " +speicherTreffer[ii] }          
-        meldung("Treffer gesamt: " + ausgabeTreffer ,"normal","16",schriftArt,"red",xBasis,270);         
+        meldung("Treffer pro Durchgang " + ausgabeTreffer ,"normal","16",schriftArt,"red",xBasis,270);         
         meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,290);   
     }
 function shuffle(a) {

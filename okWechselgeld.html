@@ -20,7 +20,7 @@ var cW = ctx.canvas.width, cH = ctx.canvas.height;
 var zeiten=[], schnitt;
 var durchLaeufe,richtig;
 var maxDurchlaeufe=10;
-var rechenErgebnis, ergebnisIndex,summe;
+var rechnung,rechenErgebnis, ergebnisIndex,summe;
 var hoechstens=100; // cent 
 
 var multiplikator=10;
@@ -98,16 +98,13 @@ function aufbauZeile()
    // legt die Rechenkette an. In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
    // rz : Anzahl Ziffern in der Rechenkette
 
-    let rechnung;
-
-        
-        
+            
         do {
             rechnung = getRndInteger(hoechstens / multiplikator, hoechstens);    
             rechenErgebnis= (hoechstens-rechnung);  
         }           
         while(rechenErgebnis<=30);
-         
+       console.log ("rechnung  " + rechnung);
         let ausgabe1= "Rechnung : " + (rechnung/100).toFixed(2) + " Euro"; 
         let gegeben  ="Gegeben   : " + (hoechstens/100).toFixed(2)  + " Euro";   
         let frage = "Wechselgeld ?";  
@@ -138,7 +135,7 @@ function vergleichsZahlen(re)
     if (re > 100000){limit=0.001;}
     
         reunten=(re-limit*re).toFixed(0);
-        reoben=(re+limit*re).toFixed(0);
+        reoben=Math.min(hoechstens,(re+limit*re).toFixed(0));
         console.log("re  " + re + "  limit  " + limit +  " reunten " + reunten +"  " +reoben + "revektor" + revektor);
        
         for(var i = reunten;i<=reoben;i++)
@@ -148,7 +145,7 @@ function vergleichsZahlen(re)
         } 
         console.log(revektor);
         var zw=shuffle(revektor)
-        console.log(zw);
+        //console.log(zw);
     
     for (var i=0;i<6;i++)
     {

@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="275" height="400"></canvas>
+    <canvas id="canvas" width="255" height="400"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -60,7 +60,7 @@ function ladeGame()
         meldung("können sie die Zeit zum", "normal","16",schriftArt,"#5a617b",xBasis ,tb+110); 
         meldung("Reagieren verändern.", "normal","16",schriftArt,"#5a617b",xBasis ,tb+130); 
         meldung("Es gibt " +  maxDurchlaeufe + " Durchläufe.","normal","16,",schriftArt,"#5a617b",xBasis,tb+160); 
-        meldung("Zeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",100, yBasis2 - 20);  
+        meldung("Reaktionszeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",75, yBasis2 - 20);  
         roundedButton(3)
         buttonText(3);
             
@@ -136,7 +136,7 @@ function abbruch()
         var ausgabeTreffer = "";   
         for (var ii=0;ii<speicherTreffer.length;ii++){ausgabeTreffer=ausgabeTreffer + "  " +speicherTreffer[ii] }          
         meldung("Treffer gesamt: " + ausgabeTreffer ,"normal","16",schriftArt,"red",xBasis,190);         
-        meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,230);   
+        meldung("  " + maxDurchlaeufe + " Durchläufe erreicht","normal","16",schriftArt,"red",xBasis,230);   
         ausgangsBilder();
         
     }
@@ -165,7 +165,7 @@ function auswahlButton()
                     if (offenButton)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,0.1,0.8,5);
-                    meldung("Zeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",100, yBasis2 - 20);  
+                    meldung("Reaktionszeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",75, yBasis2 - 20);  
                     
                     }                                       
                     break;
@@ -173,7 +173,7 @@ function auswahlButton()
                     if (offenButton)
                     {
                     reaktionsZeit=plusMinus(reaktionsZeit,-0.1,0.8,5);
-                    meldung("Zeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",100, yBasis2 - 20);  
+                    meldung("Reaktionszeit : " + reaktionsZeit.toFixed(2) + "  Sek." ,"normal","16",schriftArt,"#5a617b",75, yBasis2 - 20);  
                     
                     }                     
                         break;
