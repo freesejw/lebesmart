@@ -94,19 +94,21 @@ function aufbauZeile(operationen,breite,hoehe)
         yCoord=[];
         xxCoord=[];
         yyCoord=[];
+
+        var y =hoehe + yAbstand;  // Y Position bleibt konstant , da es nur eine Zeile ist
+
         var jj=-2;  // wird bei der Anzeige der + und - Felder benötigt
         for (let i = 0; i<anzahlFelder; i++)
             {
                     var x=xAbstand+breite*i;   
-                    var y =hoehe + yAbstand;  
-                   
-                //koordinaten der unsichtbaren Zellen für Ziffern und Fragezeichen
+               
+                //koordinaten der unsichtbaren Zellen für Ziffern und Fragezeichen in der ersten Zeile
 
                     xCoord.push(x);
                     yCoord.push(y);
                    
-                // Koordinaten und Füllung der Plus / Minus felder    
-                    if((i+1)%2==0 && (i<anzahlFelder+5))
+                // Koordinaten und Füllung der Plus / Minus felder  unterhalb erster Zeile  
+                    if((i+1)%2==0 && (i<anzahlFelder-3))
                     {
                        jj=jj+2;
                         for ( j=0;j<2;j++)
@@ -118,7 +120,7 @@ function aufbauZeile(operationen,breite,hoehe)
                             ctx.fillStyle="#5a617b";
                             ctx.font= "30px" + " " + schriftArt; 
 
-                            ctx.fillText (operanden[j] ,xxCoord[j+jj] +6,hoehe + yyCoord[j+jj]);  
+                           ctx.fillText (operanden[j] ,xxCoord[j+jj] +6,hoehe + yyCoord[j+jj]);  
 
                             kontrolleGetippt[j+jj]=0; // Vekor für Überprüfung auf Plus / Minus angetippt wird auf Nullgestzt
                             operandGewaehlt[j+jj]=operanden[j] // Vektor gefüllt mit abwechselnd + -
