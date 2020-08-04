@@ -21,8 +21,8 @@ var xBreite=35 , yHoehe=35;
 var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var durchLauf, treffer;
-var maxDurchlaeufe=5;
-var anzahlBaelle=2;
+var maxDurchlaeufe=3;
+var anzahlBaelle=2
 var bgColor="Lavender";
 var blinkReihe=[];
 var vergleichIndex; // dient zur abfrage welcher Button / rechteck angeklickt wurdej
@@ -40,7 +40,6 @@ var yErhoehung=10;
 var xTextRechts=xBasis +  (wBasis+ dBasis);
 
 var zaehlerClick,zaehlerTreffer,iterator;
-var audio;
 
 //Rechtecke für die Bilder
 var rects = [{x: xBasis, y: yBasis + yErhoehung, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
@@ -63,7 +62,7 @@ function ladeGame()
         meldung( "erhöht die Anzahl Bälle" ,"normal","16",schriftArt,"#5a617b",10, 250);    
         meldung( "Der Button mit - Zeichen" ,"normal","16",schriftArt,"#5a617b",10, 270);       
         meldung( "vermindert die Anzahl Bälle" ,"normal","16",schriftArt,"#5a617b",10, 290); 
-        meldung( "Minimum 3 Bälle" ,"normal","16",schriftArt,"#5a617b",10, 310); 
+        meldung( "Minimum 2 Bälle" ,"normal","16",schriftArt,"#5a617b",10, 310); 
 
         meldung("Anzahl Bälle = " +  anzahlBaelle,"normal","16",schriftArt,"#5a617b",xTextRechts + 15,350);
         roundedButton(3);
@@ -108,7 +107,7 @@ function start()
 
 function zeige()
 {
-    // Funktion wird von setInterval aufgerufen
+    // Funktion wird von setInterval aufgerufen. Ist für das Anzeigen und Verschwinder der Bälle zuständig
 
     iterator++;
 
@@ -143,10 +142,8 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
             var x=xAbstand + breite*j;  
             ctx.lineWidth="1";
             ctx.strokeStyle="blue";       
-            ctx.strokeRect(x,y,xBreite,yHoehe);            
-           
-           
-            //linke, obere Koordinaten der Rechtecke
+            ctx.strokeRect(x,y,xBreite,yHoehe);           
+           //linke, obere Koordinaten der Rechtecke werden in xCoord und yCoord gespeichert
             xCoord.push(x);
             yCoord.push(y);
         }
@@ -155,13 +152,14 @@ function aufbauMatrix(zeilen,spalten,breite,hoehe)
 
 function auswahlBlinkZellen(zeilen,spalten)
 {
+   
+   //Liefert die Nummern der Felder in dennen der Ball erscheinen soll
     var zw=[];
     for (var i =0; i<zeilen*spalten;i++)
         {
-            zw.push(i);    
-            
+            zw.push(i);   // Hier wird die Zahlenreihe von 0 bis Ende erzeugt
         }
-    return shuffle(zw);
+    return shuffle(zw);  // Hier wird sie dureinander geschüttelt.
     }
 
 canv.addEventListener('click', function(event)
@@ -170,8 +168,9 @@ canv.addEventListener('click', function(event)
     {
         xclick = event.clientX; 
         yclick = event.clientY;  
-     
-    if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
+
+     // die folgende If Abfrage prüft ob der Click innerhalb der Matrix war
+       if (xclick>xCoord[0] && (xclick < xCoord[spalten-1]+xBreite)
                         &&  yclick > yCoord[0] &&(yclick<yCoord[zeilen*spalten-1]+yHoehe))
         {
            
@@ -179,11 +178,11 @@ canv.addEventListener('click', function(event)
             zaehlerClick++;        
             var zwert = geglicktesFeld(xclick,yclick) // liefert den Index des getippten feldes 
             var zw =blinkReihe[zaehlerClick];           
-            if (zw == zwert)
+            if (zw == zwert) //bei true :  es wurde das richtige Feld geklickt
             {
                     zaehlerTreffer++;
-                    xxclick=(Math.floor(xclick/xBreite))*xBreite;
-                    yyclick=(Math.floor(yclick/yHoehe))*yHoehe;                              
+                   // xxclick=(Math.floor(xclick/xBreite))*xBreite;
+                   // yyclick=(Math.floor(yclick/yHoehe))*yHoehe;                              
                     zeigBild("daumenHoch.png",xCoord[blinkReihe[zaehlerClick]] +3 ,yCoord[blinkReihe[zaehlerClick]]+3,30,30);                                                      
                     
                     if (zaehlerTreffer == anzahlBaelle)
@@ -246,30 +245,7 @@ canv.addEventListener('click', function(event)
 
 } , false); 
 
-function siegeskranz(treffer){
-    if(treffer==2)
-            {
-                loescheMatrix();
-                zeigBild("rakete0.jpg",xAbstand,yAbstand,175,175);
-                aufschlag=1500;
-            }
-        if(treffer==10)
-            {
-                zeigBild("rakete1.jpg",xAbstand,yAbstand,175,175);
-                aufschlag=1500;
-            }
-            if(treffer==15)
-            {
-                zeigBild("rakete2.jpg",xAbstand,yAbstand,175,175);
-                aufschlag=1500;
-            }
-            if(treffer==20)
-            {
-                zeigBild("rakete3.jpg",xAbstand,yAbstand,175,175);
-                aufschlag=1500;
-            }
 
-}
 
 function geglicktesFeld(xc,yc){    // xc und yc sind die Koordinaten des Klicks 
     // Liefert deie Nummer des Feldes wenn ein Klick erfolgte.
@@ -330,7 +306,7 @@ function auswahlButton()
                             }
                     break;
                     case 2:if(plusminusBlocker==false){ 
-                                anzahlBaelle=  plusMinus(anzahlBaelle,-1,2,12);  
+                                anzahlBaelle=  plusMinus(anzahlBaelle,-1,1,12);  
                                 var lg = 20 + ctx.measureText("Anzahl Bälle  = " +  anzahlBaelle).width 
                                 meldung("Anzahl Bälle = " +  anzahlBaelle,"normal","16",schriftArt,"#5a617b",xTextRechts + 15 ,350);
                     }

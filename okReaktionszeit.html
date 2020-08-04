@@ -25,7 +25,7 @@ var startIndex;
 var geschwindigkeit=1000;
 var zeiten=new Array;
 var fehler=0;
-
+var maxDurchlaeufe=3;
 var elapsedTime;
 var warten, merkZeit=3;
 var audio;
@@ -49,9 +49,18 @@ var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
 function ladeGame() 
     {   
-        meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20",schriftArt,"#5a617b",10, 25);    
+        meldung("Verkürze die Reaktionszeit","bold","20",schriftArt,"#5a617b",xBasis,40 ); 
+        meldung("Mit Klicken  Go on  erscheint ein Bild.","normal","16",schriftArt,"#5a617b",xBasis,80); 
+        meldung("Dies must du dir merken.","normal","16",schriftArt,"#5a617b",xBasis,100);       
+        meldung("Nach der Merkzeit werden sequentiell","normal","16", schriftArt,"#5a617b",xBasis, 120);
+        meldung("verschiedende Bilder angezeigt." ,"normal","16",schriftArt,"#5a617b",xBasis, 140);
+        meldung("Ist eins dieser Bilder mit dem sich","normal","16",schriftArt,"#5a617b",xBasis, 160);
+        meldung("zu merkendem Bild identich, dann ","normal","16",schriftArt,"#5a617b",xBasis, 180);
+        meldung("kliche den Stop Button ","normal","16",schriftArt,"#5a617b",xBasis, 200);
+        meldung("Es gibt " + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, 240);
+       // meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,340);meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20",schriftArt,"#5a617b",10, 25);    
         einlesenBilder();
-        zeigBild("Imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h);
+        //zeigBild("Imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h);
         roundedButton(3);        
         buttonText();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
@@ -60,7 +69,7 @@ function ladeGame()
 
 function start()
     {   
-        ctx.clearRect(20, 190, 450, 150);
+        ctx.clearRect(20, 60, 450, 210);
         ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
         setzeAmpel("rot");
         noClickStart=true; 
