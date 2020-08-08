@@ -21,7 +21,7 @@ var xBreite=35 , yHoehe=35;
 var myVar; // für setInterval
 var getipptRechteck; // gibt an welcher Button / Rechteck angetippt wurde
 var durchLauf, treffer;
-var maxDurchlaeufe=3;
+var maxDurchlaeufe=10;
 var anzahlBaelle=2
 var bgColor="Lavender";
 var blinkReihe=[];
@@ -32,7 +32,7 @@ var plusminusBlocker;
 
 var xCoord=[], yCoord=[];
 var zeilen = 5, spalten=5;
-var neuStart=false;
+var neuerDurchlauf;
 
 var xAbstand=30,yAbstand = 100;     // Verschiebt die Matrix nach rechts und unten
 var xBasis=10, yBasis=360, wBasis=70, hBasis=40, dBasis=10, xtestdis=1, ytextdis=25;
@@ -86,11 +86,11 @@ function start()
            meldung("Geschafft :  0  bei 0  Versuchen","normal","16",schriftArt,"#5a617b",15,70);
            } //löscht "Merke ...."
         
-        
+        neuerDurchlauf=false;
         zaehlerClick=0;
         zaehlerTreffer=0;
         durchLauf++;
-     // neuStart=false;
+     // neuerDurchlauf=false;
         loescheMatrix();
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
        
@@ -185,30 +185,29 @@ canv.addEventListener('click', function(event)
                    // yyclick=(Math.floor(yclick/yHoehe))*yHoehe;                              
                     zeigBild("daumenHoch.png",xCoord[blinkReihe[zaehlerClick]] +3 ,yCoord[blinkReihe[zaehlerClick]]+3,30,30);                                                      
                     
-                    if (zaehlerTreffer == anzahlBaelle)
+                if (zaehlerTreffer == anzahlBaelle) // Eine Ballfolge wurde erfolgreich geklickt.
                         {
-                        feldBlocken=true;
+                        feldBlocken=true; 
                         treffer++
-                        neuStart=true;
+                        neuerDurchlauf=true;
                         meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuche","normal","16",schriftArt,"#5a617b",15,70);
                         }    
             }    
-                    else {
+            else {
                         zeigBild("daumenRunter.png",xCoord[zwert] +3 ,yCoord[zwert]+3,30,30);                                                           
                         meldung("Geschafft : " + treffer + " bei " +durchLauf + "  Versuch(en)","normal","16",schriftArt,"#5a617b",15,70);
-                        neuStart=true;
-                        }
+                        neuerDurchlauf=true;
+                  }
            
-                     console.log(" vorher  " + durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu " + neuStart);      
+                     console.log(" vorher  " + durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu " + neuerDurchlauf);      
                     // plusminusBlocker=false;
                  
             
-                 if((durchLauf<maxDurchlaeufe) && (neuStart==true))
+                 if((durchLauf<maxDurchlaeufe) && (neuerDurchlauf==true))
                 {
-                    console.log("  < max 1 " +durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu  " + neuStart );  
-                    neuStart=false;
+                    console.log("  < max 1 " +durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu  " + neuerDurchlauf );  
+                    neuerDurchlauf=false;
                   
-                    console.log("  < max 2 " +durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + "  neu  " + neuStart );  
                   
                     setTimeout(function () 
                     {
@@ -220,10 +219,10 @@ canv.addEventListener('click', function(event)
                     
                 }
 
-                if((durchLauf==maxDurchlaeufe) && (neuStart==true)) 
+                if((durchLauf==maxDurchlaeufe) && (neuerDurchlauf==true)) 
                
                 {
-                    console.log(" =max  " + durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + " neu "+neuStart);  
+                    console.log(" =max  " + durchLauf + " " + zaehlerClick +"  "+ anzahlBaelle + " neu "+neuerDurchlauf);  
                     durchLauf=0;
                    
                     setTimeout(function () 
