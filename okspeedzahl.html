@@ -23,7 +23,7 @@ var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var breite = 33, hoehe=33; // Abmessungen der Zellen
 var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
 var anzahlFelder = zeilenZahl*spaltenZahl;
-var maxDurchlaeufe=3; 
+var maxDurchlaeufe=10; 
 var xCoord = [];  // x Koordinate links oben im Feld
 var yCoord = [];  // y Koordinate links oben im Feld
 var zahlenSpeicher= [];  // zahlenspeicher enthält die ziffer der Matrix als Vektor
@@ -236,10 +236,10 @@ canv.addEventListener('click', function(event)
                             blockenStart=true;  // start kann wieder audfgerufen werden
                             clearInterval(id);
 
-                          //  setTimeout(function () // Zeitverzögerung bis neue Ziffer angezeigt wird
-                          //  {
-                          //  start();
-                          //  }, 700 + aufschlag);
+                            setTimeout(function () // Zeitverzögerung bis neue Ziffer angezeigt wird
+                            {
+                            start();
+                            }, 700 + aufschlag);
                           blockenStart=false;
                           blockenZeit=false;
                                         
