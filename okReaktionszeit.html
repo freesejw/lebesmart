@@ -10,7 +10,7 @@
 <style></style>
 </head>
 <body onload="ladeGame()">
-    <canvas id="canvas" width="500" height="400"></canvas>
+    <canvas id="canvas" width="285" height="400"></canvas>
      
 <script>
 var canv = document.getElementById("canvas");
@@ -24,24 +24,27 @@ var getipptRechteck;
 var startIndex;
 var geschwindigkeit=1000;
 var zeiten=new Array;
+var durchlauf; 
+
 var fehler=0;
-var maxDurchlaeufe=3;
+var maxDurchlaeufe=2;
 var elapsedTime;
 var warten, merkZeit=3;
-var audio;
 var noClickStop;
+var xBasis=10, hBasis=40, dBasis=20, xtextdis=10, ytextdis=25;
+var yBasis= 330, wBasis=60, yErhoehung=50; 
 
-var xBasis=20, yBasis=340, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
+//var xBasis=20, yBasis=340, wBasis=120, hBasis=40, dBasis=40, xtestdis=20, ytextdis=25;
 
 var rects = [{x: xBasis, y: yBasis, w: wBasis, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#ea2867",col2: "ea2867"},
-             {x: (xBasis + 2 * (wBasis+ dBasis)), y: yBasis, w: wBasis, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"}];
+             {x: (xBasis + wBasis+ dBasis), y: yBasis, w: wBasis, h: hBasis,col1: "#ea2867",col2: "ea2867"}         
+            ];
 
-var bild = {x:200, y: 60, w: 100,h: 100 };
+var bild = {x:100, y: 70, w: 100,h: 100 };
 
-var texts =[{na: String.fromCharCode(9655)+  "  Go on", x: xBasis + xtestdis -10, y: yBasis + ytextdis},
-           {na:  String.fromCharCode(9633)+ "   Stop", x: (xBasis + xtestdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
-           {na:  String.fromCharCode(9660)+ "Abbruch", x: (xBasis + xtestdis + 2 * (wBasis+ dBasis)),y: yBasis + ytextdis }];
+var texts =[{na: "Go on", x: xBasis + xtextdis -10, y: yBasis + ytextdis},
+           {na: "Stop", x: (xBasis + xtextdis +  wBasis + dBasis),y: yBasis + ytextdis} ,
+           ];
     
 var box =  {x:20, y: 240, w: 420,h: 80 };  //Textbox
 
@@ -61,25 +64,27 @@ function ladeGame()
        // meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,340);meldung("Minimiere die Reaktionszeit / übe die Konzentration","bold","20",schriftArt,"#5a617b",10, 25);    
         einlesenBilder();
         //zeigBild("Imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h);
-        roundedButton(3);        
+        roundedButton(2);        
         buttonText();  // Start ; Stop ; Abbruch         
         noClickStop=true; 
         noClickStart=false;
+        durchlauf=0;
     }
 
 function start()
     {   
-        ctx.clearRect(20, 60, 450, 210);
-        ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
+        ctx.clearRect(xBasis, 60, 450, 260);
+       // ctx.clearRect(box.x -5,box.y-5,box.w+10,box.h+10)
         setzeAmpel("rot");
         noClickStart=true; 
         noClickStop=true; // wird auf false gesetzt sobald die Vergleichsbilder gezeigt wurden         
         startIndex=random(anzahlBilder);    
         zeigBild(pic[startIndex],bild.x ,bild.y,bild.w,bild.h); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
-        startTimer(50, 200, 400, 20, merkZeit*1000);  
+        startTimer(30, 200, 200, 20, merkZeit*1000,"Merk");  
         warten=0;
+        durchlauf++;   
         myVar = setInterval(folgeBilder, geschwindigkeit); 
-             
+         
     }
 
     canv.addEventListener('click', function(e)
@@ -103,7 +108,7 @@ function folgeBilder()
             if (warten==merkZeit)
             {   
                 setzeAmpel("gruen"); 
-                akustischeMeldung("audio/schuss.mp3"); 
+               // akustischeMeldung("audio/schuss.mp3"); 
                 noClickStop=false;
             }
         aktIndex=random(anzahlBilder); // 
@@ -116,32 +121,39 @@ function stop()
     // Wenn Basisbild mit dem geklickten Bild indentisch ist Treffermeldung und Abbruch
     {
     
-     
+     durchlauf++;
      setzeAmpel("rot");
     if (aktIndex==startIndex)
         {
             elapsedTime = Date.now() - startTime;
             //elapsedTime = (elapsedTime ).toFixed(2);   
             elapsedTime = (elapsedTime );       
-            zeiten.push(elapsedTime)
-            boxMeldung(box.x,box.y,box.w,box.h,elapsedTime);     
+            zeiten.push(elapsedTime);
+            meldung(("Gebrauchte Zeiten in ms:  "  ),"normal","16",schriftArt,"#5a617b",20,250);
+            meldung(zeiten,"normal","16",schriftArt,"#5a617b",20,270);  
+            zeigBild("daumenHoch.png",bild.x ,bild.y,bild.w,bild.h) ;         
         }
         else
             {            
-            meldung("Falsch. Auf ein Neues!","normal","16",schriftArt,"red",20, 300);           
-            zeigBild("bergsteiger.png",250,200,100,100);
-            zeigBild("bergsteigersp.png",350,200,100,100);           
+            meldung("Falsch","normal","16",schriftArt,"red",30, 200);  
+            zeiten.push(" F ");
+            zeigBild("daumenRunter.png",bild.x ,bild.y,bild.w,bild.h) ;       
             }
 
         
-        zeigBild("imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h) ;
+      //  zeigBild("daumenHoch.png",bild.x ,bild.y,bild.w,bild.h) ;
         noClickStop=true;
         clearInterval(myVar); 
+        if(durchlauf<=maxDurchlaeufe){
         setTimeout(function () 
                         {
                            start();
                         }, 3000); 
-          
+        }  
+        else {meldung(("Anzahl Durchläufe erreicht."  ),"normal","16",schriftArt,"#5a617b",20,220);
+        meldung(("Neustart mit Go On "  ),"normal","16",schriftArt,"#5a617b",20,305);
+        durchlauf=0;
+        noClickStart=false}   
     }
  
 function einlesenBilder()
@@ -159,7 +171,7 @@ function setzeAmpel(a)
     var img = new Image();
     img.onload = function ()
      {
-        ctx.drawImage(img, 90 ,75,40,90);
+        ctx.drawImage(img, 30 ,75,40,90);
      }
     img.src = ("imageverkehr/ampel" + a + ".jpg");
 }
@@ -180,38 +192,17 @@ function auswahlButton()
                         stop(); 
                       }                       
                         break;
-                    case 2:
-                        abbruch();                        
-                        break;
+                    
                     default:
                         alert("Sorry");
                 }             
     }
 
-function abbruch()
-    {
-        setzeAmpel("rot");    
-        clearInterval(myVar);
-        zeigBild("imageverkehr/auge.gif",bild.x ,bild.y,bild.w,bild.h);   
-        noClickStart=false;
-        noClickStop=true;
-        meldung(("Gebrauchte Zeiten:  "  + zeiten),"normal","16",schriftArt,"#5a617b",29,300);
-    }
 
-function boxMeldung(x,y,w,h,time)
-    {
-        ctx.rect(x, y, w,h);
-        ctx.stroke();
-        meldung(("gebrauchte Zeit (ms) : "  + time),"bold","16",schriftArt,"#5a617b",x+10,y+h*0.33 );
-       // meldung(("Vergleich:  "  + zeiten),"normal","16",schriftArt,"#5a617b", x + 10, y+ h*0.66 );
-    }
 
-function akustischeMeldung(a)
-    {
-        audio = new Audio(a);
-        audio.play();
-    } 
- 
+
+
+
 
 </script>
   
