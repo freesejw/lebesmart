@@ -25,9 +25,9 @@ var startIndex;
 var geschwindigkeit=1000;
 var zeiten=new Array;
 var durchlauf; 
-
+var gesamtZeit;
 var fehler=0;
-var maxDurchlaeufe=2;
+var maxDurchlaeufe=5;
 var elapsedTime;
 var warten, merkZeit=3;
 var noClickStop;
@@ -69,6 +69,7 @@ function ladeGame()
         noClickStop=true; 
         noClickStart=false;
         durchlauf=0;
+       gesamtZeit=0;
     }
 
 function start()
@@ -82,7 +83,8 @@ function start()
         zeigBild(pic[startIndex],bild.x ,bild.y,bild.w,bild.h); // Basisbild. Mit dem werden die folgenden Bilder auf Gleichheit vergleiechen
         startTimer(30, 200, 200, 20, merkZeit*1000,"Merk");  
         warten=0;
-        durchlauf++;   
+        durchlauf++;  
+       
         myVar = setInterval(folgeBilder, geschwindigkeit); 
          
     }
@@ -129,8 +131,9 @@ function stop()
             //elapsedTime = (elapsedTime ).toFixed(2);   
             elapsedTime = (elapsedTime );       
             zeiten.push(elapsedTime);
-            meldung(("Gebrauchte Zeiten in ms:  "  ),"normal","16",schriftArt,"#5a617b",20,250);
-            meldung(zeiten,"normal","16",schriftArt,"#5a617b",20,270);  
+            gesamtZeit=gesamtZeit+elapsedTime;
+            //meldung(("Gebrauchte Zeiten in ms:  "  ),"normal","16",schriftArt,"#5a617b",20,250);
+            //meldung(zeiten,"normal","16",schriftArt,"#5a617b",20,270);  
             zeigBild("daumenHoch.png",bild.x ,bild.y,bild.w,bild.h) ;         
         }
         else
@@ -140,19 +143,26 @@ function stop()
             zeigBild("daumenRunter.png",bild.x ,bild.y,bild.w,bild.h) ;       
             }
 
-        
+         meldung(("Gebrauchte Zeiten in ms:  "  ),"normal","16",schriftArt,"#5a617b",20,250);
+         meldung(zeiten,"normal","16",schriftArt,"#5a617b",20,270);  
       //  zeigBild("daumenHoch.png",bild.x ,bild.y,bild.w,bild.h) ;
         noClickStop=true;
         clearInterval(myVar); 
+        
         if(durchlauf<=maxDurchlaeufe){
         setTimeout(function () 
                         {
                            start();
                         }, 3000); 
         }  
-        else {meldung(("Anzahl Durchläufe erreicht."  ),"normal","16",schriftArt,"#5a617b",20,220);
+        else {
+            var schnitt=(gesamtZeit/maxDurchlaeufe).toFixed(0);
+  
+            meldung(("Durchläufe erreicht. Schnitt: " + schnitt  ),"normal","16",schriftArt,"#5a617b",20,220);
         meldung(("Neustart mit Go On "  ),"normal","16",schriftArt,"#5a617b",20,305);
+       gesamtZeit=0;
         durchlauf=0;
+        zeiten=[]; 
         noClickStart=false}   
     }
  
