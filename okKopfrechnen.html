@@ -24,32 +24,53 @@ var durchLaeufe,richtig;
 var rechenErgebnis, ergebnisIndex,summe; 
 var maxDurchlaeufe=10;
 var bgCol="5a617b";
-var breite=20,yZeile =60, xDist=10,yDist=25;
+var yZeile =60, xDist=10,yDist=25;
 var min=1;
 var max=100;
-var stoppstarten;
+var stoppstarten; // Neustart nur erlaubt wenn die Durchlaüfe erledigt sind
 var sekunden;
+var selection=[1,1,1,1] ; // speichert die Auswahl der ausgesuchten Operanden. 1 gleich ausgesucht
+var noSelection;
 
-var xBasis=10, yBasis1=160, wBasis1=40, hBasis=40, dBasis1=5, xtextdis=20, ytextdis=25;
-var yBasis2= 360, wBasis2=60, dBasis2=20, yErhoehung=0; 
+var xBasis=10, yBasis1=120, wBasis1=70, hBasis1=25, dBasis1=5, xtextdis=20, ytextdis=20;
+var yBasis2= 360, wBasis2=60, dBasis2=20, hBasis2=30;yErhoehung=0; 
+var yBasis3= 410, wBasis3=30, dBasis3=10, hBasis3=30, yErhoehung=0 ,xtextdis3=5; ytextdis3=25;
 
-var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis,col1: "#82CE86",col2:"#82CE86"},
-             {x: (xBasis + (wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis,col1: "#7f7fff",col2: "#7f7fff"},
-             {x: (xBasis + 1.6 *( wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis,col1: "#5a617b",col2: "#5a617b"},             
-            
+// Buttons Go on  und Steuerung maximale Anzahl
+
+var rects = [{x: xBasis, y: yBasis2, w: wBasis2, h: hBasis2,col1: "#82CE86",col2:"#82CE86"},
+             {x: (xBasis + (wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis2,col1: "#7f7fff",col2: "#7f7fff"},
+             {x: (xBasis + 1.6 *( wBasis2+ dBasis2)), y: yBasis2, w: 0.6*wBasis2, h: hBasis2,col1: "#5a617b",col2: "#5a617b"},  
+
+// Buttons operanden Anpassung
+             {x: xBasis, y: yBasis3, w: wBasis3, h: hBasis3,col1: "#89DA59"},
+             {x: (xBasis + (wBasis3+ dBasis3)), y: yBasis3, w: wBasis3, h: hBasis3,col1: "#89DA59"},
+             {x: (xBasis + 2 *( wBasis3+ dBasis3)), y: yBasis3, w: wBasis3, h: hBasis3,col1: "#89DA59"},             
+             {x: (xBasis + 3 *( wBasis3+ dBasis3)), y: yBasis3, w: wBasis3, h: hBasis3,col1: "#89DA59"},    
+
 
 // Lösungs Alternativen  
-             {x: xBasis, y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
-             {x: (xBasis + wBasis1+ dBasis1), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
-             {x: (xBasis + 2 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
-             {x: (xBasis + 3 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
-             {x: (xBasis + 4 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol},
-             {x: (xBasis + 5 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis,col1: bgCol}];
+             {x: xBasis, y: yBasis1, w: wBasis1, h: hBasis1,col1: bgCol},
+             {x: (xBasis + wBasis1+ dBasis1), y: yBasis1, w: wBasis1, h: hBasis1,col1: bgCol},
+             {x: (xBasis + 2 * (wBasis1+ dBasis1)), y: yBasis1, w: wBasis1, h: hBasis1,col1: bgCol},
+             {x: xBasis, y: yBasis1 + 40, w: wBasis1, h: hBasis1,col1: bgCol},
+             {x: (xBasis + wBasis1+ dBasis1), y: yBasis1 + 40, w: wBasis1, h: hBasis1,col1: bgCol},
+             {x: (xBasis + 2 * (wBasis1+ dBasis1)), y: yBasis1+ 40, w: wBasis1, h: hBasis1,col1: bgCol}];
+
+
+// Text für Buttons Go on und Max Zahl Steuerung
 
 var texts =[{na:"Go on", x: xBasis + xtextdis -8, y: yBasis2 + ytextdis,},
            {na: String.fromCharCode(43), x: (xBasis + xtextdis +  wBasis2 + dBasis2 -5),y: yBasis2 + ytextdis} ,
            {na: String.fromCharCode(45), x: (xBasis + 10 + 1.6 * (wBasis2+ dBasis2)),y: yBasis2 + ytextdis }];
           
+// Text für Operanden Anpassung
+var opertexts =[{na: String.fromCharCode(43), x: xBasis + xtextdis3, y: yBasis3 + ytextdis3,},
+           {na: String.fromCharCode(45), x: (xBasis + xtextdis3 +  5 + wBasis3 + dBasis3 -5),y: yBasis3 + ytextdis3} ,
+           {na: String.fromCharCode(120), x: (xBasis + xtextdis3 + 2 * (wBasis3+ dBasis3)),y: yBasis3 + ytextdis3 },
+           {na: String.fromCharCode(47), x: (xBasis + xtextdis3 + 3 * (wBasis3+ dBasis3)),y: yBasis3 + ytextdis3 }];
+
+
 function ladeGame()
     {
         // Die Kettenrechnung befindet sich bei yBasis1 + ytextdis 
@@ -62,60 +83,76 @@ function ladeGame()
         meldung("Klicke deine Lösung an.","normal","16",schriftArt,"#5a617b",xBasis, 160);
         meldung("Die Größe der Zahlen kannst du mit","normal","16",schriftArt,"#5a617b",xBasis, 180);
         meldung("dem + / - Button verändern","normal","16",schriftArt,"#5a617b",xBasis, 200);
-        meldung("Es gibt " + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, 240);
-        meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,340);
+        meldung("Es gibt " + maxDurchlaeufe + " automatische Durchläufe","normal","16",schriftArt,"#5a617b",xBasis, 300);
+        meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",xBasis + 80,340);
+        meldung("In der letzten Zeile können die Operanden" ,"normal","16",schriftArt,"#5a617b",xBasis,230); 
+        meldung("+ - * / ausgewählt werden" ,"normal","16",schriftArt,"#5a617b",xBasis ,250); 
+        roundedButton(3); // zeichnet die Buttons für Go on usw sowie  Operanden Anpassung  + - * und /
+        buttonText(); // Text für die drei Button G0 sowie maxZahl + und - 
+        zeichOperandenAuswahl();
          
-        roundedButton(3);
-        buttonText();        
         richtig=0;
         summe=0;
         durchLaeufe=0;        
         stoppstarten = false;
+        noSelection=false;
+        
     }
 
 
 function start()
     {   
-        meldung("Maximale Zahl = " + maxZahl ,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2)+10 ,340);
-        ctx.clearRect(0, yZeile,cW,160); //  Löscht 3+ 4 *... Anzeige        
+       
+       ctx.clearRect(0, yZeile,cW,130); //  Löscht 3+ 4 *... Anzeige  bei automatischem Aufruf von Start      
        
         if (durchLaeufe == 0)
             {    
                 richtig=0;  
                 zeiten=[];    
                 summe=0;  
-            ctx.clearRect(0,yZeile ,cW,250); // löscht die Zeile mit der Rechenaufgabe
-            ctx.clearRect(0,315-18,cW,18)// löscht Die  .. Durchläufe ....   
-            //ctx.clearRect(xBasis,yBasis2,cW,hBasis);    
+           ctx.clearRect(0,yZeile ,cW,250); // löscht die Startseite bis auf die Buttons
+           ctx.clearRect(0,300-18,cW,18)// löscht Die  .. Durchläufe wurden erreicht  
+           if(selection.indexOf(1)==-1){selection=[1,1,1,1];
+            zeichOperandenAuswahl();}
+           console.log("sel   " +selection);
             }
-            durchLaeufe++;
-            aufbauZeile(maxZahl,breite);
+        durchLaeufe++;
+        aufbauZeile(maxZahl);
        
         vergleichsZahlen(); 
        
         startTime = Date.now();
         stoppstarten=true;
-        zeigBild("tic2.jpg",xBasis,yBasis2,wBasis2,hBasis);
+        zeigBild("tic2.jpg",xBasis,yBasis2+3,wBasis2-5,hBasis2-8);
+      }
+     // else{ selection=[1,1,1,1];}
+   
         
-    }
+  //  }
 
 
-function aufbauZeile(rz,breite)
+
+
+function aufbauZeile(rz)
 {
    // legt die Rechenkette an. In derren Elemente werden nachfolgend die zahlen und opranden  gezeichnet
-   // rz : Anzahl Ziffern in der Rechenkette
+   // rz : mxzahl;
 
             var ziffer1,ziffer2;
             var oo;           
                       
-            var operanden=["+","-","*","/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
-           
+           // var operanden=["+","-","*","/"]; // Die Operanden MÜSSEN ohne Leerzeichen eingegeben werden.
+           var operanden=["+","-","*","/"];
+
                 ziffer1 = getRndInteger(2, rz); // Es werden zahlen zwischen 1 und maxZahl zugelassen
                 ziffer2 = getRndInteger(2, rz);
                 console.log(ziffer1 ,ziffer2);
-                oo=operanden[random(operanden.length)].trim(); 
-
-                let isDivision = (oo==="/")               
+                do {
+                var z=random(operanden.length)}
+                while (selection[z]==0);
+         
+                oo=operanden[z].trim(); 
+       let isDivision = (oo==="/")               
                                 
                 if(isDivision)
                     {                   
@@ -213,13 +250,16 @@ function vergleichsZahlen()
             ctx.fillText(zz[0],xBasis +8 ,yBasis1+ ytextdis); 
             ctx.fillText(zz[1],xBasis + 8 + wBasis1+dBasis1,yBasis1+ytextdis); 
             ctx.fillText(zz[2],(xBasis +8 +  2 * (wBasis1+ dBasis1)),yBasis1+ytextdis);
-            ctx.fillText(zz[3],(xBasis + 8 + 3 * (wBasis1+ dBasis1)),yBasis1+ ytextdis);
-            ctx.fillText(zz[4],(xBasis + 8 + 4 * (wBasis1+ dBasis1)),yBasis1 +ytextdis );
-            ctx.fillText(zz[5],(xBasis + 8 + 5 * (wBasis1+ dBasis1)),yBasis1 +ytextdis );
+            ctx.fillText(zz[3],(xBasis +8),yBasis1+ 35 + ytextdis);
+            ctx.fillText(zz[4],(xBasis + 8 +  (wBasis1+ dBasis1)),yBasis1 +35 +ytextdis );
+            ctx.fillText(zz[5],(xBasis + 8 + 2 * (wBasis1+ dBasis1)),yBasis1 +35 +ytextdis );
+
             for(var i=0;i<6;i++)
             {
-            filledCircle(rects[3+i].x+20, rects[3+i].y+20,20,0,2,Math.PI);
+            // Startet mit i + 7  ,wegen Buttons und Operanden    
+            ctx.strokeRect(rects[7+i].x, rects[7+i].y,wBasis1, hBasis1);
             }
+           
 }
  
   function ergebnisKette(kette)
@@ -233,8 +273,7 @@ function vergleichsZahlen()
 
  canv.addEventListener('click', function(e)
      {       
-        var rect = angetippt(rects, e.offsetX, e.offsetY);
-        if (rect) 
+        var rect = angetippt(rects, e.offsetX, e.offsetY); // die funktion angetippt errmittelt welcher Button getippt wurde  .Gibt var getipptRechteck zurück        if (rect) 
         {
           auswahlButton();  
           
@@ -243,18 +282,16 @@ function vergleichsZahlen()
 
 function vergleich(a)
 {
-   // als a wird getipptRechteck übergen 
-    
-    if(a==ergebnisIndex+3)
+   // als a wird getipptRechteck übergeben. die Funktion ist in rn 
+    var aa=a;
+    if(aa==ergebnisIndex+7)
         {
             elapsedTime = Date.now() - startTime;
            // sekunden= (elapsedTime / 1000 ).toFixed(0);  
-           sekunden= (elapsedTime / 1000 ) 
-           
-            richtig++;
-           
-            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",xBasis, 240);
-            zeigBild("daumenHoch.png", xBasis -5 + (getipptRechteck- 3) * (wBasis1+ dBasis1),yBasis1-5,50,50);       
+           sekunden= (elapsedTime / 1000 )            
+            richtig++;          
+            meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",xBasis, 220);
+            zeigBild("daumenHoch.png", rects[a].x + 0.4*wBasis1, rects[a].y ,0.5*wBasis1, hBasis1);       
             zeiten.push( sekunden); 
 
            // ausgabe der benötigten Zeiten *********************************************
@@ -274,24 +311,24 @@ function vergleich(a)
             for(var ii=0;ii<ausdruck.length;ii++)   
             {ausgabe=ausgabe + "  " + ausdruck[ii].toFixed(0)};
 
-            meldung(( "Zeit/Durchlauf : " + ausgabe ),"normal","16",schriftArt,"#5a617b",xBasis,265);
+            meldung(( "Zeit/Durchlauf : " + ausgabe ),"normal","16",schriftArt,"#5a617b",xBasis,250);
 
             if (richtig>0)
                 {   
-                ctx.clearRect(xBasis,285-16,cW,16)       
-                meldung(( "Durchschnitts Zeit ( Sek. ) : "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis,285);           
+               // ctx.clearRect(xBasis,285-16,cW,16)       
+                meldung(( "Durchschnitts Zeit ( Sek. ) : "  + schnitt),"normal","16",schriftArt,"#5a617b",xBasis,270);           
                 }
            
         }
                
             else 
                 {
-                    zeigBild("daumenRunter.png", xBasis -5 + (getipptRechteck- 3) * (wBasis1+ dBasis1),yBasis1-5,50,50); 
-                    meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",20, 240);
+                    zeigBild("daumenRunter.png", rects[a].x + 0.4*wBasis1, rects[a].y ,0.5*wBasis1, hBasis1);  
+                    meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",xBasis, 220);
                 }
               // neuer Aufruf 
               if(durchLaeufe<maxDurchlaeufe) {
-                  console.log(durchLaeufe);
+              //    console.log(durchLaeufe);
                 setTimeout(function () 
                 {
                    start();
@@ -299,8 +336,8 @@ function vergleich(a)
               }
               // Abbruch
               else{
-                meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,315);              
-                ctx.clearRect(xBasis,yBasis2,cW,hBasis);  //löscht die Buttons                
+                meldung("Die " + maxDurchlaeufe + " Durchläufe wurden erreicht","normal","16",schriftArt,"red",xBasis,300);              
+               // ctx.clearRect(xBasis,yBasis2,cW,hBasis);  //löscht die Buttons                
                 roundedButton(3);
                 buttonText();
                 ende=true;
@@ -312,10 +349,11 @@ function vergleich(a)
 function auswahlButton()
 
     {        
+        
         switch (getipptRechteck) 
                 {
                     case 0:                                         
-                    if(!stoppstarten)
+                    if(!stoppstarten && !noSelection)
                             {    
                                 start();
                                 stoppstarten=true;
@@ -323,26 +361,30 @@ function auswahlButton()
                         break;
                    
                     case 1:
-                        maxZahl= plusMinus(maxZahl,schrittWeite,1,grenze); 
-                        meldung("Maximale Zahl = " + maxZahl,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2 + 10),340);                          
-                      //  durchLaeufe--; 
-                      //  start();                          
+                        maxZahl= plusMinus(maxZahl,ermittelnSchrittWeite(maxZahl),10,grenze); 
+                        meldung("Maximale Zahl = " + maxZahl,"normal","16",schriftArt,"#5a617b",(xBasis + 80),340);                          
+                                           
                         break;
                     case 2:
-                        maxZahl= plusMinus(maxZahl,-schrittWeite,1,grenze); 
-                        meldung("Maximale Zahl = " + maxZahl,"normal","16",schriftArt,"#5a617b",(xBasis + wBasis2+ dBasis2 +10),340);   
-                       // start();  
-                      //  durchLaeufe--;                         
+                        maxZahl= plusMinus(maxZahl,-ermittelnSchrittWeite(maxZahl),10,9); 
+                        console.log("maxZahl  " +maxZahl+ "sw  " + ermittelnSchrittWeite(maxZahl));
+                        meldung("Maximale Zahl = " + maxZahl,"normal","16",schriftArt,"#5a617b",(xBasis + 80),340);   
+                                           
                         break;
                      case 3:
                      case 4:
                      case 5:
-                     case 6:
-                     case 7:   
-                     case 8:                    
-                        stoppstarten=false;                                       
-                       // durchLaeufe++;                       
-                        vergleich(getipptRechteck);                         
+                     case 6:   if(!stoppstarten){ umsetzung(getipptRechteck)  ;}
+                     
+                     break;   
+                     case 7: 
+                     case 8: 
+                     case 9: 
+                     case 10: 
+                     case 11: 
+                     case 12:        
+                        vergleich(getipptRechteck);  
+                        stoppstarten=false; 
                         break;                     
                      default:
                        alert("auswahlButton fehlgeschlagen");
@@ -365,7 +407,76 @@ function zeigBild(a,x,y,w,h)
     img.src = a;
 }
       
+ function ermittelnSchrittWeite(mz) {
+if(getipptRechteck==1){
+    if (mz<10) sw=1;
+    if (mz>=10 && mz <20) sw=2;
+    if (mz>=20 && mz <100) sw=10;
+    if (mz>=100 && mz <1000) sw=100;
+    //if (mz>=1000 && mz <10000) sw=1000;
+    //if (mz>=10000 && mz <100000) sw=10000;
+    if (mz>=1000 ) sw=1000;
+}
+
+if(getipptRechteck==2) {
+    if (mz<10) sw=1;
+    if (mz>10 && mz <=20) sw=2;
+    if (mz>20 && mz <=100) sw=10;
+    if (mz>100 && mz <=1000) sw=100;
+    //if (mz>=1000 && mz <10000) sw=1000;
+    //if (mz>=10000 && mz <100000) sw=10000;
+    if (mz>1000 ) sw=1000;
+}
+    return sw;
+ }   
+ 
+function umsetzung(a){
+    var aa =a-3;
+    console.log("umsetzung  vorher "   + aa + "   " + selection);
+
+
+        if (selection[aa]==0) {
+        selection[aa]=1;
+        ctx.fillStyle="#89Da59";         
+        ctx.fillRect(rects[a].x, rects[a].y, rects[a].w, rects[a].h,10);    
+        ctx.fillStyle = "black";
+        ctx.font = "33px Arial";
+          
+       ctx.fillText(opertexts[aa].na,opertexts[aa].x, opertexts[aa].y);  
+
+     }
+    else {    
         
+        selection[aa]=0; 
+
+   //  meldung(( "Anzahl Richtige :  " + richtig) +  " bei " + durchLaeufe + " Klicks","bold","16",schriftArt,"#5a617b",xBasis, 220);
+     console.log("umsetzung  nachher "   + aa + "   " + selection);
+     ctx.fillStyle="#ff0000";         
+     ctx.fillRect(rects[a].x , rects[a].y, rects[a].w, rects[a].h,10);      
+     ctx.fillStyle = "black";
+    ctx.font = "33px Arial";
+    }     
+
+
+       ctx.fillText(opertexts[aa].na,opertexts[aa].x , opertexts[aa].y);       
+  //  if (selection.indexOf(1)<0) {noSelection=true;}
+  //   else {noSelection=false;}
+      
+}
+function zeichOperandenAuswahl(){
+    for (var i=0;i<4;i++){
+var a=i+3;
+console.log(a);
+            ctx.fillStyle="#89Da59";         
+            ctx.fillRect(rects[a].x , rects[a].y, rects[a].w, rects[a].h,10);    
+            ctx.fillStyle = "black";
+            ctx.font = "33px Arial";
+         
+        ctx.fillText(opertexts[i].na,opertexts[i].x , opertexts[i].y);  
+
+    }
+}
+
 </script>
 
 </body>

@@ -61,11 +61,10 @@ function angetippt(rects, x, y) {
 {
         // Mehr oder weniger Zeit zum Suchen
         let anz=ausgang; 
-        if ((anz + delta)< oben && delta>0)
-        {anz=anz + delta; }
-        if ((anz + delta)> unten && delta<=0)
-        {anz=anz + delta; }
-        
+        if (delta>=0) {anz= Math.min((anz + delta),oben);}
+       
+        if (delta < 0 ) {anz= Math.max((anz + delta),oben);}
+       
         return anz;
 }         
 function roundedButton(a)
