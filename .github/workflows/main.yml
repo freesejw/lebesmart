@@ -30,8 +30,11 @@ jobs:
           git checkout docs
           git merge master
           
-      - uses: ad-m/github-push-action@v0.6.0
+      - name: GitHub Commit & Push
         with:
-          github_token: bitte_ersetzen
+          github_token: $\{{ secrets.GITHUB_TOKEN }}
+          author_email: joachim.w.freese@gmail.com
+          author_name: Github Action
+          message: Automatischer Commit
           repository: lebesmart
           branch: docs
