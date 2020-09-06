@@ -63,7 +63,7 @@ function angetippt(rects, x, y) {
         let anz=ausgang; 
         if (delta>=0) {anz= Math.min((anz + delta),oben);}
        
-        if (delta < 0 ) {anz= Math.max((anz + delta),oben);}
+        if (delta < 0 ) {anz= Math.max((anz + delta),unten);}
        
         return anz;
 }         

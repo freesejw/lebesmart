@@ -23,7 +23,7 @@ var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var breite = 33, hoehe=33; // Abmessungen der Zellen
 var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
 var anzahlFelder = zeilenZahl*spaltenZahl;
-var maxDurchlaeufe=10; 
+var maxDurchlaeufe=3; 
 var xCoord = [];  // x Koordinate links oben im Feld
 var yCoord = [];  // y Koordinate links oben im Feld
 var zahlenSpeicher= [];  // zahlenspeicher enthält die ziffer der Matrix als Vektor
@@ -81,7 +81,9 @@ function start()
     { 
     if(blockenStart==true){loescheButton(3);}      
         ctx.clearRect(xAbstand,yAbstand,breite*spaltenZahl,hoehe*zeilenZahl); // löscht Zahlen Matrix
+
        if (durchLauf== 0){ ctx.clearRect(xAbstand, 60-20,canv.width,45 );} //löscht "finde...."
+       
         zaehlerTreffer=0, zeitAusgang=0, anzahlClicks=0;   
         //zeitAusgang=0;
         durchLauf++; 
@@ -140,7 +142,7 @@ function zeitPruef()
             
         if (blockenMatrix)
             {
-                clearInterval(id);
+                clearInterval(id); // Es geht wieder weiter nit klicken Go On Button
                 blockenStart=false; 
                 zeitAusgang=0;               
             }
@@ -153,22 +155,23 @@ canv.addEventListener('click', function(event)
         yclick = event.clientY - yAbstand; 
        
 
-        // prüft ob der Klick innerhalb der Matrix erfolgte
+        // prüft ob der Klick innerhalb der Matrix erfolgte. Wenn nicht, dann geschieht nichts
         if (((xCoord[0] < xclick) && (xclick < (xCoord[spaltenZahl-1]) + breite ) &&
                 (yCoord[0] < yclick) && (yclick < yCoord[(zeilenZahl*spaltenZahl)-1]+ hoehe)) && blockenMatrix==false)
         {
             anzahlClicks++;
            
-            if(anzahlClicks<=indexReihe.length)
+            if(anzahlClicks<=indexReihe.length) // es sind soviel Klicks zulässig wie die Zahl an Ziffern hat. Die Ziffern der Zahl sind in indexReihe
             {
                // console.log(anzahlClicks+ "    " + indexReihe.length);
            
                 var treffer=false;    
                 var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des geklickten Feldes
 
-                if (zwert>=0) { treffer= true}  // Zwert > 0 dann ein Matrixfeld geklickt 
-                if ( treffer) 
-                    {
+                if (zwert>=0)  // Zwert > 0 dann ein Matrixfeld geklickt 
+                 { 
+                    treffer= true  
+                
                     
                         var zw =indexReihe.indexOf(zwert);
                     
@@ -207,11 +210,11 @@ canv.addEventListener('click', function(event)
                                     buttonText();   
                                                        
                                 }
-                    }
+                    }  // Behandlung einzelner Klicks ( für Ziffern )
 
                     if (zaehlerTreffer == indexReihe.length)
                         {             
-                           // alle Felder richtig geklickt, Ziffer getrffen
+                           // alle Felder richtig geklickt, Zahl richtig
                            
                             var aufschlag=0;
                             anzahlTreffer++; 
