@@ -90,7 +90,7 @@ function start()
         zaehlerClick=0;
         zaehlerTreffer=0;
         durchLauf++;
-     // neuerDurchlauf=false;
+     
         loescheMatrix();
         aufbauMatrix(zeilen,spalten,xBreite,yHoehe);
        
@@ -121,7 +121,7 @@ function zeige()
         {
         ctx.clearRect(xCoord[blinkReihe[iterator-1]]+2,yCoord[blinkReihe[iterator-1]]+2,xBreite-6,yHoehe-6);            
         }
-    if (iterator>anzahlBaelle)
+    if (iterator>anzahlBaelle) //beendet die Anzeige
         {
         ctx.clearRect(xCoord[blinkReihe[iterator]]+4,yCoord[blinkReihe[iterator]]+2,xBreite-6,yHoehe-6);
             clearInterval(myVar);
