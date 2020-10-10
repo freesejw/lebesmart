@@ -166,7 +166,7 @@ canv.addEventListener('click', function(event)
                // console.log(anzahlClicks+ "    " + indexReihe.length);
            
                 var treffer=false;    
-                var zwert = feldNummerSchuss(xclick,yclick) // liefert den Index des geklickten Feldes
+                var zwert = feldnummerTreffer(xclick,yclick) // liefert den Index des geklickten Feldes
 
                 if (zwert>=0)  // Zwert > 0 dann ein Matrixfeld geklickt 
                  { 
@@ -508,11 +508,10 @@ function ermittleBasisZahlen(zeilen, spalten)
     
     zahlenSpeicher = arrayEbnen(matrix);
     indexReihe = baueIndexReihe(matrix, gesuchteZahl);
-    //console.log("IndexReihe: " + indexReihe);
-  
+   
 }
 
-function feldNummerSchuss(xc,yc)
+function feldnummerTreffer(xc,yc)
 {    // xc und yc sind die Koordinaten des Klicks 
     // Liefert deie Nummer des Feldes wenn ein Treffer erfolgte. Dabei wird noch nicht nach Gruppe unterschieden
     var zw;
