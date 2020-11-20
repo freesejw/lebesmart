@@ -23,7 +23,7 @@ var xDist=15, yDist=25;  // Verschiebt die Zahlen im Feld;
 var breite = 33, hoehe=33; // Abmessungen der Zellen
 var zeilenZahl = 7, spaltenZahl =7; // Felder pro Spalte und Zeile
 var anzahlFelder = zeilenZahl*spaltenZahl;
-var maxDurchlaeufe=3; 
+var maxDurchlaeufe=10; 
 var xCoord = [];  // x Koordinate links oben im Feld
 var yCoord = [];  // y Koordinate links oben im Feld
 var zahlenSpeicher= [];  // zahlenspeicher enthält die ziffer der Matrix als Vektor
@@ -65,7 +65,8 @@ function ladeGame()
     meldung("Mit dem Plus / Minus Button","normal","16",schriftArt,"#5a617b",xBasis, 185); 
     meldung("können sie die Zeit zum", "normal","16",schriftArt,"#5a617b",xBasis ,205); 
     meldung("Finden/Klicken  verändern.", "normal","16",schriftArt,"#5a617b",xBasis ,225); 
-    meldung("Es gibt " +  maxDurchlaeufe + " Durchläufe.","normal","16,",schriftArt,"#5a617b",xBasis,275); 
+   // meldung("Es gibt " +  maxDurchlaeufe + " Durchläufe.","normal","16,",schriftArt,"#5a617b",xBasis,275); 
+    meldung("Es gibt unbegrenzte Durchläufe.","normal","16,",schriftArt,"#5a617b",xBasis,275); 
     //ermittleBasisZahlen(zeilenZahl,spaltenZahl);
     //aufbauMatrix(zeilenZahl,spaltenZahl,breite,hoehe,zahlenSpeicher);
     roundedButton(3);
@@ -231,7 +232,7 @@ canv.addEventListener('click', function(event)
                                     meldung("Weiter so !!!  " + maxDurchlaeufe + "  Durchläufe","normal","16",schriftArt,"black",xCoord[42]+ xAbstand + 14,yCoord[42]+yAbstand+20);   
                                 
                                     ctx.clearRect(80,150,150,150);
-                                    zeigBild("schiess.png",80,150,120,120);
+                                    zeigBild("Bilder/schiess.png",80,150,120,120);
                                     aufschlag = 1000;
                                     }
 
